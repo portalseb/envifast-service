@@ -1,5 +1,9 @@
 package com.bb.envifastservice.algo;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.Map;
+
 public class Aeropuerto {
     private int id;
     private String codigo;
@@ -8,6 +12,19 @@ public class Aeropuerto {
     private String abreviacion;
 
     private String continente;
+
+    private Map<Aeropuerto, Integer> costoMinimo;
+
+    public void inicializarCostos(ArrayList<Aeropuerto> aeropuertos){
+        // inicializar los costos minimos con infinito, que para este caso
+        // es el tiempo minimo de REdEx.
+        // inicializar infinito = politica + 1 o poner infinito.
+
+    }
+
+    public void calculoCostosMinimo(ArrayList<PlanVuelo> planVuelos){
+        //
+    }
 
     // getters y setters. Entonces ya tenemos la informacion de los aeropuertos
     public int getId() {
