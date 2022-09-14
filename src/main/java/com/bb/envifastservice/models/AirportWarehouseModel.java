@@ -8,7 +8,7 @@ import java.util.Set;
 @Data
 @Entity
 @Table(name= "airport_warehouse")
-public class AirportWarehouse {
+public class AirportWarehouseModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "_aw_id")
@@ -18,7 +18,7 @@ public class AirportWarehouse {
     @Column(name="_city_name")
     private String cityName;
     @OneToMany(mappedBy = "AirportWarehouse")
-    Set<Flight> Flights;
+    Set<FlightModel> flightModels;
     @Column(name = "_city_short_name")
     private String cityShortName;
     @Column(name="_country_name")

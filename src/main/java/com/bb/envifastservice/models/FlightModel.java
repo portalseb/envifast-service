@@ -3,14 +3,12 @@ package com.bb.envifastservice.models;
 import lombok.Data;
 
 import javax.persistence.*;
-import java.time.DateTimeException;
 import java.time.LocalDateTime;
-import java.util.Set;
 
 @Data
 @Entity
 @Table(name= "flights")
-public class Flight {
+public class FlightModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "_flight_id")
@@ -25,7 +23,7 @@ public class Flight {
     private LocalDateTime arrivalDate;
     @ManyToOne
     @JoinColumn(name = "_arrival_airport", nullable = false)
-    AirportWarehouse arrivalAirport;
+    AirportWarehouseModel arrivalAirport;
 //    @ManyToOne
 //    @JoinColumn(name = "_departure_airport", nullable = false)
 //    AirportWarehouse departureAirport;
