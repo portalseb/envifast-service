@@ -13,6 +13,8 @@ public class Aeropuerto {
 
     private String continente;
 
+    private int almacen;
+
     private Map<Aeropuerto, Integer> costoMinimo;
 
     public void inicializarCostos(ArrayList<Aeropuerto> aeropuertos){
@@ -73,5 +75,13 @@ public class Aeropuerto {
 
     public void setContinente(String continente) {
         this.continente = continente;
+    }
+
+    public int getAlmacen() {
+        return almacen;
+    }
+
+    public void setAlmacen(int almacen) {
+        this.almacen = almacen;
     }
 }

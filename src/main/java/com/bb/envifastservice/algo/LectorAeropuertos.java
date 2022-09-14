@@ -38,6 +38,15 @@ public class LectorAeropuertos {
                         a.setCiudad(parts[2]);
                         a.setPais(parts[3]);
                         a.setAbreviacion(parts[4]);
+
+                        if( i<= 15) {
+                            a.setContinente("America del Sur");
+                            a.setAlmacen(850);
+                        }
+                        else {
+                            a.setContinente("Europa");
+                            a.setAlmacen(900);
+                        }
                         this.aeropuertos.add(a);
                     }
                 }
