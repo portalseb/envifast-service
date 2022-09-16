@@ -16,6 +16,14 @@ public class AntSide {
     public static final double coeficienteEvaporacion = 986;
 
 
+    /********************************************************/
+    /**Nuevos atributos de inicio y final*/
+    public Integer nodoInicial;
+    public Integer nodoFinal;
+    /********************************************************/
+    /********************************************************/
+
+
     public AntSide(int numeroAristas, int numeroNodos) {
         caminos = new ArrayList<String>(numeroAristas);
         nodos = new ArrayList<Integer>(numeroNodos);
@@ -28,6 +36,46 @@ public class AntSide {
         probabilidadDeSerEscogido = new ArrayList<Double>(numeroAristas);
         numeroVecesDeSerEscogigo = new ArrayList<Integer>(numeroAristas);
     }
+
+    /*******************************************************************************************/
+    /**Nuevo constructor con el nodoInicio y nodoFinal *****************************************/
+    public AntSide(int numeroAristas, int numeroNodos, int nodoIni, int nodoFin) {
+        caminos = new ArrayList<String>(numeroAristas);
+        nodos = new ArrayList<Integer>(numeroNodos);
+        costos = new ArrayList<Double>(numeroAristas);
+        visibilidad = new ArrayList<Double>(numeroAristas);
+        cantidadFeromonasCamino = new ArrayList<Double>(numeroAristas);
+        for(Double ferom: cantidadFeromonasCamino){
+            ferom = 0.1;
+        }
+        probabilidadDeSerEscogido = new ArrayList<Double>(numeroAristas);
+        numeroVecesDeSerEscogigo = new ArrayList<Integer>(numeroAristas);
+        nodoInicial = nodoIni;
+        nodoFinal = nodoFin;
+    }
+    /*****************************************************************************************/
+    /*****************************************************************************************/
+    /** Setter y getter de nodo inicial y final*/
+    public Integer getNodoInicial() {
+        return nodoInicial;
+    }
+
+    public void setNodoInicial(Integer nodoInicial) {
+        this.nodoInicial = nodoInicial;
+    }
+
+    public Integer getNodoFinal() {
+        return nodoFinal;
+    }
+
+    public void setNodoFinal(Integer nodoFinal) {
+        this.nodoFinal = nodoFinal;
+    }
+    /*****************************************************************************************/
+    /*****************************************************************************************/
+
+
+
 
     public ArrayList<String> getCaminos() {
         return caminos;

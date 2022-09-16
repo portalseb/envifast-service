@@ -1,5 +1,6 @@
 package com.bb.envifastservice.algo.antColony;
 
+import javax.persistence.criteria.CriteriaBuilder;
 import java.util.ArrayList;
 
 public class Ant {
@@ -14,27 +15,50 @@ public class Ant {
     public final double cntQ=0.0001;//Aprendizaje
     private AntSide ambienteGlobal=null;
 
-
-//    public Ant()
-//    {
-//        this.ambienteGlobal=new AntSide();
-//        this.feromonasEntreVisibilidad=new ArrayList<Double>(ambienteGlobal.getCostos().size());
-//        this.ponderadoEscalaProbabilidades=new ArrayList<Double>(ambienteGlobal.getCostos().size());
-//        this.probabilidadDeCaminoEntreSumatoria=new ArrayList<Double>(ambienteGlobal.getCostos().size());
-//        this.caminoElegidoPorHormiga=new ArrayList<Boolean>(ambienteGlobal.getCostos().size());
-//        //this.vCantidad_de_caminos=3;
-//    }//Fin del cosntructor.
+    /*******************************************************************************************/
+    /**Nuevo atributos para guardar el camino de una hormiga ***********************************/
+    private ArrayList<Integer> caminoNodos;
+    private ArrayList<Double> caminoCostos;
+    /******************************************************************************************/
+    /******************************************************************************************/
 
 
+    /******************************************************************************************/
+    /**Se agregan los nuevos atributos al constructor */
     public Ant(AntSide ambienteHormiga)
     {
-        this.ambienteGlobal=ambienteHormiga;//new Hormigas_ambiente();
+        this.ambienteGlobal=ambienteHormiga;
         this.feromonasEntreVisibilidad=new ArrayList<Double>(ambienteGlobal.getCostos().size());
         this.ponderadoEscalaProbabilidades=new ArrayList<Double>(ambienteGlobal.getCostos().size());
         this.probabilidadDeCaminoEntreSumatoria=new ArrayList<Double>(ambienteGlobal.getCostos().size());
         this.caminoElegidoPorHormiga=new ArrayList<Boolean>(ambienteGlobal.getCostos().size());
-        //this.vCantidad_de_caminos=3;
+        this.caminoNodos = new ArrayList<Integer>(ambienteGlobal.getCostos().size()); //Este tamaño solo sera suficiente si nos aseguramos que no puede recorrer un mismo camino 2 veces
+        this.caminoCostos = new ArrayList<Double>(ambienteGlobal.getCostos().size()); //Este tamaño solo sera suficiente si nos aseguramos que no puede recorrer un mismo camino 2 veces
+        this.caminoNodos.add(this.ambienteGlobal.getNodoInicial());
+
     }
+
+    /******************************************************************************************/
+    /******************************************************************************************/
+    /**Se agregan los setter y getter de los nuevos atributos */
+    public ArrayList<Integer> getCaminoNodos() {
+        return caminoNodos;
+    }
+
+    public void setCaminoNodos(ArrayList<Integer> caminoNodos) {
+        this.caminoNodos = caminoNodos;
+    }
+
+    public ArrayList<Double> getCaminoCostos() {
+        return caminoCostos;
+    }
+
+    public void setCaminoCostos(ArrayList<Double> caminoCostos) {
+        this.caminoCostos = caminoCostos;
+    }
+
+    /******************************************************************************************/
+    /******************************************************************************************/
 
 
     public ArrayList<Double> probabilidadElegirUnCamino(AntSide ambiente)//El ambiente que se le pasa solo contiene los caminos posibles desde el nodo de la hormiga
@@ -42,7 +66,9 @@ public class Ant {
         int i=0;
         double sumatoriaDeProbabilidades=0.0;
         //Aqui se deberia limpiar las feromonasEntreVisibilidad, ponderadoEscalaProbabilidades, probabilidadDeCaminoEntreSumatoria
-
+        //...
+        //...
+        //
 
         for(i=0;i <= ambiente.getCantidadFeromonasCamino().size()-1;i++)
         {
@@ -63,26 +89,46 @@ public class Ant {
         return ponderadoEscalaProbabilidades;
     }
 
-
+    /******************************************************************************************/
+    /******************************************************************************************/
+    /** Nuevo metodo para saber si la hormiga llego al final
+    Se le pasaria el ultimo nodo al que ha saltado */
+    public boolean llegoAlFinal(Integer nodoActual){
+        return ambienteGlobal.getNodoFinal() == nodoActual;
+    }
+    /******************************************************************************************/
+    /******************************************************************************************/
 
     public void explorar()
     {
+        Integer nodoActual = ambienteGlobal.getNodoInicial();
 
-        for (int i=0;i<4;i++) //Seria un while hasta que llegue al final (solucion)
+        while(!llegoAlFinal(nodoActual)) //While hasta que llegue al final (solucion)
         {
-            // Hallar los caminos posibles desde el nodo donde esta la hormiga (no puede volver)
-            //...metodo...
+            // Metodo para hallar los caminos posibles desde el nodo donde esta la hormiga
+            // (no puede volver y podriamos poner que no pase por donde ya vino revisando el caminoNodos)
+            //...metodo (Falta)...
             //...
 
+            //Se crea un ambiente con los posibles caminos
             //AntSide caminosHormiga = new AntSide(...)
-            //probabilidadElegirUnCamino(caminosHormiga);
-            //
 
 
-            //Se usa el numero Random y se coloca el siguiente nodo: 1,2,3,4,5,6,7,8,9...
-            //Se actualizaria un arreglo para guardar los nodos del camino de la hormiga y otro para guardar los costos.
+            // Metodo para generar la recta de probabilidades
+            //probabilidadElegirUnCamino(caminosHormiga); //Esto se podria poner como parametro directamente en el metodo de abajo
 
 
+            //Metodo para usar el numero Random y sacar el nuevo nodo
+            ////...metodo (Falta)...
+            //...
+
+
+            //Metodo para actualizar el arreglo caminoNodos y caminoCostos con el nuevo nodo
+            ////...metodo (Falta)...
+            //...
+
+
+            //Se actualiza nodoActual con el nuevo nodo
         }
 
     }
