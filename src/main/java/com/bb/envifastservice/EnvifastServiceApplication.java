@@ -14,9 +14,12 @@ public class EnvifastServiceApplication {
 //        SpringApplication.run(EnvifastServiceApplication.class, args);
         CalculadorDeCostosCapacidades calculadora = new CalculadorDeCostosCapacidades();
         calculadora.leerAeropuertos();
-        calculadora.leerPlanesVuelos();
-        calculadora.calcularCostosMinimos();
-        calculadora.imprimirCostosMinimos();
+        calculadora.imprimirAeropuertos();
+//        calculadora.leerPlanesVuelos();
+//        calculadora.calcularCostosMinimos();
+//        System.out.println("D");
+//        calculadora.imprimirCostosMinimos();
+//        System.out.println("E");
     }
 
 

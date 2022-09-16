@@ -3,11 +3,12 @@ package com.bb.envifastservice.algo;
 public class Ciudad {
     private String nombre;
     private String abreviacion;
-
     private String pais;
     private String continente;
 
+    public Ciudad (){
 
+    }
     public Ciudad(String nombre, String abreviacion, String pais) {
         this.nombre = nombre;
         this.abreviacion = abreviacion;
