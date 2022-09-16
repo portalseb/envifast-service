@@ -2,10 +2,11 @@ package com.bb.envifastservice.algo;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Map;
 import java.util.TimeZone;
 
-public class Aeropuerto {
+public class Aeropuerto implements Comparable<Aeropuerto> {
 
     public static final Integer CAPACIDAD_AEROPUERTO = 500;
     private Integer id;
@@ -85,5 +86,13 @@ public class Aeropuerto {
         this.deposito.add(pac);
         pac.actualizarEstado(this, null);
         setCapacidad(this.capacidad + 1);// aumentamos la capacidad
+    }
+
+    @Override
+    public int compareTo(Aeropuerto o) {
+        if(o.getUso() < this.getUso()){
+            return 1; // o > este mismo
+        }
+        return 0;
     }
 }
