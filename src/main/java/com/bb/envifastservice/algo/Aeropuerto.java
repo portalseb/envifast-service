@@ -3,85 +3,87 @@ package com.bb.envifastservice.algo;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.TimeZone;
 
 public class Aeropuerto {
-    private int id;
-    private String codigo;
-    private String ciudad;
-    private String pais;
-    private String abreviacion;
 
-    private String continente;
+    public static final Integer CAPACIDAD_AEROPUERTO = 500;
+    private Integer id;
+    private Ciudad ciudad;
+    private String nombre;
+    private TimeZone timeZone;
+    private ArrayList<Paquete> deposito = new ArrayList<>();
+    private Integer capacidad;
 
-    private int almacen;
-
-    private Map<Aeropuerto, Integer> costoMinimo;
-
-    public void inicializarCostos(ArrayList<Aeropuerto> aeropuertos){
-        // inicializar los costos minimos con infinito, que para este caso
-        // es el tiempo minimo de REdEx.
-        // inicializar infinito = politica + 1 o poner infinito.
-
+    public Aeropuerto(Integer id, String nombreCiudad, String ciudadAbreviada, String pais, String nombre,
+                      String timeZone){
+        this.id = id;
+        this.ciudad = new Ciudad(nombreCiudad, ciudadAbreviada, pais);
+        this.nombre = nombre;
+        this.timeZone = TimeZone.getTimeZone(timeZone);
+        this.capacidad = CAPACIDAD_AEROPUERTO;
     }
 
-    public void calculoCostosMinimo(ArrayList<PlanVuelo> planVuelos){
-        //
-    }
-
-    // getters y setters. Entonces ya tenemos la informacion de los aeropuertos
-    public int getId() {
-        return id;
-    }
-
-    public String getCodigo() {
-        return codigo;
-    }
-
-    public String getCiudad() {
-        return ciudad;
-    }
-
-    public String getPais() {
-        return pais;
-    }
-
-    public String getAbreviacion() {
-        return abreviacion;
-    }
-
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
-    public void setCodigo(String codigo) {
-        this.codigo = codigo;
-    }
-
-    public void setCiudad(String ciudad) {
+    public void setCiudad(Ciudad ciudad) {
         this.ciudad = ciudad;
     }
 
-    public void setPais(String pais) {
-        this.pais = pais;
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
     }
 
-    public void setAbreviacion(String abreviacion) {
-        this.abreviacion = abreviacion;
+    public void setTimeZone(TimeZone timeZone) {
+        this.timeZone = timeZone;
     }
 
-    public String getContinente() {
-        return continente;
+    public void setDeposito(ArrayList<Paquete> deposito) {
+        this.deposito = deposito;
     }
 
-    public void setContinente(String continente) {
-        this.continente = continente;
+    public void setCapacidad(Integer capacidad) {
+        this.capacidad = capacidad;
     }
 
-    public int getAlmacen() {
-        return almacen;
+    public Integer getId() {
+        return id;
     }
 
-    public void setAlmacen(int almacen) {
-        this.almacen = almacen;
+    public Ciudad getCiudad() {
+        return ciudad;
+    }
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public TimeZone getTimeZone() {
+        return timeZone;
+    }
+
+    public ArrayList<Paquete> getDeposito() {
+        return deposito;
+    }
+
+    public Integer getCapacidad() {
+        return capacidad;
+    }
+
+    public String paraImprimir(){
+        return "Este es el aeropuerto " + this.nombre + ", estoy en " + this.timeZone.getID() + " en " +
+                this.ciudad.paraImprimir();
+    }
+
+    public Integer getUso() {
+        return this.deposito.size();
+    }
+
+    public void agregarPaquete(Paquete pac){
+        this.deposito.add(pac);
+        pac.actualizarEstado(this, null);
+        setCapacidad(this.capacidad + 1);// aumentamos la capacidad
     }
 }
