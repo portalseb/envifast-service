@@ -10,6 +10,8 @@ public class PlanVuelo {
     private int costo;
 
     public PlanVuelo(){
+        this.origen = new Aeropuerto();
+        this.destino = new Aeropuerto();
         this.costo = 0;
     }
 
@@ -82,5 +84,15 @@ public class PlanVuelo {
         this.almacen = almacen;
     }
 
-
+    @Override
+    public String toString() {
+        return "PlanVuelo{" +
+                "origen='" + origen.getCodigo() + "' - " + origen.getCiudad().getNombre() +
+                ", destino='" + destino.getCodigo() + "' - " + destino.getCiudad().getNombre() +
+                ", horaInicio='" + horaInicio + '\'' +
+                ", horaFin='" + horaFin + '\'' +
+                ", almacen=" + almacen +
+                ", costo=" + costo +
+                '}';
+    }
 }

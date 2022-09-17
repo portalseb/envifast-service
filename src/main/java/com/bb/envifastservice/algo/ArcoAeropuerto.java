@@ -12,8 +12,9 @@ public class ArcoAeropuerto {
     private LocalTime horaPartida;
     private LocalTime horaLlegada;
 
-    // Constructor
-//    public ArcoAeropuerto(String )
+    private ArcoAeropuerto(){
+
+    }
 
     public ArcoAeropuerto(String nombreVuelo, Aeropuerto aeropuerto1, Aeropuerto aeropuerto2, String partida, String llegada){
         this.flight = new Avion(nombreVuelo);

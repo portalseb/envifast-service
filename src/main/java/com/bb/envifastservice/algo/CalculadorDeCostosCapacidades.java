@@ -60,4 +60,10 @@ public class CalculadorDeCostosCapacidades {
             System.out.println(a.toString());
         }
     }
+
+    public void imprimirPlanesVuelo(){
+        for (PlanVuelo pv: planesVuelos){
+            System.out.println(pv.toString());
+        }
+    }
 }

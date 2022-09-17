@@ -42,26 +42,22 @@ public class LectorPlanVuelos {
             while (true) {
                 data = br.readLine();
                 if(data == null) break;
-//                    String data2 = data.replaceAll("\\s+", " ");
                 String[] parts = data.split("-");
                 if(parts.length >= 2){
-                    PlanVuelo a = new PlanVuelo();
-
+                    PlanVuelo pv = new PlanVuelo();
                     // Tenemos que encontrar el aeropuerto de origen y de destino para que funcione
                     for (int j = 0; j < this.aeropuertos.size(); j++) {
                         if(parts[0].equals(this.aeropuertos.get(j).getCodigo())){
-                            a.setOrigen(this.aeropuertos.get(j));
+                            pv.setOrigen(this.aeropuertos.get(j));
                         }
                         if(parts[1].equals(this.aeropuertos.get(j).getCodigo())){
-                            a.setDestino(this.aeropuertos.get(j));
+                            pv.setDestino(this.aeropuertos.get(j));
                         }
                     }
                     // ahora ya nos aseguramos que esta leyendo bien los datos
-                    a.setHoraInicio(parts[2]);
-                    a.setHoraFin(parts[3]);
-//                    a.setOrigen(aeroOrigen);
-//                    a.setDestino(aeroDestino);
-                    this.vuelos.add(a);
+                    pv.setHoraInicio(parts[2]);
+                    pv.setHoraFin(parts[3]);
+                    this.vuelos.add(pv);
                 }
                 i++;
             }
@@ -78,5 +74,11 @@ public class LectorPlanVuelos {
         }
     }
 
-
+    @Override
+    public String toString() {
+        return "LectorPlanVuelos{" +
+                "vuelos=" + vuelos +
+                ", aeropuertos=" + aeropuertos +
+                '}';
+    }
 }
