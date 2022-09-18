@@ -87,7 +87,7 @@ public class ArcoAeropuerto {
             zdt_arrival = zdt_arrival.plusDays(1);
         }
 
-        return Duration.between(zdt_takeoff.toLocalDate(), zdt_arrival.toLocalDate());
+        return Duration.between(zdt_takeoff.toLocalDateTime(), zdt_arrival.toLocalDateTime());
     }
 
     public String toString(){
