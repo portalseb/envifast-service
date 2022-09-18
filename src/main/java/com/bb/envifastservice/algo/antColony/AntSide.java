@@ -13,7 +13,7 @@ public class AntSide {
     public ArrayList<Double> probabilidadDeSerEscogido;
     public ArrayList<Integer> numeroVecesDeSerEscogigo;
 
-    public static final double coeficienteEvaporacion = 986;
+    public static final double coeficienteEvaporacion = 0.01;
 
 
     /********************************************************/
@@ -23,6 +23,16 @@ public class AntSide {
     /********************************************************/
     /********************************************************/
 
+    /**Constructor necesario para crear las nuevas tablas en caada paso de la hormiga*/
+    public AntSide(){
+        caminos = new ArrayList<String>();
+        nodos = new ArrayList<Integer>();
+        costos = new ArrayList<Double>();
+        visibilidad = new ArrayList<Double>();
+        cantidadFeromonasCamino = new ArrayList<Double>();
+        probabilidadDeSerEscogido = new ArrayList<Double>();
+        numeroVecesDeSerEscogigo = new ArrayList<Integer>();
+    }
 
     public AntSide(int numeroAristas, int numeroNodos) {
         caminos = new ArrayList<String>(numeroAristas);
@@ -30,8 +40,8 @@ public class AntSide {
         costos = new ArrayList<Double>(numeroAristas);
         visibilidad = new ArrayList<Double>(numeroAristas);
         cantidadFeromonasCamino = new ArrayList<Double>(numeroAristas);
-        for(Double ferom: cantidadFeromonasCamino){
-            ferom = 0.1;
+        for(int i=0;i<numeroAristas;i++){
+            cantidadFeromonasCamino.add(0.1);
         }
         probabilidadDeSerEscogido = new ArrayList<Double>(numeroAristas);
         numeroVecesDeSerEscogigo = new ArrayList<Integer>(numeroAristas);
@@ -45,8 +55,8 @@ public class AntSide {
         costos = new ArrayList<Double>(numeroAristas);
         visibilidad = new ArrayList<Double>(numeroAristas);
         cantidadFeromonasCamino = new ArrayList<Double>(numeroAristas);
-        for(Double ferom: cantidadFeromonasCamino){
-            ferom = 0.1;
+        for(int i=0;i<numeroAristas;i++){
+            cantidadFeromonasCamino.add(0.1);
         }
         probabilidadDeSerEscogido = new ArrayList<Double>(numeroAristas);
         numeroVecesDeSerEscogigo = new ArrayList<Integer>(numeroAristas);
@@ -133,10 +143,21 @@ public class AntSide {
         this.numeroVecesDeSerEscogigo = numeroVecesDeSerEscogigo;
     }
 
-    public void actualizarFeromonasEnElCamino(ArrayList<Double> recorridoHormiga) {
+    public void actualizarFeromonasEnElCamino(Ant hormiga1, Ant hormiga2) {
         int i=0;
         while (i < getCantidadFeromonasCamino().size()) {
-            this.cantidadFeromonasCamino.add((1 - coeficienteEvaporacion) * getCantidadFeromonasCamino().get(i) + recorridoHormiga.get(i));
+            if(hormiga1.getCaminoIndices().contains(i) && hormiga2.getCaminoIndices().contains(i))
+                this.cantidadFeromonasCamino.set(i,(1 - coeficienteEvaporacion) * getCantidadFeromonasCamino().get(i) +
+                        hormiga1.getCntQ()/hormiga1.getCaminoCostos().get(hormiga1.getCaminoIndices().indexOf(i)) +
+                        hormiga2.getCntQ()/hormiga2.getCaminoCostos().get(hormiga2.getCaminoIndices().indexOf(i)));
+            else if (hormiga1.getCaminoIndices().contains(i)) {
+                this.cantidadFeromonasCamino.set(i,(1 - coeficienteEvaporacion) * getCantidadFeromonasCamino().get(i) +
+                        hormiga1.getCntQ()/hormiga1.getCaminoCostos().get(hormiga1.getCaminoIndices().indexOf(i)));
+            }
+            else if (hormiga2.getCaminoIndices().contains(i)) {
+                this.cantidadFeromonasCamino.set(i,(1 - coeficienteEvaporacion) * getCantidadFeromonasCamino().get(i) +
+                        hormiga2.getCntQ()/hormiga2.getCaminoCostos().get(hormiga2.getCaminoIndices().indexOf(i)));
+            }
             i++;
         }
     }
