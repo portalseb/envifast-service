@@ -131,6 +131,12 @@ public class TablaTiempos {
     public ArrayList<ArcoAeropuerto> getArcos(){
         return this.arcos;
     }
+
+    public void calcularHeuristica(){
+        // una vez que ya tenemos todos los arcos leidos, entonces podemos calcular el menor
+        // costo entre cada par de nodos.
+
+    }
 }
 
 

@@ -27,7 +27,11 @@ public class BestFirstGraph {
         // calculoHeuristica(); // aqui calculara la heuristica para cada nodo
     }
 
+    public void calculateHeuristic(){
+        // tenemos que si o si tener el nodo final.
 
+        // Aqui tenemos que recorrer todos los nodos de
+    }
     // en nuestro caso no hay bloqueos
 
     public void setInitialNode(Aeropuerto initialNode) {

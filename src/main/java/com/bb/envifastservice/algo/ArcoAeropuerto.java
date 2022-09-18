@@ -73,12 +73,16 @@ public class ArcoAeropuerto {
     }
 
     public Duration obtenerDuracionVuelo(){
+//        LocalDateTime ldt_takeoff = this.horaPartida.atDate(LocalDate.now());
+//        ZonedDateTime zdt_takeoff = ldt_takeoff.atZone(this.aeropuerto1.getTimeZone().toZoneId());
+//
+//        LocalDateTime ldt_arrival = this.horaLlegada.atDate(LocalDate.now());
+//        ZonedDateTime zdt_arrival = ldt_arrival.atZone(this.aeropuerto2.getTimeZone().toZoneId());
         LocalDateTime ldt_takeoff = this.horaPartida.atDate(LocalDate.now());
         ZonedDateTime zdt_takeoff = ldt_takeoff.atZone(this.aeropuerto1.getTimeZone().toZoneId());
 
         LocalDateTime ldt_arrival = this.horaLlegada.atDate(LocalDate.now());
         ZonedDateTime zdt_arrival = ldt_arrival.atZone(this.aeropuerto2.getTimeZone().toZoneId());
-
         if(ldt_takeoff.compareTo(ldt_arrival) > 0){
             zdt_arrival = zdt_arrival.plusDays(1);
         }
@@ -86,9 +90,10 @@ public class ArcoAeropuerto {
         return Duration.between(zdt_takeoff.toLocalDate(), zdt_arrival.toLocalDate());
     }
 
-    public String paraImprimir(){
+    public String toString(){
         return "Avion: " + getFlight().getNombre() + " desde " + getAeropuerto1().getCiudad().getNombre() +
-                " hacia " + getAeropuerto2().getCiudad().getNombre() + " en " + obtenerDuracionVuelo().toString();
+                " hacia " + getAeropuerto2().getCiudad().getNombre() + " en "
+               +  obtenerDuracionVuelo().toString();
      }
 
 }

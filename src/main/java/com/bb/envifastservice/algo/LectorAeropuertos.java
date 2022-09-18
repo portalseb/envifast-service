@@ -5,6 +5,8 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.TimeZone;
 
 public class LectorAeropuertos {
     private ArrayList<Aeropuerto> aeropuertos; // array list
@@ -33,35 +35,45 @@ public class LectorAeropuertos {
                     String data2 = data.replaceAll("\\s+", " ");
                     String[] parts = data2.split(" ");
                     if(parts.length >= 2){
-                        Aeropuerto a =  new Aeropuerto();
+                        Integer id = Integer.parseInt(parts[0]);
+                        String codigo = parts[1];
+
+
                         // ahora ya nos aseguramos que esta leyendo bien los datos
-                        a.setId(Integer.parseInt(parts[0]));
-                        a.setCodigo(parts[1]);
+                        String ciudadNombre;
+                        String ciudadPais;
+                        String ciudadAbreviacion;
+                        String continente;
+                        Integer capacidad;
                         if(i==9 || i==11){
-                            a.getCiudad().setNombre(parts[2] + " " + parts[3]);
-                            a.getCiudad().setPais(parts[4]);
-                            a.getCiudad().setAbreviacion(parts[5]);
+                            ciudadNombre = parts[2] + " " + parts[3];
+                            ciudadPais = parts[4];
+                            ciudadAbreviacion = parts[5];
                         } else if(i==10){
-                            a.getCiudad().setNombre(parts[2] + " " + parts[3] + " " + parts[4]);
-                            a.getCiudad().setPais(parts[5]);
-                            a.getCiudad().setAbreviacion(parts[6]);
+                            ciudadNombre =parts[2] + " " + parts[3] + " " + parts[4];
+                            ciudadPais =parts[5];
+                            ciudadAbreviacion = parts[6];
                         } else if(i==34 || i==43){
-                            a.getCiudad().setNombre(parts[2]);
-                            a.getCiudad().setPais(parts[3] + " " + parts[4]);
-                            a.getCiudad().setAbreviacion(parts[5]);
+                            ciudadNombre = parts[2];
+                            ciudadPais = parts[3] + " " + parts[4];
+                            ciudadAbreviacion =parts[5];
                         }else {
-                            a.getCiudad().setNombre(parts[2]);
-                            a.getCiudad().setPais(parts[3]);
-                            a.getCiudad().setAbreviacion(parts[4]);
+                            ciudadNombre = parts[2];
+                            ciudadPais = parts[3];
+                            ciudadAbreviacion =parts[4];
                         }
                         if( i<= 15) {
-                            a.getCiudad().setContinente("America del Sur");
-                            a.setCapacidad(850);
+                            continente = "America del Sur";
+                            capacidad = 850;
                         }
                         else {
-                            a.getCiudad().setContinente("Europa");
-                            a.setCapacidad(900);
+                            continente = "Europa";
+                            capacidad = 900;
                         }
+                        Aeropuerto a;
+                        System.out.printf(Calendar.getInstance().getTimeZone().toString());
+                        a = new Aeropuerto(id, codigo,ciudadNombre, ciudadAbreviacion, ciudadPais
+                        , codigo,  TimeZone.getTimeZone(ciudadNombre).toString(), continente);
                         this.aeropuertos.add(a);
                     }
                 }

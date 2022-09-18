@@ -9,11 +9,11 @@ public class Ciudad {
     public Ciudad (){
 
     }
-    public Ciudad(String nombre, String abreviacion, String pais) {
+    public Ciudad(String nombre, String abreviacion, String pais, String continente) {
         this.nombre = nombre;
         this.abreviacion = abreviacion;
         this.pais = pais;
-//        this.continente = continente;
+        this.continente = continente;
     }
 
     public String getNombre() {
