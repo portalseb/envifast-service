@@ -40,6 +40,10 @@ public class EnvifastServiceApplication {
             System.out.println(pv.toString());
         }
 
+        ////Generar data de envios:
+        //GenerateTestData test = new GenerateTestData();
+        //test.GenerateData("C:\\Users\\Fernando\\Desktop\\fernando\\Archivos Pucp\\ciclo 9\\dp1\\algoritmos\\data.prueba.01.txt",aeropuertos,100,6);
+
 
     }
 }
