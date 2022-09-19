@@ -16,6 +16,8 @@ public class Ant {
     private ArrayList<Integer> posiblesCaminosIndices;
     private ArrayList<Integer> caminoIndices;
 
+    private double costoTotal;
+
     public double cntQ= 1;//Aprendizaje
     private AntSide ambienteGlobal=null;
 
@@ -41,7 +43,7 @@ public class Ant {
         this.caminoNodos.add(this.ambienteGlobal.getNodoInicial());
         posiblesCaminosIndices = new ArrayList<Integer>();
         caminoIndices = new ArrayList<Integer>();
-
+        costoTotal=0.0;
     }
 
     /******************************************************************************************/
@@ -171,6 +173,10 @@ public class Ant {
         return caminosHormiga;
     }
 
+    public double getCostoTotal(){
+        return this.costoTotal;
+    }
+
     public void explorar()
     {
         Integer nodoActual = ambienteGlobal.getNodoInicial();
@@ -197,6 +203,7 @@ public class Ant {
             //Actualizar el arreglo caminoNodos y caminoCostos con el nuevo nodo
             this.caminoNodos.add(nuevoNodo);
             this.caminoCostos.add(caminosHormiga.getCostos().get(pos));
+            this.costoTotal = this.costoTotal + caminosHormiga.getCostos().get(pos);
 
             //Arreglo que sirve para guardar los indices de los caminos del arreglo del ambiente global
             this.caminoIndices.add(posiblesCaminosIndices.get(pos));

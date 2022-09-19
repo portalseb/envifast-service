@@ -1,13 +1,28 @@
 package com.bb.envifastservice.algo.antColony;
 
+import java.util.ArrayList;
+
 public class Aco {
+    private double solucionCosto;
+    private ArrayList<String> solucionCamino;
+
     public Aco() {
+        solucionCosto=999999;
+        solucionCamino=new ArrayList<String>();
     }
 
-    public void activarHormigas() {
+    public double getSolucionCosto() {
+        return solucionCosto;
+    }
+
+    public ArrayList<String> getSolucionCamino() {
+        return solucionCamino;
+    }
+
+    public void activarHormigas(int cantAristas, int cantNodos, int nodoInicial, int nodoFin) {
         //Inicializar ambiente
         //Este constructor se cambiará, debe aceptar el arreglo de vuelos y aeropuertos, aeropuerto de inicio y fin, (mas adelante la cantidad de paquetes)
-        AntSide ambiente= new AntSide(11,7,1,4);
+        AntSide ambiente= new AntSide(cantAristas,cantNodos,nodoInicial,nodoFin);
 
         //Datos en duro para la prueba
         //Caminos (Seran los vuelos)
@@ -79,8 +94,35 @@ public class Aco {
             // Se deberia guardar el mejor camino en el ambiente tambien
             System.out.println("Camino de hormiga 1");
             System.out.println(hormiga1.getCaminoNodos().toString());
+            System.out.println(hormiga1.getCostoTotal());
             System.out.println("Camino de hormiga 2");
             System.out.println(hormiga2.getCaminoNodos().toString());
+            System.out.println(hormiga2.getCostoTotal());
+
+            //System.out.println("El mejor de los dos");
+
+            if(solucionCosto> hormiga1.getCostoTotal()|| solucionCosto>hormiga2.getCostoTotal()){
+                if(hormiga1.getCostoTotal()<hormiga2.getCostoTotal()){
+                    solucionCamino=new ArrayList<String>();
+                    for(int j=0;j<hormiga1.getCaminoIndices().size();j++){
+                        //System.out.println(ambiente.getCaminos().get(hormiga1.getCaminoIndices().get(j)));
+                        solucionCamino.add(ambiente.getCaminos().get(hormiga1.getCaminoIndices().get(j)));
+                    }
+                    solucionCosto=hormiga1.getCostoTotal();
+                }
+                else {
+                    solucionCamino=new ArrayList<String>();
+                    for (int j = 0; j < hormiga2.getCaminoIndices().size(); j++){
+                        //System.out.println(ambiente.getCaminos().get(hormiga2.getCaminoIndices().get(j)));
+                        solucionCamino.add(ambiente.getCaminos().get(hormiga2.getCaminoIndices().get(j)));
+                    }
+                    solucionCosto= hormiga2.getCostoTotal();
+                }
+            }
+
+
+
+
         }
     }
 
@@ -88,7 +130,8 @@ public class Aco {
 //    public static void main(String args[]) {
 //        //Se debe leer los vuelos y aeropuertos
 //        Aco algoritmoHormigas = new Aco();
-//        algoritmoHormigas.activarHormigas();
+//        algoritmoHormigas.activarHormigas(11,7,1,4);
+//        System.out.println("Camino: " + algoritmoHormigas.getSolucionCamino().toString());
 //    }
 }
 
