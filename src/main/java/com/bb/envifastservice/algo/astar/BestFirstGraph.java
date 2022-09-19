@@ -27,12 +27,47 @@ public class BestFirstGraph {
         // calculoHeuristica(); // aqui calculara la heuristica para cada nodo
     }
 
-    public void calculateHeuristic(){
-        // tenemos que si o si tener el nodo final.
+    public void calculoHeuristica(){
+        // Calculamos la heuristica con el nodo final que tenemos como atributo
 
-        // Aqui tenemos que recorrer todos los nodos de
+        // Aqui tenemos que recorrer todos los nodos de los aeropuertos y encontrar el costo minimo
+        // entre cada aeropuerto y el nodo final.
     }
-    // en nuestro caso no hay bloqueos
+
+    public ArrayList<Aeropuerto> findPath(){
+        openList.add(this.initialNode);// inicializamos la lista de nodos abiertos
+        while(!openList.isEmpty()){
+            Aeropuerto currentNode = openList.poll();
+            closedList.add(currentNode);
+            if(isFinalNode(currentNode)){
+                return getPath(currentNode);
+            }
+        }
+        return null;
+    }
+
+    // para obtemer el camino de la solucion
+    private ArrayList<Aeropuerto> getPath(Aeropuerto currentNode){
+        ArrayList<Aeropuerto> path = new ArrayList<>();
+        path.add(currentNode);
+        Aeropuerto parent;
+        while((parent = currentNode.getPadre()) != null){
+            path.add(0, parent);
+            currentNode = parent;
+        }
+        return path;
+    }
+
+    private void addAdjacentNodes(Aeropuerto currentNode){
+        // agregamos los nodos que estan cerca al objetivo, los nodos adyacentes
+    }
+
+
+
+    private boolean isFinalNode(Aeropuerto currentNode){
+        return currentNode.equals(this.finalNode);
+    }
+
 
     public void setInitialNode(Aeropuerto initialNode) {
         this.initialNode = initialNode;
