@@ -17,7 +17,7 @@ public class Aeropuerto implements Comparable<Aeropuerto> {
     private ArrayList<Paquete> deposito = new ArrayList<>();
     private Integer capacidad;
 
-    private Aeropuerto padre;
+    private Aeropuerto parent;
 
     private Integer f;
     private Integer h;
@@ -36,6 +36,28 @@ public class Aeropuerto implements Comparable<Aeropuerto> {
         this.nombre = nombre;
         this.timeZone = TimeZone.getTimeZone(timeZone);
         this.capacidad = CAPACIDAD_AEROPUERTO;
+    }
+
+    public void setNodeData(Aeropuerto currentNode, int costo){
+        int gCost = currentNode.getG() + costo;
+        setParent(currentNode);
+        setG(gCost);
+        calculateFinalCost();
+    }
+
+    public void calculateFinalCost(){
+        int finalCost = getG() + getH(); // tenemos que ver la manera de calcular la heuristica.
+        // es mas ni creo que la calculemos en esta clase, solo la setearemos en otra
+        setF(finalCost);
+    }
+
+    public boolean checkBetterPath(Aeropuerto currentNode, int cost) {
+        int gCost = currentNode.getG() + cost;
+        if (gCost < getG()) {
+            setNodeData(currentNode, cost);
+            return true;
+        }
+        return false;
     }
 
     public void setId(Integer id) {
@@ -130,12 +152,12 @@ public class Aeropuerto implements Comparable<Aeropuerto> {
         return 0;
     }
 
-    public Aeropuerto getPadre() {
-        return padre;
+    public Aeropuerto getParent() {
+        return parent;
     }
 
-    public void setPadre(Aeropuerto padre) {
-        this.padre = padre;
+    public void setParent(Aeropuerto parent) {
+        this.parent = parent;
     }
 
     // para las funcioens f = g + h

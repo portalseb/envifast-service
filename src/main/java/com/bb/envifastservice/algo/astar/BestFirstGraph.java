@@ -1,8 +1,13 @@
 package com.bb.envifastservice.algo.astar;
 
 import com.bb.envifastservice.algo.Aeropuerto;
+import com.bb.envifastservice.algo.ArcoAeropuerto;
 import com.bb.envifastservice.algo.TablaTiempos;
 
+import java.time.Duration;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.*;
 
 public class BestFirstGraph {
@@ -51,7 +56,7 @@ public class BestFirstGraph {
         ArrayList<Aeropuerto> path = new ArrayList<>();
         path.add(currentNode);
         Aeropuerto parent;
-        while((parent = currentNode.getPadre()) != null){
+        while((parent = currentNode.getParent()) != null){
             path.add(0, parent);
             currentNode = parent;
         }
@@ -60,6 +65,37 @@ public class BestFirstGraph {
 
     private void addAdjacentNodes(Aeropuerto currentNode){
         // agregamos los nodos que estan cerca al objetivo, los nodos adyacentes
+        // para el calculo de los nodos adyacentes tenemos que tener en cuenta
+        // que se tiene que tomar la hora y leer los arcos aeropuertos que tengan
+        // como nodo de partida al nodo actual.
+
+        for (ArcoAeropuerto
+                arco:
+             this.graph.getArcos()) {
+            if(arco.getHoraPartida().compareTo(LocalTime.from(LocalDate.now())) > 0){
+                if(arco.getAeropuerto1().getCodigo() == currentNode.getCodigo()){
+                    checkNode(arco.getAeropuerto1(), currentNode, arco.obtenerDuracionVuelo().toMinutesPart());
+                }
+            }
+        }
+
+    }
+
+    private void checkNode(Aeropuerto adjacentNode, Aeropuerto currentNode, int costo){
+        if(!this.closedList.contains(adjacentNode)){
+            if(!this.openList.contains(adjacentNode)){
+                adjacentNode.setNodeData(currentNode, costo); // actualiza el costo de f = g(n) + h(n)
+                this.openList.add(adjacentNode);
+            }else{
+                boolean changed = adjacentNode.checkBetterPath(currentNode, costo);
+                if(changed){
+                    // removemos y agregamos el nodo adyacente, para que la cola de prioridad
+                    // pueda ordenar de nuevo sus contenidos con el valor modificado de finalCost.
+                    this.openList.remove(adjacentNode);
+                    this.openList.add(adjacentNode);
+                }
+            }
+        }
     }
 
 
