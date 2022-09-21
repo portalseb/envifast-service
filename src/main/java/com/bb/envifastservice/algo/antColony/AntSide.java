@@ -6,9 +6,9 @@ import com.bb.envifastservice.algo.ArcoAeropuerto;
 import java.util.ArrayList;
 
 public class AntSide {
-    public ArrayList<String> caminos;//0: 1-2, 1:1-3, 2: 3-4, 3: 3-5, se debe cambiar
+    public ArrayList<ArcoAeropuerto> caminos;//0: 1-2, 1:1-3, 2: 3-4, 3: 3-5, se debe cambiar
     //public ArrayList <ArcoAeropuerto> caminos;
-    public ArrayList<Integer> nodos;//aeropuertos, se debe cambiar
+    public ArrayList<Aeropuerto> nodos;//aeropuertos, se debe cambiar
     // public ArrayList <Aeropuerto> nodos;
     public ArrayList<Double> costos;//costos (duracion de vuelos), no se cambia
     public ArrayList<Double> visibilidad; //inversa de los costos, no se cambia
@@ -16,18 +16,18 @@ public class AntSide {
     public ArrayList<Double> probabilidadDeSerEscogido; //recta de probabilidad, no se cambia
     public ArrayList<Integer> numeroVecesDeSerEscogigo; //no se esta usando
     public static final double coeficienteEvaporacion = 0.01; //para actualizar feromonas, no se cambia
-    public Integer nodoInicial; //cambiar tipo de dato
+    public Aeropuerto nodoInicial; //cambiar tipo de dato
     //public Aeropuerto nodoInicial;
-    public Integer nodoFinal; //cambiar tipo de dato
+    public Aeropuerto nodoFinal; //cambiar tipo de dato
     //public Aeropuerto nodoFinal;
 
     /******************************************************************************************************************/
     /******************************************************************************************************************/
     /**Cambiar tipos de dato de caminos y nodos -> arcoAeropuerto y aeropuertos*/
     public AntSide(){
-        caminos = new ArrayList<String>();
+        caminos = new ArrayList<ArcoAeropuerto>();
         //caminos = new ArrayList<ArcoAeropuerto>();
-        nodos = new ArrayList<Integer>();
+        nodos = new ArrayList<Aeropuerto>();
         //nodos = new ArrayList <Aeropuerto>();
         costos = new ArrayList<Double>();
         visibilidad = new ArrayList<Double>();
@@ -37,9 +37,9 @@ public class AntSide {
     }
 
     public AntSide(int numeroAristas, int numeroNodos) {
-        caminos = new ArrayList<String>(numeroAristas);
+        caminos = new ArrayList<ArcoAeropuerto>(numeroAristas);
         //caminos = new ArrayList<ArcoAeropuerto>(numeroAristas);
-        nodos = new ArrayList<Integer>(numeroNodos);
+        nodos = new ArrayList<Aeropuerto>(numeroNodos);
         //nodos = new ArrayList <Aeropuerto>(numeroNodos);
         costos = new ArrayList<Double>(numeroAristas);
         visibilidad = new ArrayList<Double>(numeroAristas);
@@ -59,10 +59,10 @@ public class AntSide {
     /******************************************************************************************************************/
     /**Se debería modificar los constructores para recibir los ArrayList de aeropuertos y arcoAeropuertos*/
     /**Cambiar tipos de dato*/
-    public AntSide(int numeroAristas, int numeroNodos, int nodoIni, int nodoFin) {
-        caminos = new ArrayList<String>(numeroAristas);
+    public AntSide(int numeroAristas, int numeroNodos, Aeropuerto nodoIni, Aeropuerto nodoFin) {
+        caminos = new ArrayList<ArcoAeropuerto>(numeroAristas);
         //caminos = new ArrayList<ArcoAeropuerto>(numeroAristas);
-        nodos = new ArrayList<Integer>(numeroNodos);
+        nodos = new ArrayList<Aeropuerto>(numeroNodos);
         //nodos = new ArrayList <Aeropuerto>(numeroNodos);
         costos = new ArrayList<Double>(numeroAristas);
         visibilidad = new ArrayList<Double>(numeroAristas);
@@ -82,52 +82,52 @@ public class AntSide {
     /******************************************************************************************************************/
     /******************************************************************************************************************/
     /**Estos getter y setter se deben cambiar de tipo de datos*/
-    public Integer getNodoInicial() {
+    public Aeropuerto getNodoInicial() {
         return nodoInicial;
     }
     //public Aeropuerto getNodoInicial() {
     //        return nodoInicial;
     //    }
-    public void setNodoInicial(Integer nodoInicial) {
+    public void setNodoInicial(Aeropuerto nodoInicial) {
         this.nodoInicial = nodoInicial;
     }
     // public void setNodoInicial(Aeropuerto nodoInicial) {
     //        this.nodoInicial = nodoInicial;
     //    }
-    public Integer getNodoFinal() {
+    public Aeropuerto getNodoFinal() {
         return nodoFinal;
     }
     //public Aeropuerto getNodoFinal() {
     //        return nodoFinal;
     //    }
-    public void setNodoFinal(Integer nodoFinal) {
+    public void setNodoFinal(Aeropuerto nodoFinal) {
         this.nodoFinal = nodoFinal;
     }
     //public void setNodoFinal(Aeropuerto nodoFinal) {
     //        this.nodoFinal = nodoFinal;
     //    }
 
-    public ArrayList<String> getCaminos() {
+    public ArrayList<ArcoAeropuerto> getCaminos() {
         return caminos;
     }
     //public ArrayList<ArcoAeropuerto> getCaminos() {
     //        return caminos;
     //    }
-    public void setCaminos(ArrayList<String> caminos) {
+    public void setCaminos(ArrayList<ArcoAeropuerto> caminos) {
         this.caminos = caminos;
     }
     //public void setCaminos(ArrayList<ArcoAeropuerto> caminos) {
     //        this.caminos = caminos;
     //    }
 
-    public ArrayList<Integer> getNodos() {
+    public ArrayList<Aeropuerto> getNodos() {
         return nodos;
     }
     //public ArrayList<Aeropuerto> getNodos() {
     //        return nodos;
     //    }
 
-    public void setNodos(ArrayList<Integer> nodos) {
+    public void setNodos(ArrayList<Aeropuerto> nodos) {
         this.nodos = nodos;
     }
     //public void setNodos(ArrayList<Aeropuerto> nodos) {

@@ -1,5 +1,8 @@
 package com.bb.envifastservice.algo.antColony;
 
+import com.bb.envifastservice.algo.Aeropuerto;
+import com.bb.envifastservice.algo.ArcoAeropuerto;
+
 import java.util.ArrayList;
 
 public class Aco {
@@ -22,15 +25,17 @@ public class Aco {
     /******************************************************************************************************************/
     /******************************************************************************************************************/
 
-    public void activarHormigas(int cantAristas, int cantNodos, int nodoInicial, int nodoFin) {
+    public void activarHormigas(int cantAristas, int cantNodos, Aeropuerto nodoInicial, Aeropuerto nodoFin) {
         /**Inicializar ambiente*/
         /**Este constructor se cambiará, debe aceptar el arreglo de vuelos y aeropuertos, aeropuerto de inicio y fin, (mas adelante la cantidad de paquetes)*/
         AntSide ambiente= new AntSide(cantAristas,cantNodos,nodoInicial,nodoFin);
-
         /******************************************************************************************************************/
         /******************************************************************************************************************/
         /**Datos en duro para la prueba (eliminar)*/
         //Caminos (Seran los vuelos)
+        Aeropuerto a1 = new Aeropuerto(1, "001", "Lima", "lima", "Peru",
+                                       "Jorge Chavez", "PACIFICO", "America del sur");
+
         ambiente.getCaminos().add("1-2");
         ambiente.getCaminos().add("1-3");
         ambiente.getCaminos().add("1-6");

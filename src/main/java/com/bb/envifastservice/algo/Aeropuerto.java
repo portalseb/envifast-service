@@ -28,6 +28,17 @@ public class Aeropuerto implements Comparable<Aeropuerto> {
 //        this.timeZone = TimeZone.getTimeZone(timeZone);
 //        this.capacidad = CAPACIDAD_AEROPUERTO;
     }
+
+    public Aeropuerto(Aeropuerto aeropuerto){
+        this.id = aeropuerto.getId();
+        this.codigo = aeropuerto.getCodigo();
+        this.ciudad = new Ciudad(aeropuerto.getCiudad().getNombre(), aeropuerto.getCiudad().getAbreviacion(),
+                                 aeropuerto.getCiudad().getPais(), aeropuerto.getCiudad().getContinente());
+        this.nombre = aeropuerto.getNombre();
+        this.timeZone = aeropuerto.getTimeZone();
+        this.capacidad = aeropuerto.getCapacidad();
+    }
+
     public Aeropuerto(Integer id, String codigo, String nombreCiudad, String ciudadAbreviada,
                       String pais, String nombre, String timeZone, String continente){
         this.id = id;

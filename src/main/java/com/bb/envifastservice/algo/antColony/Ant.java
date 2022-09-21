@@ -1,5 +1,8 @@
 package com.bb.envifastservice.algo.antColony;
 
+import com.bb.envifastservice.algo.Aeropuerto;
+import com.bb.envifastservice.algo.ArcoAeropuerto;
+
 import javax.persistence.criteria.CriteriaBuilder;
 import java.util.ArrayList;
 import java.util.Random;
@@ -15,7 +18,7 @@ public class Ant {
     private double costoTotal;//Costo del camino que siguio la hormiga, no se cambia
     public double cntQ= 1;//Aprendizaje
     private AntSide ambienteGlobal=null;
-    private ArrayList<Integer> caminoNodos; //Cambiar tipo de dato -> Aeropuerto
+    private ArrayList<Aeropuerto> caminoNodos; //Cambiar tipo de dato -> Aeropuerto
     private ArrayList<Double> caminoCostos; //Cambiar tipo de dato -> ArcoAeropuerto
 
 
@@ -29,17 +32,17 @@ public class Ant {
         this.ponderadoEscalaProbabilidades=new ArrayList<Double>(ambienteGlobal.getCostos().size());
         this.probabilidadDeCaminoEntreSumatoria=new ArrayList<Double>(ambienteGlobal.getCostos().size());
         this.caminoElegidoPorHormiga=new ArrayList<Boolean>(ambienteGlobal.getCostos().size());
-        this.caminoNodos = new ArrayList<Integer>(ambienteGlobal.getCostos().size()); //Este tamaño solo sera suficiente si nos aseguramos que no puede recorrer un mismo camino 2 veces
+        this.caminoNodos = new ArrayList<Aeropuerto>(ambienteGlobal.getCostos().size()); //Este tamaño solo sera suficiente si nos aseguramos que no puede recorrer un mismo camino 2 veces
         this.caminoCostos = new ArrayList<Double>(ambienteGlobal.getCostos().size()); //Este tamaño solo sera suficiente si nos aseguramos que no puede recorrer un mismo camino 2 veces
         this.caminoNodos.add(this.ambienteGlobal.getNodoInicial());
         posiblesCaminosIndices = new ArrayList<Integer>();
         caminoIndices = new ArrayList<Integer>();
         costoTotal=0.0;
     }
-    public ArrayList<Integer> getCaminoNodos() {
+    public ArrayList<Aeropuerto> getCaminoNodos() {
         return caminoNodos;
     }
-    public void setCaminoNodos(ArrayList<Integer> caminoNodos) {
+    public void setCaminoNodos(ArrayList<Aeropuerto> caminoNodos) {
         this.caminoNodos = caminoNodos;
     }
     /******************************************************************************************************************/
@@ -110,7 +113,7 @@ public class Ant {
     /******************************************************************************************************************/
     /******************************************************************************************************************/
     /** Cambiar el tipo de dato del nodo */
-    public boolean llegoAlFinal(Integer nodoActual){
+    public boolean llegoAlFinal(Aeropuerto nodoActual){
         return ambienteGlobal.getNodoFinal() == nodoActual;
     }
     /******************************************************************************************************************/
@@ -143,20 +146,22 @@ public class Ant {
     /******************************************************************************************************************/
     /******************************************************************************************************************/
     /** Cambiar los tipos de datos y poner los limites de tiempo ******************************************************/
-    public AntSide posiblesCaminos(AntSide ambienteGlob, ArrayList<Integer> nodos, ArrayList<Double> costos,int nodoAnt, int nodoAct){
+    public AntSide posiblesCaminos(AntSide ambienteGlob, ArrayList<Aeropuerto> nodos, ArrayList<Double> costos,
+                                   Aeropuerto nodoAnt, Aeropuerto nodoAct){
         AntSide caminosHormiga = new AntSide(); //no se si se puede esto
-        String camino = null;
-        String[] partsCamino = null;
+        ArcoAeropuerto camino;
+        Aeropuerto origen, destino;
         posiblesCaminosIndices = new ArrayList<Integer>(); //0: 1, 1: 3
 
         for(int i=0;i<ambienteGlob.getCaminos().size();i++){
             camino = ambienteGlob.getCaminos().get(i);
-            partsCamino = camino.split("-"); //0: 4, 1: 5
+            origen = new Aeropuerto(camino.getAeropuerto1());
+            destino = new Aeropuerto(camino.getAeropuerto2());
             //Aqui se verifica que si el camino comienza con el nodo actual, el detino no puede ser el nodo anterior
             //Tambien se le podria pasar todo el camino para que no regrese por ningun nodo anterior
             /** Tambien se verificará aqui que cumpla los limites de tiempo*/
-            if((Integer.parseInt(partsCamino[0])==nodoAct && nodoAct==ambienteGlob.getNodoInicial()) ||
-                    (Integer.parseInt(partsCamino[0])==nodoAct && Integer.parseInt(partsCamino[1])!=nodoAnt )){
+            if((origen.getId() == nodoAct.getId() && nodoAct.getId() == ambienteGlob.getNodoInicial().getId()) ||
+                    (origen.getId() == nodoAct.getId() && destino.getId()!=nodoAnt.getId() )){
                 caminosHormiga.getCaminos().add(camino);
                 caminosHormiga.getCantidadFeromonasCamino().add(ambienteGlob.getCantidadFeromonasCamino().get(i));
                 caminosHormiga.getVisibilidad().add(ambienteGlob.getVisibilidad().get(i));
@@ -176,12 +181,11 @@ public class Ant {
     /** Cambiar los tipos de datos*************************************************************************************/
     public void explorar()
     {
-        Integer nodoActual = ambienteGlobal.getNodoInicial();
-        Integer nuevoNodo = 0, nodoAnt=0;
+        Aeropuerto nodoActual = ambienteGlobal.getNodoInicial();
+        Aeropuerto nuevoNodo, nodoAnt = new Aeropuerto();
         int pos=0;
         AntSide caminosHormiga = null;
-        String camino = null;
-        String[] partsCamino = null;
+        ArcoAeropuerto camino = null;
 
         while(!llegoAlFinal(nodoActual)) //While hasta que llegue al final (solucion)
         {
@@ -193,9 +197,7 @@ public class Ant {
             // Se genera y se usa la recta de probabilidades para sacar el nuevo nodo
             pos = nodoSiguiente(probabilidadElegirUnCamino(caminosHormiga));
             camino = caminosHormiga.getCaminos().get(pos);
-            partsCamino = camino.split("-");
-            nuevoNodo = Integer.parseInt(partsCamino[1]);
-
+            nuevoNodo = camino.getAeropuerto2();
 
             //Actualizar el arreglo caminoNodos y caminoCostos con el nuevo nodo
             this.caminoNodos.add(nuevoNodo);

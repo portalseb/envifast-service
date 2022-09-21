@@ -12,7 +12,7 @@ public class ArcoAeropuerto {
     private LocalTime horaPartida;
     private LocalTime horaLlegada;
 
-    private ArcoAeropuerto(){
+    public ArcoAeropuerto(){
 
     }
 
