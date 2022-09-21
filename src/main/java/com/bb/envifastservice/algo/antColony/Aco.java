@@ -7,10 +7,10 @@ import java.util.ArrayList;
 
 public class Aco {
     private double solucionCosto;//No se deberia cambiar
-    private ArrayList<String> solucionCamino; //Cambiar tipo de dato
+    private ArrayList<ArcoAeropuerto> solucionCamino; //Cambiar tipo de dato
     public Aco() {
         solucionCosto=999999;
-        solucionCamino=new ArrayList<String>(); //Cambiar tipo de dato
+        solucionCamino=new ArrayList<ArcoAeropuerto>(); //Cambiar tipo de dato
     }
     public double getSolucionCosto() {
         return solucionCosto;
@@ -19,34 +19,61 @@ public class Aco {
     /******************************************************************************************************************/
     /******************************************************************************************************************/
     /** Cambiar los tipos de datos*/
-    public ArrayList<String> getSolucionCamino() {
+    public ArrayList<ArcoAeropuerto> getSolucionCamino() {
         return solucionCamino;
     }
     /******************************************************************************************************************/
     /******************************************************************************************************************/
 
-    public void activarHormigas(int cantAristas, int cantNodos, Aeropuerto nodoInicial, Aeropuerto nodoFin) {
-        /**Inicializar ambiente*/
-        /**Este constructor se cambiará, debe aceptar el arreglo de vuelos y aeropuertos, aeropuerto de inicio y fin, (mas adelante la cantidad de paquetes)*/
-        AntSide ambiente= new AntSide(cantAristas,cantNodos,nodoInicial,nodoFin);
+    public void activarHormigas(int cantAristas, int cantNodos, int nodoInicial, int nodoFin) {
+        /**Inicializar ambiente*
         /******************************************************************************************************************/
         /******************************************************************************************************************/
         /**Datos en duro para la prueba (eliminar)*/
         //Caminos (Seran los vuelos)
-        Aeropuerto a1 = new Aeropuerto(1, "001", "Lima", "lima", "Peru",
-                                       "Jorge Chavez", "PACIFICO", "America del sur");
 
-        ambiente.getCaminos().add("1-2");
-        ambiente.getCaminos().add("1-3");
-        ambiente.getCaminos().add("1-6");
-        ambiente.getCaminos().add("2-7");
-        ambiente.getCaminos().add("2-3");
-        ambiente.getCaminos().add("6-3");
-        ambiente.getCaminos().add("6-5");
-        ambiente.getCaminos().add("3-7");
-        ambiente.getCaminos().add("3-5");
-        ambiente.getCaminos().add("5-4");
-        ambiente.getCaminos().add("7-4");
+        // Creamos los aerpuertos
+        Aeropuerto a1 = new Aeropuerto(1, "001", "Lima", "lima", "Peru",
+                "Jorge Chavez", "PACIFICO", "America del sur");
+        Aeropuerto a2 = new Aeropuerto(2, "002", "Santiago de Chile", "sant", "Chile",
+                "Arturo Merino", "PACIFICO", "America del sur");
+        Aeropuerto a3 = new Aeropuerto(3, "003", "Caracas", "cara", "Venezuela",
+                "Simon Bolivar", "PACIFICO", "America del sur");
+        Aeropuerto a4 = new Aeropuerto(4, "004", "Bogota", "bogo", "Colombia",
+                "El Dorado", "PACIFICO", "America del sur");
+        Aeropuerto a5 = new Aeropuerto(5, "005", "Quito", "quit", "Ecuador",
+                "Mariscal Sucre", "PACIFICO", "America del sur");
+        Aeropuerto a6 = new Aeropuerto(6, "006", "La Paz", "lapa", "Bolivia",
+                "El Alto", "PACIFICO", "America del sur");
+        Aeropuerto a7 = new Aeropuerto(7, "007", "Brasilia", "bras", "Brasil",
+                "Juscelino Kubitschek", "PACIFICO", "America del sur");
+
+        /**Este constructor se cambiará, debe aceptar el arreglo de vuelos y aeropuertos, aeropuerto de inicio y fin, (mas adelante la cantidad de paquetes)*/
+        AntSide ambiente= new AntSide(cantAristas,cantNodos);
+
+        //Nodos(seran los aeropuertos)
+        ambiente.getNodos().add(a1);
+        ambiente.getNodos().add(a2);
+        ambiente.getNodos().add(a3);
+        ambiente.getNodos().add(a4);
+        ambiente.getNodos().add(a5);
+        ambiente.getNodos().add(a6);
+        ambiente.getNodos().add(a7);
+
+        ambiente.setNodoInicial(a1);
+        ambiente.setNodoFinal(a4);
+
+        ambiente.getCaminos().add(new ArcoAeropuerto("ABCD", a1, a2, "12:00", "16:00"));
+        ambiente.getCaminos().add(new ArcoAeropuerto("DEFG", a1, a3, "12:00", "16:00"));
+        ambiente.getCaminos().add(new ArcoAeropuerto("GHIJ", a1, a6, "12:00", "16:00"));
+        ambiente.getCaminos().add(new ArcoAeropuerto("ABCD", a2, a7, "12:00", "16:00"));
+        ambiente.getCaminos().add(new ArcoAeropuerto("ABCD", a2, a3, "12:00", "16:00"));
+        ambiente.getCaminos().add(new ArcoAeropuerto("ABCD", a6, a3, "12:00", "16:00"));
+        ambiente.getCaminos().add(new ArcoAeropuerto("ABCD", a6, a5, "12:00", "16:00"));
+        ambiente.getCaminos().add(new ArcoAeropuerto("ABCD", a3, a7, "12:00", "16:00"));
+        ambiente.getCaminos().add(new ArcoAeropuerto("ABCD", a3, a5, "12:00", "16:00"));
+        ambiente.getCaminos().add(new ArcoAeropuerto("ABCD", a5, a4, "12:00", "16:00"));
+        ambiente.getCaminos().add(new ArcoAeropuerto("ABCD", a7, a4, "12:00", "16:00"));
 
         //Costos (Seran los costos de los vuelos)
         ambiente.getCostos().add(5.00);
@@ -74,18 +101,9 @@ public class Aco {
         ambiente.getVisibilidad().add(0.18);
         ambiente.getVisibilidad().add(0.21);
 
-        //Nodos(seran los aeropuertos)
-        ambiente.getNodos().add(1);
-        ambiente.getNodos().add(2);
-        ambiente.getNodos().add(3);
-        ambiente.getNodos().add(4);
-        ambiente.getNodos().add(5);
-        ambiente.getNodos().add(6);
-        ambiente.getNodos().add(7);
-
         //Nodo inicial y final (sera el aeropuerto de partida y llegada)
-        ambiente.setNodoInicial(1);
-        ambiente.setNodoFinal(4);
+        ambiente.setNodoInicial(a1);
+        ambiente.setNodoFinal(a4);
         /******************************************************************************************************************/
         /******************************************************************************************************************/
 
@@ -118,7 +136,7 @@ public class Aco {
 
             if(solucionCosto> hormiga1.getCostoTotal()|| solucionCosto>hormiga2.getCostoTotal()){
                 if(hormiga1.getCostoTotal()<hormiga2.getCostoTotal()){
-                    solucionCamino=new ArrayList<String>();
+                    solucionCamino=new ArrayList<ArcoAeropuerto>();
                     for(int j=0;j<hormiga1.getCaminoIndices().size();j++){
                         //System.out.println(ambiente.getCaminos().get(hormiga1.getCaminoIndices().get(j)));
                         solucionCamino.add(ambiente.getCaminos().get(hormiga1.getCaminoIndices().get(j)));
@@ -126,7 +144,7 @@ public class Aco {
                     solucionCosto=hormiga1.getCostoTotal();
                 }
                 else {
-                    solucionCamino=new ArrayList<String>();
+                    solucionCamino=new ArrayList<ArcoAeropuerto>();
                     for (int j = 0; j < hormiga2.getCaminoIndices().size(); j++){
                         //System.out.println(ambiente.getCaminos().get(hormiga2.getCaminoIndices().get(j)));
                         solucionCamino.add(ambiente.getCaminos().get(hormiga2.getCaminoIndices().get(j)));
@@ -142,12 +160,14 @@ public class Aco {
     }
 
     //Main para llamar al algoritmo
-//    public static void main(String args[]) {
-//        //Se debe leer los vuelos y aeropuertos
-//        Aco algoritmoHormigas = new Aco();
-//        algoritmoHormigas.activarHormigas(11,7,1,4);
-//        System.out.println("Camino: " + algoritmoHormigas.getSolucionCamino().toString());
-//    }
+    public static void main(String args[]) {
+        //Se debe leer los vuelos y aeropuertos
+
+        // Creamos la solución
+        Aco algoritmoHormigas = new Aco();
+        algoritmoHormigas.activarHormigas(11,7,1,4);
+        System.out.println("Camino: " + algoritmoHormigas.getSolucionCamino().toString());
+    }
 }
 
 
