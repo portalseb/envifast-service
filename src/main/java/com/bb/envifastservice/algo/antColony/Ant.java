@@ -5,32 +5,23 @@ import java.util.ArrayList;
 import java.util.Random;
 
 public class Ant {
-    //private String vNombre_de_la_ormiga="";////De momento no se usa
-
     private int cantidadCaminos; //De momento no se usa
     private ArrayList<Boolean> caminoElegidoPorHormiga;//De momento no se usa
-    private ArrayList<Double> feromonasEntreVisibilidad;
-    private ArrayList<Double> ponderadoEscalaProbabilidades;
-    private ArrayList<Double> probabilidadDeCaminoEntreSumatoria;
-
-    private ArrayList<Integer> posiblesCaminosIndices;
-    private ArrayList<Integer> caminoIndices;
-
-    private double costoTotal;
-
+    private ArrayList<Double> feromonasEntreVisibilidad; //2da columna de las tablas por cada paso, no se cambia
+    private ArrayList<Double> ponderadoEscalaProbabilidades; //recta de probabilidades, no se cambia
+    private ArrayList<Double> probabilidadDeCaminoEntreSumatoria; //3era columna de las tablas por cada paso, no se cambia
+    private ArrayList<Integer> posiblesCaminosIndices; //Indices (en el arreglo caminos de Antside) de los caminos que puede recorrer la hormiga, no se cambia
+    private ArrayList<Integer> caminoIndices; //Indices (en el arreglo caminos de Antside) de los caminos que recorre la hormiga, no se cambia
+    private double costoTotal;//Costo del camino que siguio la hormiga, no se cambia
     public double cntQ= 1;//Aprendizaje
     private AntSide ambienteGlobal=null;
-
-    /*******************************************************************************************/
-    /**Nuevo atributos para guardar el camino de una hormiga ***********************************/
-    private ArrayList<Integer> caminoNodos;
-    private ArrayList<Double> caminoCostos;
-    /******************************************************************************************/
-    /******************************************************************************************/
+    private ArrayList<Integer> caminoNodos; //Cambiar tipo de dato -> Aeropuerto
+    private ArrayList<Double> caminoCostos; //Cambiar tipo de dato -> ArcoAeropuerto
 
 
-    /******************************************************************************************/
-    /**Se agregan los nuevos atributos al constructor */
+    /******************************************************************************************************************/
+    /******************************************************************************************************************/
+    /** Cambiar tipos de dato */
     public Ant(AntSide ambienteHormiga)
     {
         this.ambienteGlobal=ambienteHormiga;
@@ -45,17 +36,14 @@ public class Ant {
         caminoIndices = new ArrayList<Integer>();
         costoTotal=0.0;
     }
-
-    /******************************************************************************************/
-    /******************************************************************************************/
-    /**Se agregan los setter y getter de los nuevos atributos */
     public ArrayList<Integer> getCaminoNodos() {
         return caminoNodos;
     }
-
     public void setCaminoNodos(ArrayList<Integer> caminoNodos) {
         this.caminoNodos = caminoNodos;
     }
+    /******************************************************************************************************************/
+    /******************************************************************************************************************/
 
     public ArrayList<Double> getCaminoCostos() {
         return caminoCostos;
@@ -84,9 +72,10 @@ public class Ant {
     public double getCntQ() {
         return cntQ;
     }
-/******************************************************************************************/
-    /******************************************************************************************/
 
+    public double getCostoTotal(){
+        return this.costoTotal;
+    }
 
     public ArrayList<Double> probabilidadElegirUnCamino(AntSide ambiente)//El ambiente que se pasa contiene los caminos posibles desde el nodo de la hormiga
     {
@@ -117,20 +106,21 @@ public class Ant {
         return ponderadoEscalaProbabilidades;
     }
 
-    /******************************************************************************************/
-    /******************************************************************************************/
-    /** Nuevo metodo para saber si la hormiga llego al final
-    Se le pasaria el ultimo nodo al que ha saltado */
+
+    /******************************************************************************************************************/
+    /******************************************************************************************************************/
+    /** Cambiar el tipo de dato del nodo */
     public boolean llegoAlFinal(Integer nodoActual){
         return ambienteGlobal.getNodoFinal() == nodoActual;
     }
-    /******************************************************************************************/
-    /******************************************************************************************/
+    /******************************************************************************************************************/
+    /******************************************************************************************************************/
 
-    /******************************************************************************************/
-    /******************************************************************************************/
-    /** Nuevo metodo para sacar el siguiente nodo al que la hormiga se movera
-     Se le pasa la recta de probabilidades (aun estoy viendo si soporta todos los casos)*/
+
+
+    /******************************************************************************************************************/
+    /******************************************************************************************************************/
+    /** Cambiar los tipos de datos*/
     public int nodoSiguiente(ArrayList<Double> rectaProbabilidades){
         Random rand = new Random();
         double pos = rand.nextDouble();
@@ -146,18 +136,22 @@ public class Ant {
         }
         return i;
     }
-    /******************************************************************************************/
-    /******************************************************************************************/
+    /******************************************************************************************************************/
+    /******************************************************************************************************************/
 
+
+    /******************************************************************************************************************/
+    /******************************************************************************************************************/
+    /** Cambiar los tipos de datos y poner los limites de tiempo ******************************************************/
     public AntSide posiblesCaminos(AntSide ambienteGlob, ArrayList<Integer> nodos, ArrayList<Double> costos,int nodoAnt, int nodoAct){
         AntSide caminosHormiga = new AntSide(); //no se si se puede esto
         String camino = null;
         String[] partsCamino = null;
-        posiblesCaminosIndices = new ArrayList<Integer>();
+        posiblesCaminosIndices = new ArrayList<Integer>(); //0: 1, 1: 3
 
         for(int i=0;i<ambienteGlob.getCaminos().size();i++){
             camino = ambienteGlob.getCaminos().get(i);
-            partsCamino = camino.split("-");
+            partsCamino = camino.split("-"); //0: 4, 1: 5
             //Aqui se verifica que si el camino comienza con el nodo actual, el detino no puede ser el nodo anterior
             //Tambien se le podria pasar todo el camino para que no regrese por ningun nodo anterior
             /** Tambien se verificará aqui que cumpla los limites de tiempo*/
@@ -172,11 +166,14 @@ public class Ant {
         }
         return caminosHormiga;
     }
+    /******************************************************************************************************************/
+    /******************************************************************************************************************/
 
-    public double getCostoTotal(){
-        return this.costoTotal;
-    }
 
+
+    /******************************************************************************************************************/
+    /******************************************************************************************************************/
+    /** Cambiar los tipos de datos*************************************************************************************/
     public void explorar()
     {
         Integer nodoActual = ambienteGlobal.getNodoInicial();
@@ -215,4 +212,6 @@ public class Ant {
             nodoActual = nuevoNodo;
         }
     }
+    /******************************************************************************************************************/
+    /******************************************************************************************************************/
 }

@@ -3,28 +3,33 @@ package com.bb.envifastservice.algo.antColony;
 import java.util.ArrayList;
 
 public class Aco {
-    private double solucionCosto;
-    private ArrayList<String> solucionCamino;
-
+    private double solucionCosto;//No se deberia cambiar
+    private ArrayList<String> solucionCamino; //Cambiar tipo de dato
     public Aco() {
         solucionCosto=999999;
-        solucionCamino=new ArrayList<String>();
+        solucionCamino=new ArrayList<String>(); //Cambiar tipo de dato
     }
-
     public double getSolucionCosto() {
         return solucionCosto;
     }
 
+    /******************************************************************************************************************/
+    /******************************************************************************************************************/
+    /** Cambiar los tipos de datos*/
     public ArrayList<String> getSolucionCamino() {
         return solucionCamino;
     }
+    /******************************************************************************************************************/
+    /******************************************************************************************************************/
 
     public void activarHormigas(int cantAristas, int cantNodos, int nodoInicial, int nodoFin) {
-        //Inicializar ambiente
-        //Este constructor se cambiará, debe aceptar el arreglo de vuelos y aeropuertos, aeropuerto de inicio y fin, (mas adelante la cantidad de paquetes)
+        /**Inicializar ambiente*/
+        /**Este constructor se cambiará, debe aceptar el arreglo de vuelos y aeropuertos, aeropuerto de inicio y fin, (mas adelante la cantidad de paquetes)*/
         AntSide ambiente= new AntSide(cantAristas,cantNodos,nodoInicial,nodoFin);
 
-        //Datos en duro para la prueba
+        /******************************************************************************************************************/
+        /******************************************************************************************************************/
+        /**Datos en duro para la prueba (eliminar)*/
         //Caminos (Seran los vuelos)
         ambiente.getCaminos().add("1-2");
         ambiente.getCaminos().add("1-3");
@@ -76,8 +81,13 @@ public class Aco {
         //Nodo inicial y final (sera el aeropuerto de partida y llegada)
         ambiente.setNodoInicial(1);
         ambiente.setNodoFinal(4);
+        /******************************************************************************************************************/
+        /******************************************************************************************************************/
 
-        //Se repite hasta un limite
+
+        /*****************************************************************************************************************/
+        /*****************************************************************************************************************/
+        /**Definir cual va a ser el limite y cambiar tipos de datos*/
         for(int i=0; i<5;i++){
             // //Inicializar hormiga 1
             Ant hormiga1 = new Ant(ambiente);
@@ -119,8 +129,8 @@ public class Aco {
                     solucionCosto= hormiga2.getCostoTotal();
                 }
             }
-
-
+        /*****************************************************************************************************************/
+        /*****************************************************************************************************************/
 
 
         }
