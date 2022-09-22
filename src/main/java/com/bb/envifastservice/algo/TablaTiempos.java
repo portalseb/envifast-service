@@ -132,10 +132,18 @@ public class TablaTiempos {
         return this.arcos;
     }
 
-    public void calcularHeuristica(){
+    public void calcularHeuristica(Aeropuerto finalNode){
         // una vez que ya tenemos todos los arcos leidos, entonces podemos calcular el menor
         // costo entre cada par de nodos.
-
+        for (Aeropuerto a:
+             this.aeropuertos) {
+            int aux = a.getCapacidad();
+            if(aux <= finalNode.getCapacidad()){
+                a.setH((aux/100)*3500);// el valor de la heuristica tiene que ser menor
+            }else{
+                a.setH((aux)*3500);// el valor de la heuristica tiene que ser mayor
+            }
+        }
     }
 }
 
