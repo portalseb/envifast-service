@@ -19,8 +19,8 @@ public class UserModel {
         private String username;
         @Column(name = "_password")
         private String password;
-        @ManyToMany(fetch = FetchType.EAGER)
-        private Collection<RoleModel> = new ArrayList<>();
+        //@ManyToMany(fetch = FetchType.EAGER)
+        //private Collection<RoleModel> = new ArrayList<>();
         @Column(name = "_active")
         private int active;
 }
