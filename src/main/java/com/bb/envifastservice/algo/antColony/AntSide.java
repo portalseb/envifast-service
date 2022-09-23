@@ -36,6 +36,18 @@ public class AntSide {
         numeroVecesDeSerEscogigo = new ArrayList<Integer>();
     }
 
+    public AntSide(ArrayList<Aeropuerto> aeropuertos, ArrayList<ArcoAeropuerto> vuelos){
+        caminos = new ArrayList<ArcoAeropuerto>(vuelos);
+        nodos = new ArrayList<Aeropuerto>(aeropuertos);
+        costos = new ArrayList<Double>(vuelos.size());
+        visibilidad = new ArrayList<Double>(vuelos.size());
+        cantidadFeromonasCamino = new ArrayList<Double>();
+        for(int i=0;i<vuelos.size();i++)
+            cantidadFeromonasCamino.add(0.1);
+        probabilidadDeSerEscogido = new ArrayList<Double>(vuelos.size());
+        numeroVecesDeSerEscogigo = new ArrayList<Integer>(vuelos.size());
+    }
+
     public AntSide(int numeroAristas, int numeroNodos) {
         caminos = new ArrayList<ArcoAeropuerto>(numeroAristas);
         //caminos = new ArrayList<ArcoAeropuerto>(numeroAristas);
@@ -50,10 +62,6 @@ public class AntSide {
         probabilidadDeSerEscogido = new ArrayList<Double>(numeroAristas);
         numeroVecesDeSerEscogigo = new ArrayList<Integer>(numeroAristas);
     }
-    /******************************************************************************************************************/
-    /******************************************************************************************************************/
-
-
 
     /******************************************************************************************************************/
     /******************************************************************************************************************/
