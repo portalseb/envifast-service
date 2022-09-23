@@ -11,29 +11,29 @@ import java.time.LocalDateTime;
 public class FlightModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "_flight_id")
+    @Column(name = "_id_flight")
     private Long id;
-    @Column(name = "_max_capacity")
+    @Column(name = "_max_plane_capacity")
     private Long maxCapacity;
     @Column(name = "_available_capacity")
     private Long availableCapacity;
+    @Column(name = "_departed")
+    private Boolean departed;
+    @Column(name = "_arrived")
+    private Boolean arrived;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "_airport_departure_id", insertable = false, updatable = false)
+    private AirportsModel departureAirport;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "_airport_arrival_id", insertable = false, updatable = false)
+    private AirportsModel arrivalAirport;
     @Column(name = "_departure_date")
     private LocalDateTime departureDate;
     @Column(name = "_arrival_date")
     private LocalDateTime arrivalDate;
-    @ManyToOne
-    @JoinColumn(name = "_arrival_airport", nullable = false)
-    AirportWarehouseModel arrivalAirport;
-//    @ManyToOne
-//    @JoinColumn(name = "_departure_airport", nullable = false)
-//    AirportWarehouse departureAirport;
-    @Column(name = "_departure_hour")
-    private int departureHour;
-    @Column(name = "_departure_minutes")
-    private int departureMinutes;
-    @Column(name = "_arrival_hour")
-    private int arrivalHour;
-    @Column(name = "_arrival_minutes")
-    private int arrivalMinutes;
+    @Column(name = "_flying_time")
+    private LocalDateTime flyingTime;
+    @Column(name = "_active")
+    private Boolean active;
 
 }
