@@ -61,7 +61,9 @@ public class AStarSearch {
         for (ArcoAeropuerto
                 arco:
              this.graph.getArcos()) {
-            int horaPartida = arco.getHoraPartida().getHour() * 60 +  arco.getHoraPartida().getMinute();
+            int horaLlegada = arco.getHoraPartida().getHour() * 60 +  arco.getHoraPartida().getMinute();
+
+//            System.out.println("Duracion vuelo: " + duracionVuelo);
 //            int horaActual = LocalDate.now().atStartOfDay().getHour() * 60 + LocalDate.now().atStartOfDay().getMinute();
             Calendar now = Calendar.getInstance();
             int hour = now.get(Calendar.HOUR_OF_DAY);
@@ -75,9 +77,23 @@ public class AStarSearch {
             // tuve que comentar esta funcion, porque los nodos adyacentes
             // no son solo los que despegan despues de ahora, sino que pueden despegar manhiana
 //            if(horaPartida > horaActual){
-//                if(arco.getAeropuerto1().getCodigo() == currentNode.getCodigo()){
-                    checkNode(arco.getAeropuerto1(), currentNode, arco.obtenerDuracionVuelo().toMinutesPart());
-//                }
+            // Si tiene que ser el aeropuerto 1, porque el nodo adyacente es el aeropuerto a donde se dirige
+            // SI ESTA CALCULANDO LAS HORAS CORRECTAMENTE, ENTONCES QUE ESTA PASANDO
+            // Y PORQUE SIGUE ESCOGIENDO A SKBO COMO SEGUNDO AEROPUERTO
+            if(arco.getAeropuerto1().getCodigo() == currentNode.getCodigo()){
+                // y aqui el nodo adyacente si tendria que ser aeropuerto de destino
+
+                // por ahora esta funcion esta buena, pero me parece que el costo esta mal calculado
+//                checkNode(arco.getAeropuerto2(), currentNode, arco.obtenerDuracionVuelo().toMinutesPart());
+                int duracionVuelo = (int) arco.obtenerDuracionVuelo().toMinutes(); // duracion del vuelo en minutos
+                int costo;
+                if(horaLlegada > horaActual){
+                    costo = horaLlegada  - horaActual + duracionVuelo;
+                }else{
+                    costo = horaActual + 24 * 60 - horaLlegada + duracionVuelo;
+                }
+                checkNode(arco.getAeropuerto2(), currentNode, costo);
+            }
 //            }
         }
 
@@ -86,6 +102,8 @@ public class AStarSearch {
     // este metodo nos permite saber si el nodo esta en la lista abierta o cerrada
     // si no esta en la lista abierta lo agrega y si ya esta entonces actualizamos f = g(n) + h(n).
     private void checkNode(Aeropuerto adjacentNode, Aeropuerto currentNode, int costo){
+        System.out.println("El costo es: " + costo);
+        System.out.println("El aeropuerto adyacente es: " + adjacentNode.getCodigo());
         if(!this.closedList.contains(adjacentNode)){
             if(!this.openList.contains(adjacentNode)){
                 adjacentNode.setNodeData(currentNode, costo);
