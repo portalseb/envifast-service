@@ -3,38 +3,23 @@ package com.bb.envifastservice.algo;
 import java.io.*;
 import java.util.ArrayList;
 
-public class LectorPlanVuelos {
-    private ArrayList<PlanVuelo> vuelos;
+public class LectorArcoAeropuerto {
+
+    private ArrayList<ArcoAeropuerto> arcos;
     private ArrayList<Aeropuerto> aeropuertos;
 
-    public LectorPlanVuelos(){
-        this.vuelos = new ArrayList<PlanVuelo>();
+    public LectorArcoAeropuerto(){
+        this.arcos = new ArrayList<>();
     }
 
-    public void setVuelos(ArrayList<PlanVuelo> vuelos) {
-        this.vuelos = vuelos;
-    }
-
-    public ArrayList<Aeropuerto> getAeropuertos() {
-        return aeropuertos;
-    }
-
-    public void setAeropuertos(ArrayList<Aeropuerto> aeropuertos) {
+    public LectorArcoAeropuerto(ArrayList<Aeropuerto> aeropuertos) {
+        this.arcos = new ArrayList<>();
         this.aeropuertos = aeropuertos;
     }
 
-    public ArrayList<PlanVuelo> getVuelos() {
-        return vuelos;
-    }
-
-    public LectorPlanVuelos(ArrayList<Aeropuerto> airlines){
-        this.vuelos = new ArrayList<PlanVuelo>();
-        this.aeropuertos = airlines;
-    }
-    public void Leer(String ruta) throws FileNotFoundException {
+    public void Leer(String ruta)  throws FileNotFoundException {
         File archivo = new File (ruta);
         BufferedReader br = new BufferedReader(new FileReader(archivo));
-
         try {
             String data;
             int i = 0; // estableceremos como contador para no tomar en cuanta ciertas lineas
@@ -44,20 +29,26 @@ public class LectorPlanVuelos {
                 if(data == null) break;
                 String[] parts = data.split("-");
                 if(parts.length >= 2){
-                    PlanVuelo pv = new PlanVuelo();
+                    String nombreVuelo = "Vuelo_Rutina";
+                    int j_aeropuerto1 = 0, j_aeropuerto2 = 0;
                     // Tenemos que encontrar el aeropuerto de origen y de destino para que funcione
                     for (int j = 0; j < this.aeropuertos.size(); j++) {
                         if(parts[0].equals(this.aeropuertos.get(j).getCodigo())){
-                            pv.setOrigen(this.aeropuertos.get(j));
+                            j_aeropuerto1 = j;
+//                            pv.setOrigen(this.aeropuertos.get(j));
                         }
                         if(parts[1].equals(this.aeropuertos.get(j).getCodigo())){
-                            pv.setDestino(this.aeropuertos.get(j));
+                            j_aeropuerto2 = j;
+//                            pv.setDestino(this.aeropuertos.get(j));
                         }
                     }
                     // ahora ya nos aseguramos que esta leyendo bien los datos
-                    pv.setHoraInicio(parts[2]);
-                    pv.setHoraFin(parts[3]);
-                    this.vuelos.add(pv);
+                    ArcoAeropuerto pv = new ArcoAeropuerto(nombreVuelo, this.aeropuertos.get(j_aeropuerto1),
+                            this.aeropuertos.get(j_aeropuerto2), parts[2], parts[3]);
+//                    pv.setHoraInicio(parts[2]);
+//                    pv.setHoraFin(parts[3]);
+//                    this.vuelos.add(pv);
+                    this.arcos.add(pv);
                 }
                 i++;
             }
@@ -73,11 +64,26 @@ public class LectorPlanVuelos {
             }
         }
     }
+    public ArrayList<ArcoAeropuerto> getArcos() {
+        return arcos;
+    }
+
+    public ArrayList<Aeropuerto> getAeropuertos() {
+        return aeropuertos;
+    }
+
+    public void setArcos(ArrayList<ArcoAeropuerto> arcos) {
+        this.arcos = arcos;
+    }
+
+    public void setAeropuertos(ArrayList<Aeropuerto> aeropuertos) {
+        this.aeropuertos = aeropuertos;
+    }
 
     @Override
     public String toString() {
         return "LectorPlanVuelos{" +
-                "vuelos=" + vuelos +
+                "vuelos=" + arcos +
                 ", aeropuertos=" + aeropuertos +
                 '}';
     }

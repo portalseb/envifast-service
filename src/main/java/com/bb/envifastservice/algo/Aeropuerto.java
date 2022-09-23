@@ -1,60 +1,199 @@
 package com.bb.envifastservice.algo;
 
-public class Aeropuerto {
-    private int id;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.Map;
+import java.util.TimeZone;
+
+public class Aeropuerto implements Comparable<Aeropuerto> {
+
+    public static final Integer CAPACIDAD_AEROPUERTO = 500;
+    private Integer id;
     private String codigo;
-    private String ciudad;
-    private String pais;
-    private String abreviacion;
+    private Ciudad ciudad;
+    private String nombre;
+    private TimeZone timeZone;
+    private ArrayList<Paquete> deposito = new ArrayList<>();
+    private Integer capacidad;
 
-    private String continente;
+    private Aeropuerto parent;
 
-    // getters y setters. Entonces ya tenemos la informacion de los aeropuertos
-    public int getId() {
-        return id;
+    private Integer f;
+    private Integer h;
+    private Integer g;
+
+    public Aeropuerto(){
+        ciudad = new Ciudad();
+//        this.timeZone = TimeZone.getTimeZone(timeZone);
+//        this.capacidad = CAPACIDAD_AEROPUERTO;
     }
 
-    public String getCodigo() {
-        return codigo;
+    public Aeropuerto(Aeropuerto aeropuerto){
+        this.id = aeropuerto.getId();
+        this.codigo = aeropuerto.getCodigo();
+        this.ciudad = new Ciudad(aeropuerto.getCiudad().getNombre(), aeropuerto.getCiudad().getAbreviacion(),
+                                 aeropuerto.getCiudad().getPais(), aeropuerto.getCiudad().getContinente());
+        this.nombre = aeropuerto.getNombre();
+        this.timeZone = aeropuerto.getTimeZone();
+        this.capacidad = aeropuerto.getCapacidad();
     }
 
-    public String getCiudad() {
-        return ciudad;
+    public Aeropuerto(Integer id, String codigo, String nombreCiudad, String ciudadAbreviada,
+                      String pais, String nombre, String timeZone, String continente){
+        this.id = id;
+        this.codigo = codigo;
+        this.ciudad = new Ciudad(nombreCiudad, ciudadAbreviada, pais, continente);
+        this.nombre = nombre;
+        this.timeZone = TimeZone.getTimeZone(timeZone);
+        this.capacidad = CAPACIDAD_AEROPUERTO;
     }
 
-    public String getPais() {
-        return pais;
+    public void setNodeData(Aeropuerto currentNode, int costo){
+        int gCost = currentNode.getG() + costo;
+        setParent(currentNode);
+        setG(gCost);
+        calculateFinalCost();
     }
 
-    public String getAbreviacion() {
-        return abreviacion;
+    public void calculateFinalCost(){
+        int finalCost = getG() + getH(); // tenemos que ver la manera de calcular la heuristica.
+        // es mas ni creo que la calculemos en esta clase, solo la setearemos en otra
+        setF(finalCost);
     }
 
-    public void setId(int id) {
+    public boolean checkBetterPath(Aeropuerto currentNode, int cost) {
+        int gCost = currentNode.getG() + cost;
+        if (gCost < getG()) {
+            setNodeData(currentNode, cost);
+            return true;
+        }
+        return false;
+    }
+
+    public void setId(Integer id) {
         this.id = id;
     }
 
-    public void setCodigo(String codigo) {
+    public void setCodigo(String codigo){
         this.codigo = codigo;
     }
 
-    public void setCiudad(String ciudad) {
+    public void setCiudad(Ciudad ciudad) {
         this.ciudad = ciudad;
     }
 
-    public void setPais(String pais) {
-        this.pais = pais;
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
     }
 
-    public void setAbreviacion(String abreviacion) {
-        this.abreviacion = abreviacion;
+    public void setTimeZone(TimeZone timeZone) {
+        this.timeZone = timeZone;
     }
 
-    public String getContinente() {
-        return continente;
+    public void setDeposito(ArrayList<Paquete> deposito) {
+        this.deposito = deposito;
     }
 
-    public void setContinente(String continente) {
-        this.continente = continente;
+    public void setCapacidad(Integer capacidad) {
+        this.capacidad = capacidad;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public String getCodigo(){
+        return codigo;
+    }
+
+    public Ciudad getCiudad() {
+        return ciudad;
+    }
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public TimeZone getTimeZone() {
+        return timeZone;
+    }
+
+    public ArrayList<Paquete> getDeposito() {
+        return deposito;
+    }
+
+    public Integer getCapacidad() {
+        return capacidad;
+    }
+
+    public String paraImprimir(){
+        return "Este es el aeropuerto " + this.nombre + ", estoy en " + this.timeZone.getID() + " en " +
+                this.ciudad.paraImprimir();
+    }
+
+    public Integer getUso() {
+        return this.deposito.size();
+    }
+
+    public void agregarPaquete(Paquete pac){
+        this.deposito.add(pac);
+        pac.actualizarEstado(this, null);
+        setCapacidad(this.capacidad + 1);// aumentamos la capacidad
+    }
+
+    @Override
+    public String toString() {
+        return "Aeropuerto{" +
+                "id=" + id +
+                ", codigo='" + codigo + '\'' +
+                ", ciudad=" + ciudad.getNombre() +
+                ", pais='" + ciudad.getPais() + '\'' +
+                ", continente'" + ciudad.getContinente() + '\'' +
+                ", abreviacion=" + ciudad.getAbreviacion() + '\'' +
+                ", capacidad=" + capacidad +
+                '}';
+    }
+
+    @Override
+    public int compareTo(Aeropuerto o) {
+        if(o.getUso() < this.getUso()){
+            return 1; // o > este mismo
+        }
+        return 0;
+    }
+
+    public Aeropuerto getParent() {
+        return parent;
+    }
+
+    public void setParent(Aeropuerto parent) {
+        this.parent = parent;
+    }
+
+    // para las funcioens f = g + h
+
+    public Integer getF() {
+        return f;
+    }
+
+    public Integer getH() {
+        return h;
+    }
+
+    public Integer getG() {
+        return g;
+    }
+
+    public void setF(Integer f) {
+        this.f = f;
+    }
+
+    public void setH(Integer h) {
+        this.h = h;
+    }
+
+    public void setG(Integer g) {
+        this.g = g;
     }
 }
