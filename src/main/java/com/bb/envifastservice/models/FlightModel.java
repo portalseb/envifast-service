@@ -7,10 +7,10 @@ import java.time.LocalDateTime;
 
 @Data
 @Entity
-@Table(name= "flights")
+@Table(name= "flight")
 public class FlightModel {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "_id_flight")
     private Long id;
     @Column(name = "_max_plane_capacity")
@@ -34,6 +34,6 @@ public class FlightModel {
     @Column(name = "_flying_time")
     private LocalDateTime flyingTime;
     @Column(name = "_active")
-    private Boolean active;
+    private int active;
 
 }

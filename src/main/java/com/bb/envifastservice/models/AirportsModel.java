@@ -7,10 +7,10 @@ import java.util.Set;
 
 @Data
 @Entity
-@Table(name= "airport_warehouse")
+@Table(name= "airport")
 public class AirportsModel {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "_id_airport")
     private Long id;
     @Column(name ="_airport_code")
