@@ -45,6 +45,8 @@ public class Aeropuerto implements Comparable<Aeropuerto> {
         this.codigo = codigo;
         this.ciudad = new Ciudad(nombreCiudad, ciudadAbreviada, pais, continente);
         this.nombre = nombre;
+        this.g = 0;
+        this.h = 0;
         this.timeZone = TimeZone.getTimeZone(timeZone);
         this.capacidad = CAPACIDAD_AEROPUERTO;
     }
@@ -57,8 +59,7 @@ public class Aeropuerto implements Comparable<Aeropuerto> {
     }
 
     public void calculateFinalCost(){
-        int finalCost = getG() + getH(); // tenemos que ver la manera de calcular la heuristica.
-        // es mas ni creo que la calculemos en esta clase, solo la setearemos en otra
+        int finalCost = getG() + getH();
         setF(finalCost);
     }
 
@@ -163,6 +164,14 @@ public class Aeropuerto implements Comparable<Aeropuerto> {
         return 0;
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        // me parece que solo hay que calcular si son iguales por el nombre, pero bueno eso lo veo despues
+        Aeropuerto otroAeropuerto = (Aeropuerto) obj;
+
+        return otroAeropuerto.getCodigo() == this.getCodigo();
+    }
+
     public Aeropuerto getParent() {
         return parent;
     }
@@ -170,8 +179,6 @@ public class Aeropuerto implements Comparable<Aeropuerto> {
     public void setParent(Aeropuerto parent) {
         this.parent = parent;
     }
-
-    // para las funcioens f = g + h
 
     public Integer getF() {
         return f;

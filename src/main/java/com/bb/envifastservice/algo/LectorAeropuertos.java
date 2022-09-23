@@ -12,7 +12,6 @@ public class LectorAeropuertos {
     private ArrayList<Aeropuerto> aeropuertos; // array list
 
     public LectorAeropuertos(){
-        System.out.println("Entro al constructor");
         this.aeropuertos = new ArrayList<Aeropuerto>();
 //        this.aeropuertos = new Aeropuerto[40]; // en total tenemos 40 aero puertos
     }
@@ -71,7 +70,7 @@ public class LectorAeropuertos {
                             capacidad = 900;
                         }
                         Aeropuerto a;
-                        System.out.printf(Calendar.getInstance().getTimeZone().toString());
+
                         a = new Aeropuerto(id, codigo,ciudadNombre, ciudadAbreviacion, ciudadPais
                         , codigo,  TimeZone.getTimeZone(ciudadNombre).toString(), continente);
                         this.aeropuertos.add(a);

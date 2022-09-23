@@ -4,6 +4,8 @@ import com.bb.envifastservice.algo.Aeropuerto;
 import com.bb.envifastservice.algo.ArcoAeropuerto;
 import com.bb.envifastservice.algo.TablaTiempos;
 
+import java.sql.Time;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.*;
@@ -23,15 +25,6 @@ public class AStarSearch {
         this.closedList = new HashSet<>();
         this.openList = new PriorityQueue<>();
 
-    }
-
-    // efectivamente, el calculo de la heuristica se tiene que buscar en el grafo
-
-    public void calculateHeuristic(){
-//        for (Aeropuerto a: this.graph.
-//             ) {
-//
-//        }
     }
 
     public ArrayList<Aeropuerto> findPath(){
@@ -64,14 +57,28 @@ public class AStarSearch {
     // se toman los que esten en los planes de vuelo disponibles a esa hora y que tengan como
     // nodo de partida al nodo actual
     private void addAdjacentNodes(Aeropuerto currentNode){
+        // esta funcion esta fallando
         for (ArcoAeropuerto
                 arco:
              this.graph.getArcos()) {
-            if(arco.getHoraPartida().compareTo(LocalTime.from(LocalDate.now())) > 0){
-                if(arco.getAeropuerto1().getCodigo() == currentNode.getCodigo()){
+            int horaPartida = arco.getHoraPartida().getHour() * 60 +  arco.getHoraPartida().getMinute();
+//            int horaActual = LocalDate.now().atStartOfDay().getHour() * 60 + LocalDate.now().atStartOfDay().getMinute();
+            Calendar now = Calendar.getInstance();
+            int hour = now.get(Calendar.HOUR_OF_DAY);
+            int minute = now.get(Calendar.MINUTE);
+            int horaActual = ((hour * 60) + minute);;
+//            if(arco.getHoraPartida().compareTo(LocalTime.from(LocalDate.now())) > 0){
+//                if(arco.getAeropuerto1().getCodigo() == currentNode.getCodigo()){
+//                    checkNode(arco.getAeropuerto1(), currentNode, arco.obtenerDuracionVuelo().toMinutesPart());
+//                }
+//            }
+            // tuve que comentar esta funcion, porque los nodos adyacentes
+            // no son solo los que despegan despues de ahora, sino que pueden despegar manhiana
+//            if(horaPartida > horaActual){
+//                if(arco.getAeropuerto1().getCodigo() == currentNode.getCodigo()){
                     checkNode(arco.getAeropuerto1(), currentNode, arco.obtenerDuracionVuelo().toMinutesPart());
-                }
-            }
+//                }
+//            }
         }
 
     }
