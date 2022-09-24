@@ -156,7 +156,7 @@ public class Ant {
             destino = new Aeropuerto(camino.getAeropuerto2());
 //            horaSalidaSiguienteVuelo = (double) camino.getHoraPartida().getHour()*60 + camino.getHoraPartida().getMinute();
 
-            //Aqui se verifica que el destino no puede ser un nodo anterior y restricciones de tiempo
+            //Aqui se verifica que el destino no puede ser un nodo anterior y que se cumplan restricciones de tiempo
 
 //            if(
 //             (origen.getId() == nodoAct.getId() && nodoAct.getId() == ambienteGlob.getNodoInicial().getId() &&

@@ -152,29 +152,18 @@ public class AntSide {
     public ArrayList<ArcoAeropuerto> getCaminos() {
         return caminos;
     }
-    //public ArrayList<ArcoAeropuerto> getCaminos() {
-    //        return caminos;
-    //    }
+
     public void setCaminos(ArrayList<ArcoAeropuerto> caminos) {
         this.caminos = caminos;
     }
-    //public void setCaminos(ArrayList<ArcoAeropuerto> caminos) {
-    //        this.caminos = caminos;
-    //    }
 
     public ArrayList<Aeropuerto> getNodos() {
         return nodos;
     }
-    //public ArrayList<Aeropuerto> getNodos() {
-    //        return nodos;
-    //    }
 
     public void setNodos(ArrayList<Aeropuerto> nodos) {
         this.nodos = nodos;
     }
-    //public void setNodos(ArrayList<Aeropuerto> nodos) {
-    //        this.nodos = nodos;
-    //    }
 
     public ArrayList<Double> getCostos() {
         return costos;
