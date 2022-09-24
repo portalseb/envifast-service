@@ -22,9 +22,6 @@ public class Ant {
     private ArrayList<Double> caminoCostos; //Cambiar tipo de dato -> ArcoAeropuerto
 
 
-    /******************************************************************************************************************/
-    /******************************************************************************************************************/
-    /** Cambiar tipos de dato */
     public Ant(AntSide ambienteHormiga)
     {
         this.ambienteGlobal=ambienteHormiga;
@@ -45,8 +42,6 @@ public class Ant {
     public void setCaminoNodos(ArrayList<Aeropuerto> caminoNodos) {
         this.caminoNodos = caminoNodos;
     }
-    /******************************************************************************************************************/
-    /******************************************************************************************************************/
 
     public ArrayList<Double> getCaminoCostos() {
         return caminoCostos;
@@ -89,7 +84,6 @@ public class Ant {
         ponderadoEscalaProbabilidades = new ArrayList<Double>(ambiente.getCaminos().size());
         probabilidadDeCaminoEntreSumatoria = new ArrayList<Double>(ambiente.getCaminos().size());
 
-
         for(i=0;i <= ambiente.getCantidadFeromonasCamino().size()-1;i++)
         {
             // Para calcular la probabilidad de elegir un camino primero se multiplica las feromonas en el camino por la visibilidad.
@@ -108,22 +102,14 @@ public class Ant {
         }
         return ponderadoEscalaProbabilidades;
     }
-
-
-    /******************************************************************************************************************/
-    /******************************************************************************************************************/
-    /** Cambiar el tipo de dato del nodo */
     public boolean llegoAlFinal(Aeropuerto nodoActual){
         return ambienteGlobal.getNodoFinal() == nodoActual;
     }
-    /******************************************************************************************************************/
-    /******************************************************************************************************************/
-
 
 
     /******************************************************************************************************************/
     /******************************************************************************************************************/
-    /** Cambiar los tipos de datos*/
+    /** Revisar si comprende todos los casos*/
     public int nodoSiguiente(ArrayList<Double> rectaProbabilidades){
         Random rand = new Random();
         double pos = rand.nextDouble();
@@ -148,18 +134,54 @@ public class Ant {
     /** Cambiar los tipos de datos y poner los limites de tiempo ******************************************************/
     public AntSide posiblesCaminos(AntSide ambienteGlob, ArrayList<Aeropuerto> nodos, ArrayList<Double> costos,
                                    Aeropuerto nodoAnt, Aeropuerto nodoAct){
-        AntSide caminosHormiga = new AntSide(); //no se si se puede esto
+        AntSide caminosHormiga = new AntSide();
         ArcoAeropuerto camino;
         Aeropuerto origen, destino;
         posiblesCaminosIndices = new ArrayList<Integer>(); //0: 1, 1: 3
+
+        /******************************************************************************************************************/
+        /**Variables para guardar horas de llegada y salida de los vuelos*/
+        double horaLLegadaUltimoVuelo = 0.0,horaSalidaSiguienteVuelo;
+        if(nodoAct.getId() != ambienteGlob.getNodoInicial().getId())
+            horaLLegadaUltimoVuelo = (double)ambienteGlob.getCaminos().get(caminoIndices.get(caminoIndices.size() - 1)).getHoraLlegada().getHour()*60 + ambienteGlob.getCaminos().get(caminoIndices.get(caminoIndices.size() - 1)).getHoraLlegada().getMinute();
+        else
+            horaLLegadaUltimoVuelo = 1.0; //aqui poner la hora actual
+        /******************************************************************************************************************/
+        /******************************************************************************************************************/
+
 
         for(int i=0;i<ambienteGlob.getCaminos().size();i++){
             camino = ambienteGlob.getCaminos().get(i);
             origen = new Aeropuerto(camino.getAeropuerto1());
             destino = new Aeropuerto(camino.getAeropuerto2());
-            //Aqui se verifica que si el camino comienza con el nodo actual, el detino no puede ser el nodo anterior
-            //Tambien se le podria pasar todo el camino para que no regrese por ningun nodo anterior
-            /** Tambien se verificará aqui que cumpla los limites de tiempo*/
+//            horaSalidaSiguienteVuelo = (double) camino.getHoraPartida().getHour()*60 + camino.getHoraPartida().getMinute();
+
+            //Aqui se verifica que el destino no puede ser un nodo anterior y restricciones de tiempo
+
+//            if(
+//             (origen.getId() == nodoAct.getId() && nodoAct.getId() == ambienteGlob.getNodoInicial().getId() &&
+//             this.costoTotal + (double) camino.obtenerDuracionVuelo().toMinutes() <= ambienteGlob.getPlazoMaximoEntrega() &&
+//             //¿Aqui tambien se pondria lo del transbordo, desde la hora actual hasta cuando salga el vuelo?
+//             !this.caminoNodos.contains(camino.getAeropuerto2())
+//             ) ||
+//             (origen.getId() == nodoAct.getId() && destino.getId()!=nodoAnt.getId() &&
+//             (
+//             (horaLLegadaUltimoVuelo <= horaSalidaSiguienteVuelo && this.costoTotal + (horaSalidaSiguienteVuelo - horaLLegadaUltimoVuelo) + (double) camino.obtenerDuracionVuelo().toMinutes() <= ambienteGlob.getPlazoMaximoEntrega())
+//             ||
+//             (horaLLegadaUltimoVuelo > horaSalidaSiguienteVuelo && this.costoTotal + (horaSalidaSiguienteVuelo + 24 * 60 - horaLLegadaUltimoVuelo) + (double) camino.obtenerDuracionVuelo().toMinutes() <= ambienteGlob.getPlazoMaximoEntrega())
+//             )
+//             && !this.caminoNodos.contains(camino.getAeropuerto2())
+//             )
+//             )
+            //{
+            //                caminosHormiga.getCaminos().add(camino);
+            //                caminosHormiga.getCantidadFeromonasCamino().add(ambienteGlob.getCantidadFeromonasCamino().get(i));
+            //                caminosHormiga.getCostos().add(aqui se calcula recien el costo del camino que vamos a elegir);
+            //                caminosHormiga.getVisibilidad().add( aqui se calcula recien la visibilidad del camino que vamos a elegir );
+            //                posiblesCaminosIndices.add(i);
+            //            }
+
+
             if((origen.getId() == nodoAct.getId() && nodoAct.getId() == ambienteGlob.getNodoInicial().getId()) ||
                     (origen.getId() == nodoAct.getId() && destino.getId()!=nodoAnt.getId() )){
                 caminosHormiga.getCaminos().add(camino);
@@ -174,11 +196,6 @@ public class Ant {
     /******************************************************************************************************************/
     /******************************************************************************************************************/
 
-
-
-    /******************************************************************************************************************/
-    /******************************************************************************************************************/
-    /** Cambiar los tipos de datos*************************************************************************************/
     public void explorar()
     {
         Aeropuerto nodoActual = ambienteGlobal.getNodoInicial();
@@ -214,6 +231,4 @@ public class Ant {
             nodoActual = nuevoNodo;
         }
     }
-    /******************************************************************************************************************/
-    /******************************************************************************************************************/
 }

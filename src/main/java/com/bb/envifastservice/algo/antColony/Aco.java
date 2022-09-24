@@ -15,22 +15,12 @@ public class Aco {
     public double getSolucionCosto() {
         return solucionCosto;
     }
-
-    /******************************************************************************************************************/
-    /******************************************************************************************************************/
-    /** Cambiar los tipos de datos*/
     public ArrayList<ArcoAeropuerto> getSolucionCamino() {
         return solucionCamino;
     }
-    /******************************************************************************************************************/
-    /******************************************************************************************************************/
-
     public void activarHormigas(AntSide ambiente) {
-        /**Inicializar ambiente*
-
-        /**Datos en duro para la prueba (eliminar)*/
-
-        /**Definir cual va a ser el limite y cambiar tipos de datos*/
+        /*****************************************************************************************************************/
+        /**Definir cual va a ser el limite y la cantidad de hormigas*/
         for(int i=0; i<5;i++){
             // Inicializar hormiga 1
             Ant hormiga1 = new Ant(ambiente);
@@ -137,10 +127,23 @@ public class Aco {
         AntSide ambiente= new AntSide(aeropuertos,vuelos);
 
         // Agregamos los aeropuertos de origen y destino al ambiente (nodo inicial y nodo final)
-        ambiente.setNodoInicial(a1);
-        ambiente.setNodoFinal(a4);
+        //ambiente.setNodoInicial(a1);
+        //ambiente.setNodoFinal(a4);
+        ambiente.setNodoInicialFinal(a1,a4); //nuevo metodo que agrega los 2 y tambien setea el tipo de envio (mismo continente o diferente)
 
-        // Agregamos los tiempos entre los nodos (costos)
+        /**************************************************************************************************************/
+        /**************************************************************************************************************/
+        /**IGNORAR ESTO PORQUE LOS COSTOS AHORA VAN A SER VARIABLES*/
+        /** Se añaden los costos y visibilidad usando la funcion de obtenerDuracion de cada camino*/
+        //for(int j=0;j<ambiente.getCaminos().size();j++) {
+        //    ambiente.getCostos().add((double) ambiente.getCaminos().get(j).obtenerDuracionVuelo().toMinutes());
+        //    ambiente.getVisibilidad().add(1.00 / ambiente.getCostos().get(j));
+        //}
+        /**************************************************************************************************************/
+        /**************************************************************************************************************/
+
+        //Estos costos solo de prueba, los costos seran variables en cada salto porque tmbn se debe considerar el tiempo
+        //en el aeropuerto hasta el siguiente vuelo
         ambiente.getCostos().add(5.00);
         ambiente.getCostos().add(3.10);
         ambiente.getCostos().add(5.20);

@@ -22,8 +22,12 @@ public class AntSide {
     //public Aeropuerto nodoFinal;
 
     /******************************************************************************************************************/
+    /** Nuevos atributos para sacar maximo plazo de entrega*/
+    public int tipoEnvio; //1: mismo continente, 2: diferentes contientes
+    public double plazoMaximoEntrega;
     /******************************************************************************************************************/
-    /**Cambiar tipos de dato de caminos y nodos -> arcoAeropuerto y aeropuertos*/
+    /******************************************************************************************************************/
+
     public AntSide(){
         caminos = new ArrayList<ArcoAeropuerto>();
         //caminos = new ArrayList<ArcoAeropuerto>();
@@ -80,16 +84,21 @@ public class AntSide {
         }
         probabilidadDeSerEscogido = new ArrayList<Double>(numeroAristas);
         numeroVecesDeSerEscogigo = new ArrayList<Integer>(numeroAristas);
-        nodoInicial = nodoIni;
-        nodoFinal = nodoFin;
+
+        this.nodoInicial = nodoIni;
+        this.nodoFinal = nodoFin;
+        if(nodoInicial.getCiudad().getContinente().equals(nodoFinal.getCiudad().getContinente())) {
+            this.tipoEnvio = 1;
+            this.plazoMaximoEntrega= 1440.00; //1 dia en minutos
+        }
+        else {
+            this.tipoEnvio = 2;
+            this.plazoMaximoEntrega=2880.00; //2 dias en minutos
+        }
     }
     /******************************************************************************************************************/
     /*****************************************************************************************************************/
 
-
-    /******************************************************************************************************************/
-    /******************************************************************************************************************/
-    /**Estos getter y setter se deben cambiar de tipo de datos*/
     public Aeropuerto getNodoInicial() {
         return nodoInicial;
     }
@@ -114,6 +123,31 @@ public class AntSide {
     //public void setNodoFinal(Aeropuerto nodoFinal) {
     //        this.nodoFinal = nodoFinal;
     //    }
+
+    /*******************************************************************************************************************/
+    /*******************************************************************************************************************/
+    /**Se setea nodo inicial, final, tipo de envio y plazo maximo segun el tipo de envio*/
+    public void setNodoInicialFinal(Aeropuerto nodoInicial, Aeropuerto nodoFinal) {
+        this.nodoInicial = nodoInicial;
+        this.nodoFinal = nodoFinal;
+        if(nodoInicial.getCiudad().getContinente().equals(nodoFinal.getCiudad().getContinente())) {
+            this.tipoEnvio = 1;
+            this.plazoMaximoEntrega= 1440.00; //1 dia en minutos
+        }
+        else {
+            this.tipoEnvio = 2;
+            this.plazoMaximoEntrega=2880.00; //2 dias en minutos
+        }
+    }
+    public int getTipoEnvio() {
+        return tipoEnvio;
+    }
+    public double getPlazoMaximoEntrega() {
+        return plazoMaximoEntrega;
+    }
+    /*******************************************************************************************************************/
+    /*******************************************************************************************************************/
+
 
     public ArrayList<ArcoAeropuerto> getCaminos() {
         return caminos;
@@ -141,9 +175,6 @@ public class AntSide {
     //public void setNodos(ArrayList<Aeropuerto> nodos) {
     //        this.nodos = nodos;
     //    }
-    /******************************************************************************************************************/
-    /******************************************************************************************************************/
-
 
     public ArrayList<Double> getCostos() {
         return costos;
