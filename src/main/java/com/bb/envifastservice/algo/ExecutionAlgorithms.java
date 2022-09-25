@@ -22,7 +22,7 @@ public class ExecutionAlgorithms {
         lectorArcos.Leer("D:\\DOCUMENTOS\\FACI\\2022-2\\DP1\\c.inf226.22-2.planes_vuelo.v01.txt");
         arcos = lectorArcos.getArcos();
 
-        //Generar data de envios:
+        // Generar data de envios:
 //        GenerateTestData test = new GenerateTestData();
 //        test.GenerateData("D:\\DOCUMENTOS\\FACI\\2022-2\\DP1\\data.prueba.01.txt",aeropuertos,100,6);
 
@@ -32,6 +32,7 @@ public class ExecutionAlgorithms {
 //        for(Aeropuerto a: lectorEnviosCorto.getDestinos()){
 //            System.out.println(a.getCodigo());
 //        }
+
         Avion a = new Avion("EBC1EBCI000000001");
         ArrayList<Avion> aviones = new ArrayList<>();
         aviones.add(a);
@@ -51,16 +52,14 @@ public class ExecutionAlgorithms {
             /* Finalmente probamos el algoritmo */
             ArrayList<Aeropuerto> rutaConseguida;
 
-            long start1 = System.nanoTime();
+            long start1 = System.currentTimeMillis();
             rutaConseguida = aStarSearch.findPath();
-            long end1 = System.nanoTime();
-            System.out.println("Elapsed Time in mili seconds: "+ (end1-start1)/1000000);
+            long end1 = System.currentTimeMillis();
+            System.out.println("Elapsed Time in milli seconds: "+ (end1-start1));
 
             if(rutaConseguida != null){
                 System.out.println("Se encontro una solucion: ");
-                for (Aeropuerto avion
-                        :
-                        rutaConseguida) {
+                for (Aeropuerto avion : rutaConseguida) {
                     System.out.println(avion);
                 }
             }else{
