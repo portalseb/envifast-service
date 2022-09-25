@@ -17,12 +17,14 @@ public class Ant {
     private ArrayList<Integer> posiblesCaminosIndices; //Indices (en el arreglo caminos de Antside) de los caminos que puede recorrer la hormiga, no se cambia
     private ArrayList<Integer> caminoIndices; //Indices (en el arreglo caminos de Antside) de los caminos que recorre la hormiga, no se cambia
     private double costoTotal;//Costo del camino que siguio la hormiga, no se cambia
-    public double cntQ= 1000;//Aprendizaje
+    public double cntQ= 100;//Aprendizaje
     private AntSide ambienteGlobal=null;
     private ArrayList<Aeropuerto> caminoNodos; //Cambiar tipo de dato -> Aeropuerto
     private ArrayList<Double> caminoCostos; //Cambiar tipo de dato -> ArcoAeropuerto
 
     private ArrayList<Double> caminoProbabilidades;
+
+    private boolean encontroCamino;
 
     public Ant(AntSide ambienteHormiga)
     {
@@ -38,6 +40,7 @@ public class Ant {
         caminoIndices = new ArrayList<Integer>();
         costoTotal=0.0;
         this.caminoProbabilidades = new ArrayList<Double>(ambienteGlobal.getCostos().size());
+        this.encontroCamino = false;
     }
     public ArrayList<Aeropuerto> getCaminoNodos() {
         return caminoNodos;
@@ -81,6 +84,10 @@ public class Ant {
 
     public ArrayList<Double> getCaminoProbabilidades() {
         return caminoProbabilidades;
+    }
+
+    public boolean isEncontroCamino() {
+        return encontroCamino;
     }
 
     public ArrayList<Double> probabilidadElegirUnCamino(AntSide ambiente)//El ambiente que se pasa contiene los caminos posibles desde el nodo de la hormiga
@@ -139,7 +146,7 @@ public class Ant {
 
     /******************************************************************************************************************/
     /******************************************************************************************************************/
-    /** Cambiar los tipos de datos y poner los limites de tiempo ******************************************************/
+    /** Poner los limites de capacidad ******************************************************/
     public AntSide posiblesCaminos(AntSide ambienteGlob, ArrayList<Aeropuerto> nodos, ArrayList<Double> costos,
                                    Aeropuerto nodoAnt, Aeropuerto nodoAct){
         AntSide caminosHormiga = new AntSide();
@@ -148,16 +155,11 @@ public class Ant {
         Calendar now = Calendar.getInstance();
         posiblesCaminosIndices = new ArrayList<Integer>(); //0: 1, 1: 3
 
-        /******************************************************************************************************************/
-        /**Variables para guardar horas de llegada y salida de los vuelos*/
         double horaLLegadaUltimoVuelo = 0.0,horaSalidaSiguienteVuelo;
         if(nodoAct.getId() != ambienteGlob.getNodoInicial().getId())
             horaLLegadaUltimoVuelo = (double)ambienteGlob.getCaminos().get(caminoIndices.get(caminoIndices.size() - 1)).getHoraLlegada().getHour()*60 + ambienteGlob.getCaminos().get(caminoIndices.get(caminoIndices.size() - 1)).getHoraLlegada().getMinute();
         else
             horaLLegadaUltimoVuelo = (double) now.get(Calendar.HOUR_OF_DAY) + now.get(Calendar.MINUTE); //aqui poner la hora actual
-        /******************************************************************************************************************/
-        /******************************************************************************************************************/
-
 
         for(int i=0;i<ambienteGlob.getCaminos().size();i++){
             camino = ambienteGlob.getCaminos().get(i);
@@ -235,8 +237,6 @@ public class Ant {
 
             if(caminosHormiga.getCaminos().size()==0)
             {
-                //if (caminosHormigaAnteriores.get(caminosHormigaAnteriores.size()-1).getCaminos().size()==0) caminosHormigaAnteriores.remove(caminosHormigaAnteriores.size()-1);
-
                 //Retroceder hasta tener un ambiente en el que haya caminos posibles
                 while(caminosHormigaAnteriores.size()>0) {
                     k = caminosHormigaAnteriores.get(caminosHormigaAnteriores.size()-1).getCaminos().indexOf(this.ambienteGlobal.getCaminos().get(this.caminoIndices.get(this.caminoIndices.size()-1)));
@@ -270,60 +270,9 @@ public class Ant {
                     caminosHormigaAnteriores.remove(caminosHormigaAnteriores.size() - 1);
                     if(caminosHormigaAnteriores.size()==0){  sinCamino=1; System.out.println("No hay camino posible"); break;}
                 }
-
-
-//
-//                while(caminosHormigaAnteriores.get(caminosHormigaAnteriores.size()-1).getCaminos().size()==0){
-//                    caminosHormigaAnteriores.remove(caminosHormigaAnteriores.size()-1);
-//                    this.caminoIndices.remove(this.caminoIndices.size()-1);
-//                    this.costoTotal= this.costoTotal - this.caminoCostos.get(this.caminoCostos.size()-1);
-//                    this.caminoCostos.remove(this.caminoCostos.size()-1);
-//                    this.caminoNodos.remove(this.caminoNodos.size()-1);
-//                    if(this.caminoNodos.size()>1) {
-//                        nodoActual = this.caminoNodos.get(this.caminoNodos.size() - 1);
-//                        nodoAnt = this.caminoNodos.get(this.caminoNodos.size() - 2);
-//                    }
-//                    if(this.caminoNodos.size()==1){
-//                        nodoActual = this.caminoNodos.get(this.caminoNodos.size() - 1);
-//                        nodoAnt = new Aeropuerto();
-//                    }
-//
-//
-//
-//                    // actualizas this.caminoNodos, this.caminoCostos, this.costoTotal, this.caminoIndices
-//                    if(caminosHormigaAnteriores.size()==0) break;
-//                }
-//
-//                if(caminosHormigaAnteriores.size()==0){  System.out.println("No hay camino posible"); break;}
-//
-//                caminosHormiga=caminosHormigaAnteriores.get(caminosHormigaAnteriores.size()-1);
-//                caminosHormigaAnteriores.remove(caminosHormigaAnteriores.size()-1);
-//                //al caminosHormiga y posiblesCaminosIndices le quitas el ultimo camino de: this.caminoIndices....
-//                //caminosHormiga.getCaminos()... remove
-//                k = caminosHormiga.getCaminos().indexOf(this.ambienteGlobal.getCaminos().get(this.caminoIndices.get(this.caminoIndices.size()-1)));
-//                caminosHormiga.getCaminos().remove(k);
-//                caminosHormiga.getVisibilidad().remove(k);
-//                caminosHormiga.getCostos().remove(k);
-//                caminosHormiga.getCantidadFeromonasCamino().remove(k);
-//                caminosHormiga.getPosiblesCaminosIndices().remove(k);
-//
-//                // actualizas this.caminoNodos, this.caminoCostos, this.costoTotal, this.caminoIndices
-//                this.caminoIndices.remove(this.caminoIndices.size()-1);
-//                this.costoTotal= this.costoTotal - this.caminoCostos.get(this.caminoCostos.size()-1);
-//                this.caminoCostos.remove(this.caminoCostos.size()-1);
-//                this.caminoNodos.remove(this.caminoNodos.size()-1);
-//                if(this.caminoNodos.size()>1) {
-//                    nodoActual = this.caminoNodos.get(this.caminoNodos.size() - 1);
-//                    nodoAnt = this.caminoNodos.get(this.caminoNodos.size() - 2);
-//                }
-//                if(this.caminoNodos.size()==1){
-//                    nodoActual = this.caminoNodos.get(this.caminoNodos.size() - 1);
-//                    nodoAnt = new Aeropuerto();
-//                }
-
             }
 
-            if(sinCamino==1) return;
+            if(sinCamino==1){this.encontroCamino=false; return;}
 
             // Se genera y se usa la recta de probabilidades para sacar el nuevo nodo
             pos = nodoSiguiente(probabilidadElegirUnCamino(caminosHormiga));
@@ -348,5 +297,6 @@ public class Ant {
 
             caminosHormigaAnteriores.add(caminosHormiga);
         }
+        this.encontroCamino = true;
     }
 }
