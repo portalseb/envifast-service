@@ -101,9 +101,9 @@ public class ExecutionAlgorithms {
 //            throw new RuntimeException(e);
 //        }
 //        for (int i = 0 ; i < lectorEnviosCorto.getDestinos().size(); i++){
-//            long start1 = System.nanoTime();
-////            rutaConseguida = aStarSearch.findPath();
-//            long end1 = System.nanoTime();
+//            double start1 = System.nanoTime();
+////          rutaConseguida = aStarSearch.findPath();
+//            double end1 = System.nanoTime();
 //            System.out.println("Elapsed Time in milli seconds: "+ (end1-start1));
 //
 //            diferencia = end1 - start1;
