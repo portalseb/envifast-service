@@ -34,8 +34,9 @@ public class AStartTest {
         AStarSearch aStarSearch = new AStarSearch(grafo);
 
         /* Nuestro nodo inicial sera SKBO(Bogota) y tiene que viajar a LKPR(Praga)*/
-        aStarSearch.setInitialNode(aeropuertos.get(9));
-        aStarSearch.setFinalNode(aeropuertos.get(38));
+        /* Un caso que funcionaba es nodo inicial 9 y 38*/
+        aStarSearch.setInitialNode(aeropuertos.get(0));
+        aStarSearch.setFinalNode(aeropuertos.get(1));
 
         // TAMBIEN HAY QUE VER COMO PROBAR LA HEURISTICA
 

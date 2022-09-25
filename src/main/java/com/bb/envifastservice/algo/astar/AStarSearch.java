@@ -17,6 +17,12 @@ public class AStarSearch {
     private Aeropuerto initialNode;
     private Aeropuerto finalNode;
     private TablaTiempos graph;
+
+    private double plazoMaximoEntrega;
+
+    private double costoTotal;
+
+    private int tipoEnvio;
     // tendremos que usar si o si este constructor
     public AStarSearch(TablaTiempos graph){
         this.graph = graph;
@@ -27,7 +33,18 @@ public class AStarSearch {
 
     }
 
+    private void calcularPlazoMaximo(){
+        this.costoTotal = 0; // inicializamos el contador
+        if(this.initialNode.getCiudad().getContinente().equals(this.finalNode.getCiudad().getContinente())){
+            this.tipoEnvio = 1; // vuelo en el mismo continente
+            this.plazoMaximoEntrega = 1440.0; // medio dia en minutos
+        }else{
+            this.tipoEnvio = 1; // vuelo diferente continente
+            this.plazoMaximoEntrega = 1440.0 * 2; // medio dia en minutos
+        }
+    }
     public ArrayList<Aeropuerto> findPath(){
+        calcularPlazoMaximo(); // calculamos el plazo maximo
         openList.add(this.initialNode);// inicializamos la lista de nodos abiertos
         while(!openList.isEmpty()){
             Aeropuerto currentNode = openList.poll();
@@ -105,14 +122,18 @@ public class AStarSearch {
         System.out.println("El costo es: " + costo);
         System.out.println("El aeropuerto adyacente es: " + adjacentNode.getCodigo());
         if(!this.closedList.contains(adjacentNode)){
-            if(!this.openList.contains(adjacentNode)){
+            if(!this.openList.contains(adjacentNode) && this.costoTotal + costo <= this.plazoMaximoEntrega ){
                 adjacentNode.setNodeData(currentNode, costo);
                 this.openList.add(adjacentNode);
+                this.costoTotal += costo;
+                System.out.println("El costo total en el if es: " + this.costoTotal);
             }else{
                 boolean changed = adjacentNode.checkBetterPath(currentNode, costo);
                 if(changed){
+                    this.costoTotal += costo;
                     // removemos y agregamos el nodo adyacente, para que la cola de prioridad
                     // para que pueda ordenar de nuevo sus contenidos con el valor modificado de finalCost.
+                    System.out.println("El costo total en el else es: " + this.costoTotal);
                     this.openList.remove(adjacentNode);
                     this.openList.add(adjacentNode);
                 }
@@ -137,5 +158,21 @@ public class AStarSearch {
 
     public void setGraph(TablaTiempos graph) {
         this.graph = graph;
+    }
+
+    public double getPlazoMaximoEntrega() {
+        return plazoMaximoEntrega;
+    }
+
+    public int getTipoEnvio() {
+        return tipoEnvio;
+    }
+
+    public void setPlazoMaximoEntrega(double plazoMaximoEntrega) {
+        this.plazoMaximoEntrega = plazoMaximoEntrega;
+    }
+
+    public void setTipoEnvio(int tipoEnvio) {
+        this.tipoEnvio = tipoEnvio;
     }
 }
