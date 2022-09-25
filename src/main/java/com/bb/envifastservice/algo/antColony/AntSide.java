@@ -3,11 +3,13 @@ package com.bb.envifastservice.algo.antColony;
 import com.bb.envifastservice.algo.Aeropuerto;
 import com.bb.envifastservice.algo.ArcoAeropuerto;
 
+import javax.persistence.criteria.CriteriaBuilder;
 import java.util.ArrayList;
 
 public class AntSide {
     public ArrayList<ArcoAeropuerto> caminos;//0: 1-2, 1:1-3, 2: 3-4, 3: 3-5, se debe cambiar
     //public ArrayList <ArcoAeropuerto> caminos;
+    public ArrayList<Integer> posiblesCaminosIndices;
     public ArrayList<Aeropuerto> nodos;//aeropuertos, se debe cambiar
     // public ArrayList <Aeropuerto> nodos;
     public ArrayList<Double> costos;//costos (duracion de vuelos), no se cambia
@@ -22,8 +24,12 @@ public class AntSide {
     //public Aeropuerto nodoFinal;
 
     /******************************************************************************************************************/
+    /** Nuevos atributos para sacar maximo plazo de entrega*/
+    public int tipoEnvio; //1: mismo continente, 2: diferentes contientes
+    public double plazoMaximoEntrega;
     /******************************************************************************************************************/
-    /**Cambiar tipos de dato de caminos y nodos -> arcoAeropuerto y aeropuertos*/
+    /******************************************************************************************************************/
+
     public AntSide(){
         caminos = new ArrayList<ArcoAeropuerto>();
         //caminos = new ArrayList<ArcoAeropuerto>();
@@ -34,6 +40,20 @@ public class AntSide {
         cantidadFeromonasCamino = new ArrayList<Double>();
         probabilidadDeSerEscogido = new ArrayList<Double>();
         numeroVecesDeSerEscogigo = new ArrayList<Integer>();
+        posiblesCaminosIndices = new ArrayList<Integer>();
+    }
+
+    public AntSide(ArrayList<Aeropuerto> aeropuertos, ArrayList<ArcoAeropuerto> vuelos){
+        caminos = new ArrayList<ArcoAeropuerto>(vuelos);
+        nodos = new ArrayList<Aeropuerto>(aeropuertos);
+        costos = new ArrayList<Double>(vuelos.size());
+        visibilidad = new ArrayList<Double>(vuelos.size());
+        cantidadFeromonasCamino = new ArrayList<Double>();
+        for(int i=0;i<vuelos.size();i++)
+            cantidadFeromonasCamino.add(0.1);
+        probabilidadDeSerEscogido = new ArrayList<Double>(vuelos.size());
+        numeroVecesDeSerEscogigo = new ArrayList<Integer>(vuelos.size());
+        posiblesCaminosIndices = new ArrayList<Integer>();
     }
 
     public AntSide(int numeroAristas, int numeroNodos) {
@@ -49,11 +69,8 @@ public class AntSide {
         }
         probabilidadDeSerEscogido = new ArrayList<Double>(numeroAristas);
         numeroVecesDeSerEscogigo = new ArrayList<Integer>(numeroAristas);
+        posiblesCaminosIndices = new ArrayList<Integer>();
     }
-    /******************************************************************************************************************/
-    /******************************************************************************************************************/
-
-
 
     /******************************************************************************************************************/
     /******************************************************************************************************************/
@@ -72,16 +89,22 @@ public class AntSide {
         }
         probabilidadDeSerEscogido = new ArrayList<Double>(numeroAristas);
         numeroVecesDeSerEscogigo = new ArrayList<Integer>(numeroAristas);
-        nodoInicial = nodoIni;
-        nodoFinal = nodoFin;
+
+        this.nodoInicial = nodoIni;
+        this.nodoFinal = nodoFin;
+        if(nodoInicial.getCiudad().getContinente().equals(nodoFinal.getCiudad().getContinente())) {
+            this.tipoEnvio = 1;
+            this.plazoMaximoEntrega= 1440.00; //1 dia en minutos
+        }
+        else {
+            this.tipoEnvio = 2;
+            this.plazoMaximoEntrega=2880.00; //2 dias en minutos
+        }
+        posiblesCaminosIndices = new ArrayList<Integer>();
     }
     /******************************************************************************************************************/
     /*****************************************************************************************************************/
 
-
-    /******************************************************************************************************************/
-    /******************************************************************************************************************/
-    /**Estos getter y setter se deben cambiar de tipo de datos*/
     public Aeropuerto getNodoInicial() {
         return nodoInicial;
     }
@@ -107,35 +130,54 @@ public class AntSide {
     //        this.nodoFinal = nodoFinal;
     //    }
 
+    /*******************************************************************************************************************/
+    /*******************************************************************************************************************/
+    /**Se setea nodo inicial, final, tipo de envio y plazo maximo segun el tipo de envio*/
+    public void setNodoInicialFinal(Aeropuerto nodoInicial, Aeropuerto nodoFinal) {
+        this.nodoInicial = nodoInicial;
+        this.nodoFinal = nodoFinal;
+        if(nodoInicial.getCiudad().getContinente().equals(nodoFinal.getCiudad().getContinente())) {
+            this.tipoEnvio = 1;
+            this.plazoMaximoEntrega= 1440.00; //1 dia en minutos
+        }
+        else {
+            this.tipoEnvio = 2;
+            this.plazoMaximoEntrega=2880.00; //2 dias en minutos
+        }
+    }
+    public int getTipoEnvio() {
+        return tipoEnvio;
+    }
+    public double getPlazoMaximoEntrega() {
+        return plazoMaximoEntrega;
+    }
+    /*******************************************************************************************************************/
+    public ArrayList<Integer> getPosiblesCaminosIndices() {
+        return posiblesCaminosIndices;
+    }
+
+    public void setPosiblesCaminosIndices(ArrayList<Integer> posiblesCaminosIndices) {
+        this.posiblesCaminosIndices = posiblesCaminosIndices;
+    }
+
+    /*******************************************************************************************************************/
+
+
     public ArrayList<ArcoAeropuerto> getCaminos() {
         return caminos;
     }
-    //public ArrayList<ArcoAeropuerto> getCaminos() {
-    //        return caminos;
-    //    }
+
     public void setCaminos(ArrayList<ArcoAeropuerto> caminos) {
         this.caminos = caminos;
     }
-    //public void setCaminos(ArrayList<ArcoAeropuerto> caminos) {
-    //        this.caminos = caminos;
-    //    }
 
     public ArrayList<Aeropuerto> getNodos() {
         return nodos;
     }
-    //public ArrayList<Aeropuerto> getNodos() {
-    //        return nodos;
-    //    }
 
     public void setNodos(ArrayList<Aeropuerto> nodos) {
         this.nodos = nodos;
     }
-    //public void setNodos(ArrayList<Aeropuerto> nodos) {
-    //        this.nodos = nodos;
-    //    }
-    /******************************************************************************************************************/
-    /******************************************************************************************************************/
-
 
     public ArrayList<Double> getCostos() {
         return costos;
@@ -182,15 +224,18 @@ public class AntSide {
         while (i < getCantidadFeromonasCamino().size()) {
             if(hormiga1.getCaminoIndices().contains(i) && hormiga2.getCaminoIndices().contains(i))
                 this.cantidadFeromonasCamino.set(i,(1 - coeficienteEvaporacion) * getCantidadFeromonasCamino().get(i) +
-                        hormiga1.getCntQ()/hormiga1.getCaminoCostos().get(hormiga1.getCaminoIndices().indexOf(i)) +
-                        hormiga2.getCntQ()/hormiga2.getCaminoCostos().get(hormiga2.getCaminoIndices().indexOf(i)));
+                        hormiga1.getCntQ()/hormiga1.getCostoTotal() + //.getCaminoCostos().get(hormiga1.getCaminoIndices().indexOf(i)) +
+                        hormiga2.getCntQ()/hormiga2.getCostoTotal()); //.getCaminoCostos().get(hormiga2.getCaminoIndices().indexOf(i)));
             else if (hormiga1.getCaminoIndices().contains(i)) {
                 this.cantidadFeromonasCamino.set(i,(1 - coeficienteEvaporacion) * getCantidadFeromonasCamino().get(i) +
-                        hormiga1.getCntQ()/hormiga1.getCaminoCostos().get(hormiga1.getCaminoIndices().indexOf(i)));
+                        hormiga1.getCntQ()/hormiga1.getCostoTotal());//.getCaminoCostos().get(hormiga1.getCaminoIndices().indexOf(i)));
             }
             else if (hormiga2.getCaminoIndices().contains(i)) {
                 this.cantidadFeromonasCamino.set(i,(1 - coeficienteEvaporacion) * getCantidadFeromonasCamino().get(i) +
-                        hormiga2.getCntQ()/hormiga2.getCaminoCostos().get(hormiga2.getCaminoIndices().indexOf(i)));
+                        hormiga2.getCntQ()/hormiga2.getCostoTotal());//.getCaminoCostos().get(hormiga2.getCaminoIndices().indexOf(i)));
+            }
+            else{
+                this.cantidadFeromonasCamino.set(i,(1 - coeficienteEvaporacion) * getCantidadFeromonasCamino().get(i));
             }
             i++;
         }
