@@ -80,11 +80,11 @@ public class Aco {
 
         /* Leemos los aeropuertos y los planes de vuelo */
         LectorAeropuertos lectorAeropuertos = new LectorAeropuertos();
-        lectorAeropuertos.Leer("D:\\Documentos\\Cursos\\Noveno ciclo\\DP1\\Algoritmos\\Datos_entrada\\c.inf226.22-2.lista.aeropuertos.v01.txt");
+        lectorAeropuertos.Leer("C:\\Users\\Fernando\\Desktop\\fernando\\Archivos Pucp\\ciclo 9\\dp1\\algoritmos\\c.inf226.22-2.lista.aeropuertos.v01.txt");
         aeropuertos = lectorAeropuertos.getAeropuertos();
 
         LectorArcoAeropuerto lectorArcos = new LectorArcoAeropuerto(aeropuertos);
-        lectorArcos.Leer("D:\\Documentos\\Cursos\\Noveno ciclo\\DP1\\Algoritmos\\Datos_entrada\\c.inf226.22-2.planes_vuelo.v01.txt");
+        lectorArcos.Leer("C:\\Users\\Fernando\\Desktop\\fernando\\Archivos Pucp\\ciclo 9\\dp1\\algoritmos\\c.inf226.22-2.planes_vuelo.v01.txt");
         arcos = lectorArcos.getArcos();
 
         // Creamos los aeropuertos
@@ -146,8 +146,8 @@ public class Aco {
         //ambiente.setNodoFinal(a4);
 //        ambiente.setNodoInicialFinal(a1,a4); //nuevo metodo que agrega los 2 y tambien setea el tipo de envio (mismo continente o diferente)
 
-        // Fijamos los aeropuertos de origen y destino (Ej: 0: Bogotá - 6: Santiago de Chile
-//        ambiente.setNodoInicialFinal(aeropuertos.get(0),aeropuertos.get(6));
+        // Fijamos los aeropuertos de origen y destino (Ej: 0: Bogotá - 6: Lima
+        ambiente.setNodoInicialFinal(aeropuertos.get(2),aeropuertos.get(11));
 
         /**************************************************************************************************************/
         /**************************************************************************************************************/

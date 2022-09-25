@@ -3,11 +3,13 @@ package com.bb.envifastservice.algo.antColony;
 import com.bb.envifastservice.algo.Aeropuerto;
 import com.bb.envifastservice.algo.ArcoAeropuerto;
 
+import javax.persistence.criteria.CriteriaBuilder;
 import java.util.ArrayList;
 
 public class AntSide {
     public ArrayList<ArcoAeropuerto> caminos;//0: 1-2, 1:1-3, 2: 3-4, 3: 3-5, se debe cambiar
     //public ArrayList <ArcoAeropuerto> caminos;
+    public ArrayList<Integer> posiblesCaminosIndices;
     public ArrayList<Aeropuerto> nodos;//aeropuertos, se debe cambiar
     // public ArrayList <Aeropuerto> nodos;
     public ArrayList<Double> costos;//costos (duracion de vuelos), no se cambia
@@ -38,6 +40,7 @@ public class AntSide {
         cantidadFeromonasCamino = new ArrayList<Double>();
         probabilidadDeSerEscogido = new ArrayList<Double>();
         numeroVecesDeSerEscogigo = new ArrayList<Integer>();
+        posiblesCaminosIndices = new ArrayList<Integer>();
     }
 
     public AntSide(ArrayList<Aeropuerto> aeropuertos, ArrayList<ArcoAeropuerto> vuelos){
@@ -50,6 +53,7 @@ public class AntSide {
             cantidadFeromonasCamino.add(0.1);
         probabilidadDeSerEscogido = new ArrayList<Double>(vuelos.size());
         numeroVecesDeSerEscogigo = new ArrayList<Integer>(vuelos.size());
+        posiblesCaminosIndices = new ArrayList<Integer>();
     }
 
     public AntSide(int numeroAristas, int numeroNodos) {
@@ -65,6 +69,7 @@ public class AntSide {
         }
         probabilidadDeSerEscogido = new ArrayList<Double>(numeroAristas);
         numeroVecesDeSerEscogigo = new ArrayList<Integer>(numeroAristas);
+        posiblesCaminosIndices = new ArrayList<Integer>();
     }
 
     /******************************************************************************************************************/
@@ -95,6 +100,7 @@ public class AntSide {
             this.tipoEnvio = 2;
             this.plazoMaximoEntrega=2880.00; //2 dias en minutos
         }
+        posiblesCaminosIndices = new ArrayList<Integer>();
     }
     /******************************************************************************************************************/
     /*****************************************************************************************************************/
@@ -146,6 +152,14 @@ public class AntSide {
         return plazoMaximoEntrega;
     }
     /*******************************************************************************************************************/
+    public ArrayList<Integer> getPosiblesCaminosIndices() {
+        return posiblesCaminosIndices;
+    }
+
+    public void setPosiblesCaminosIndices(ArrayList<Integer> posiblesCaminosIndices) {
+        this.posiblesCaminosIndices = posiblesCaminosIndices;
+    }
+
     /*******************************************************************************************************************/
 
 
