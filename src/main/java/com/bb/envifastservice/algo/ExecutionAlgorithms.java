@@ -25,10 +25,10 @@ public class ExecutionAlgorithms {
 
         // Generar data de envios:
 //        GenerateTestData test = new GenerateTestData();
-//        test.GenerateData("D:\\Documentos\\Cursos\\Noveno ciclo\\DP1\\Algoritmos\\Datos_entrada\\data.prueba.01.txt",aeropuertos,100,6);
+//        test.GenerateData("D:\\Documentos\\Cursos\\Noveno ciclo\\DP1\\Algoritmos\\Datos_entrada\\data.prueba.1000.txt",aeropuertos,1000,6);
 
         LectorEnviosCorto lectorEnviosCorto = new LectorEnviosCorto(aeropuertos);
-        lectorEnviosCorto.Leer("D:\\Documentos\\Cursos\\Noveno ciclo\\DP1\\Algoritmos\\Datos_entrada\\data.prueba.01.txt");
+        lectorEnviosCorto.Leer("D:\\Documentos\\Cursos\\Noveno ciclo\\DP1\\Algoritmos\\Datos_entrada\\data.prueba.1000.txt");
 
 //        for(Aeropuerto a: lectorEnviosCorto.getDestinos()){
 //            System.out.println(a.getCodigo());
@@ -40,14 +40,14 @@ public class ExecutionAlgorithms {
         TablaTiempos grafo = new TablaTiempos(arcos, aeropuertos, aviones);
 
         // Creamos el archivo para obtener los datos de ejecucion de A*
-        String resultado, resultadosAStar = "D:\\Documentos\\Cursos\\Noveno ciclo\\DP1\\Algoritmos\\Datos_entrada\\Resultados.AStar.txt";
+        String resultado, resultadosAStar = "D:\\Documentos\\Cursos\\Noveno ciclo\\DP1\\Algoritmos\\Datos_entrada\\Resultados.AStar.1000.txt";
         FileWriter fw = null;
         try {
             fw = new FileWriter(resultadosAStar);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        long diferencia;
+        double diferencia;
         for(int i=0; i<lectorEnviosCorto.getDestinos().size(); i++){
             /* Llenamos los atributos de la clase grafo */
             grafo.calcularHeuristica(lectorEnviosCorto.getDestinos().get(i)); // calculamos la heuristica segun el nodo final Praga
@@ -62,12 +62,15 @@ public class ExecutionAlgorithms {
             /* Finalmente probamos el algoritmo */
             ArrayList<Aeropuerto> rutaConseguida;
 
-            long start1 = System.currentTimeMillis();
+            double start1 = System.nanoTime();
             rutaConseguida = aStarSearch.findPath();
-            long end1 = System.currentTimeMillis();
+            double end1 = System.nanoTime();
+
+
             System.out.println("Elapsed Time in milli seconds: "+ (end1-start1));
 
             diferencia = end1 - start1;
+            diferencia = diferencia / 1000;
             resultado = String.valueOf(diferencia);
             System.out.println(resultado);
             try {
@@ -89,32 +92,33 @@ public class ExecutionAlgorithms {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        // Creamos el archivo para guardar los resultados de Colonia de hormigas
-        String resultadosACO = "D:\\Documentos\\Cursos\\Noveno ciclo\\DP1\\Algoritmos\\Datos_entrada\\Resultados.ACO.txt";
-        FileWriter fw2 = null;
-        try {
-            fw2 = new FileWriter(resultadosACO);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        for (int i = 0 ; i < lectorEnviosCorto.getDestinos().size(); i++){
-            long start1 = System.currentTimeMillis();
-//            rutaConseguida = aStarSearch.findPath();
-            long end1 = System.currentTimeMillis();
-            System.out.println("Elapsed Time in milli seconds: "+ (end1-start1));
-
-            diferencia = end1 - start1;
-            resultado = String.valueOf(diferencia);
-            try {
-                fw2.write(resultado + "\n");
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        }
-        try {
-            fw2.close();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+//        // Creamos el archivo para guardar los resultados de Colonia de hormigas
+//        String resultadosACO = "D:\\Documentos\\Cursos\\Noveno ciclo\\DP1\\Algoritmos\\Datos_entrada\\Resultados.ACO.txt";
+//        FileWriter fw2 = null;
+//        try {
+//            fw2 = new FileWriter(resultadosACO);
+//        } catch (IOException e) {
+//            throw new RuntimeException(e);
+//        }
+//        for (int i = 0 ; i < lectorEnviosCorto.getDestinos().size(); i++){
+//            long start1 = System.nanoTime();
+////            rutaConseguida = aStarSearch.findPath();
+//            long end1 = System.nanoTime();
+//            System.out.println("Elapsed Time in milli seconds: "+ (end1-start1));
+//
+//            diferencia = end1 - start1;
+//            diferencia = diferencia / 1000;
+//            resultado = String.valueOf(diferencia);
+//            try {
+//                fw2.write(resultado + "\n");
+//            } catch (IOException e) {
+//                throw new RuntimeException(e);
+//            }
+//        }
+//        try {
+//            fw2.close();
+//        } catch (IOException e) {
+//            throw new RuntimeException(e);
+//        }
     }
 }
