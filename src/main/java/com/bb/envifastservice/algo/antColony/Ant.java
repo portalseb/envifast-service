@@ -5,6 +5,7 @@ import com.bb.envifastservice.algo.ArcoAeropuerto;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Random;
 
 public class Ant {
@@ -16,11 +17,12 @@ public class Ant {
     private ArrayList<Integer> posiblesCaminosIndices; //Indices (en el arreglo caminos de Antside) de los caminos que puede recorrer la hormiga, no se cambia
     private ArrayList<Integer> caminoIndices; //Indices (en el arreglo caminos de Antside) de los caminos que recorre la hormiga, no se cambia
     private double costoTotal;//Costo del camino que siguio la hormiga, no se cambia
-    public double cntQ= 1;//Aprendizaje
+    public double cntQ= 1000;//Aprendizaje
     private AntSide ambienteGlobal=null;
     private ArrayList<Aeropuerto> caminoNodos; //Cambiar tipo de dato -> Aeropuerto
     private ArrayList<Double> caminoCostos; //Cambiar tipo de dato -> ArcoAeropuerto
 
+    private ArrayList<Double> caminoProbabilidades;
 
     public Ant(AntSide ambienteHormiga)
     {
@@ -35,6 +37,7 @@ public class Ant {
         posiblesCaminosIndices = new ArrayList<Integer>();
         caminoIndices = new ArrayList<Integer>();
         costoTotal=0.0;
+        this.caminoProbabilidades = new ArrayList<Double>(ambienteGlobal.getCostos().size());
     }
     public ArrayList<Aeropuerto> getCaminoNodos() {
         return caminoNodos;
@@ -73,6 +76,11 @@ public class Ant {
 
     public double getCostoTotal(){
         return this.costoTotal;
+    }
+
+
+    public ArrayList<Double> getCaminoProbabilidades() {
+        return caminoProbabilidades;
     }
 
     public ArrayList<Double> probabilidadElegirUnCamino(AntSide ambiente)//El ambiente que se pasa contiene los caminos posibles desde el nodo de la hormiga
@@ -137,6 +145,7 @@ public class Ant {
         AntSide caminosHormiga = new AntSide();
         ArcoAeropuerto camino;
         Aeropuerto origen, destino;
+        Calendar now = Calendar.getInstance();
         posiblesCaminosIndices = new ArrayList<Integer>(); //0: 1, 1: 3
 
         /******************************************************************************************************************/
@@ -145,7 +154,7 @@ public class Ant {
         if(nodoAct.getId() != ambienteGlob.getNodoInicial().getId())
             horaLLegadaUltimoVuelo = (double)ambienteGlob.getCaminos().get(caminoIndices.get(caminoIndices.size() - 1)).getHoraLlegada().getHour()*60 + ambienteGlob.getCaminos().get(caminoIndices.get(caminoIndices.size() - 1)).getHoraLlegada().getMinute();
         else
-            horaLLegadaUltimoVuelo = 780.0; //aqui poner la hora actual, 780 -> 13:00
+            horaLLegadaUltimoVuelo = (double) now.get(Calendar.HOUR_OF_DAY) + now.get(Calendar.MINUTE); //aqui poner la hora actual
         /******************************************************************************************************************/
         /******************************************************************************************************************/
 
@@ -250,6 +259,7 @@ public class Ant {
                         nodoActual = this.caminoNodos.get(this.caminoNodos.size() - 1);
                         nodoAnt = new Aeropuerto();
                     }
+                    this.caminoProbabilidades.remove(this.caminoProbabilidades.size()-1);
 
                     if (caminosHormigaAnteriores.get(caminosHormigaAnteriores.size() - 1).getCaminos().size() > 0) {
                         //todavia hay caminos posibles
@@ -324,6 +334,8 @@ public class Ant {
             this.caminoNodos.add(nuevoNodo);
             this.caminoCostos.add(caminosHormiga.getCostos().get(pos));
             this.costoTotal = this.costoTotal + caminosHormiga.getCostos().get(pos);
+
+            this.caminoProbabilidades.add(probabilidadDeCaminoEntreSumatoria.get(pos));
 
             //Arreglo que sirve para guardar los indices de los caminos del arreglo del ambiente global
             this.caminoIndices.add(caminosHormiga.getPosiblesCaminosIndices().get(pos));

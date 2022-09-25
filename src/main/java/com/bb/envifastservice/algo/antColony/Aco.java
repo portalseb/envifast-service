@@ -24,7 +24,9 @@ public class Aco {
     public void activarHormigas(AntSide ambiente) {
         /*****************************************************************************************************************/
         /**Definir cual va a ser el limite y la cantidad de hormigas*/
-        for(int i=0; i<5;i++){
+        int contProb1=0, contProb2=0;
+        //for(int i=0; i<1000;i++){
+        while(true){
             // Inicializar hormiga 1
             Ant hormiga1 = new Ant(ambiente);
             hormiga1.explorar();
@@ -33,16 +35,23 @@ public class Aco {
             Ant hormiga2 = new Ant(ambiente);
             hormiga2.explorar();
 
-            // Actualizar rastro de feromonas
-            ambiente.actualizarFeromonasEnElCamino(hormiga1, hormiga2);
 
             // Impresion para verificar el camino de las hormigas, se deberia guardar el mejor camino en el ambiente tambien
             System.out.println("Camino de hormiga 1");
             System.out.println(hormiga1.getCaminoNodos().toString());
-            System.out.println(hormiga1.getCostoTotal());
+//            System.out.println(hormiga1.getCostoTotal());
+
+            System.out.println(hormiga1.getCaminoProbabilidades().toString());
+
             System.out.println("Camino de hormiga 2");
             System.out.println(hormiga2.getCaminoNodos().toString());
-            System.out.println(hormiga2.getCostoTotal());
+//            System.out.println(hormiga2.getCostoTotal());
+
+            System.out.println(hormiga2.getCaminoProbabilidades().toString());
+
+            // Actualizar rastro de feromonas
+            ambiente.actualizarFeromonasEnElCamino(hormiga1, hormiga2);
+
 
             if(solucionCosto> hormiga1.getCostoTotal() || solucionCosto>hormiga2.getCostoTotal()){
                 if(hormiga1.getCostoTotal()<hormiga2.getCostoTotal()){
@@ -62,6 +71,21 @@ public class Aco {
                     solucionCosto= hormiga2.getCostoTotal();
                 }
             }
+            contProb1=0;
+            for(int p=0;p<hormiga1.getCaminoProbabilidades().size();p++)
+                if(hormiga1.getCaminoProbabilidades().get(p)>=0.9)
+                    contProb1++;
+            contProb2=0;
+            for(int p=0;p<hormiga2.getCaminoProbabilidades().size();p++)
+                if(hormiga2.getCaminoProbabilidades().get(p)>=0.9)
+                    contProb2++;
+            if(contProb1== hormiga1.getCaminoProbabilidades().size() || contProb2 == hormiga2.getCaminoProbabilidades().size()){
+                System.out.println("Se llego al limite");
+                break;
+            }
+
+
+
         /*****************************************************************************************************************/
         /*****************************************************************************************************************/
 
@@ -147,7 +171,7 @@ public class Aco {
 //        ambiente.setNodoInicialFinal(a1,a4); //nuevo metodo que agrega los 2 y tambien setea el tipo de envio (mismo continente o diferente)
 
         // Fijamos los aeropuertos de origen y destino (Ej: 0: Bogotá - 6: Lima
-        ambiente.setNodoInicialFinal(aeropuertos.get(2),aeropuertos.get(11));
+        ambiente.setNodoInicialFinal(aeropuertos.get(0),aeropuertos.get(11));
 
         /**************************************************************************************************************/
         /**************************************************************************************************************/
@@ -190,7 +214,8 @@ public class Aco {
         // Creamos la solución
         Aco algoritmoHormigas = new Aco();
         algoritmoHormigas.activarHormigas(ambiente);
-        System.out.println("Camino: " + algoritmoHormigas.getSolucionCamino().toString());
+
+        System.out.println("Camino: " + algoritmoHormigas.getSolucionCamino().toString() + algoritmoHormigas.getSolucionCosto());
     }
 }
 

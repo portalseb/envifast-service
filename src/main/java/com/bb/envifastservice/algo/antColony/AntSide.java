@@ -224,15 +224,18 @@ public class AntSide {
         while (i < getCantidadFeromonasCamino().size()) {
             if(hormiga1.getCaminoIndices().contains(i) && hormiga2.getCaminoIndices().contains(i))
                 this.cantidadFeromonasCamino.set(i,(1 - coeficienteEvaporacion) * getCantidadFeromonasCamino().get(i) +
-                        hormiga1.getCntQ()/hormiga1.getCaminoCostos().get(hormiga1.getCaminoIndices().indexOf(i)) +
-                        hormiga2.getCntQ()/hormiga2.getCaminoCostos().get(hormiga2.getCaminoIndices().indexOf(i)));
+                        hormiga1.getCntQ()/hormiga1.getCostoTotal() + //.getCaminoCostos().get(hormiga1.getCaminoIndices().indexOf(i)) +
+                        hormiga2.getCntQ()/hormiga2.getCostoTotal()); //.getCaminoCostos().get(hormiga2.getCaminoIndices().indexOf(i)));
             else if (hormiga1.getCaminoIndices().contains(i)) {
                 this.cantidadFeromonasCamino.set(i,(1 - coeficienteEvaporacion) * getCantidadFeromonasCamino().get(i) +
-                        hormiga1.getCntQ()/hormiga1.getCaminoCostos().get(hormiga1.getCaminoIndices().indexOf(i)));
+                        hormiga1.getCntQ()/hormiga1.getCostoTotal());//.getCaminoCostos().get(hormiga1.getCaminoIndices().indexOf(i)));
             }
             else if (hormiga2.getCaminoIndices().contains(i)) {
                 this.cantidadFeromonasCamino.set(i,(1 - coeficienteEvaporacion) * getCantidadFeromonasCamino().get(i) +
-                        hormiga2.getCntQ()/hormiga2.getCaminoCostos().get(hormiga2.getCaminoIndices().indexOf(i)));
+                        hormiga2.getCntQ()/hormiga2.getCostoTotal());//.getCaminoCostos().get(hormiga2.getCaminoIndices().indexOf(i)));
+            }
+            else{
+                this.cantidadFeromonasCamino.set(i,(1 - coeficienteEvaporacion) * getCantidadFeromonasCamino().get(i));
             }
             i++;
         }
