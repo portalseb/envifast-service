@@ -3,6 +3,7 @@ package com.bb.envifastservice.algo;
 import com.bb.envifastservice.GenerateTestData;
 import com.bb.envifastservice.algo.astar.AStarSearch;
 
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -38,7 +39,15 @@ public class ExecutionAlgorithms {
         aviones.add(a);
         TablaTiempos grafo = new TablaTiempos(arcos, aeropuertos, aviones);
 
-        System.out.println("Tamanhio archivo: " + lectorEnviosCorto.getDestinos().size());
+        // Creamos el archivo para obtener los datos de ejecucion de A*
+        String resultado, resultadosAStar = "D:\\Documentos\\Cursos\\Noveno ciclo\\DP1\\Algoritmos\\Datos_entrada\\Resultados.AStar.txt";
+        FileWriter fw = null;
+        try {
+            fw = new FileWriter(resultadosAStar);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        long diferencia;
         for(int i=0; i<lectorEnviosCorto.getDestinos().size(); i++){
             /* Llenamos los atributos de la clase grafo */
             grafo.calcularHeuristica(lectorEnviosCorto.getDestinos().get(i)); // calculamos la heuristica segun el nodo final Praga
@@ -58,6 +67,14 @@ public class ExecutionAlgorithms {
             long end1 = System.currentTimeMillis();
             System.out.println("Elapsed Time in milli seconds: "+ (end1-start1));
 
+            diferencia = end1 - start1;
+            resultado = String.valueOf(diferencia);
+            System.out.println(resultado);
+            try {
+                fw.write(resultado + "\n");
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
             if(rutaConseguida != null){
                 System.out.println("Se encontro una solucion: ");
                 for (Aeropuerto avion : rutaConseguida) {
@@ -67,6 +84,37 @@ public class ExecutionAlgorithms {
                 System.out.println("No se encontro solucion");
             }
         }
+        try {
+            fw.close();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        // Creamos el archivo para guardar los resultados de Colonia de hormigas
+        String resultadosACO = "D:\\Documentos\\Cursos\\Noveno ciclo\\DP1\\Algoritmos\\Datos_entrada\\Resultados.ACO.txt";
+        FileWriter fw2 = null;
+        try {
+            fw2 = new FileWriter(resultadosACO);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        for (int i = 0 ; i < lectorEnviosCorto.getDestinos().size(); i++){
+            long start1 = System.currentTimeMillis();
+//            rutaConseguida = aStarSearch.findPath();
+            long end1 = System.currentTimeMillis();
+            System.out.println("Elapsed Time in milli seconds: "+ (end1-start1));
 
+            diferencia = end1 - start1;
+            resultado = String.valueOf(diferencia);
+            try {
+                fw2.write(resultado + "\n");
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        try {
+            fw2.close();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
