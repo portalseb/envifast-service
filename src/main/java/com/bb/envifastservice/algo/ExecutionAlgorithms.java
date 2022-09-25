@@ -15,19 +15,19 @@ public class ExecutionAlgorithms {
 
         /* Leemos los aeropuertos y los planes de vuelo */
         LectorAeropuertos lectorAeropuertos = new LectorAeropuertos();
-        lectorAeropuertos.Leer("D:\\DOCUMENTOS\\FACI\\2022-2\\DP1\\c.inf226.22-2.lista.aeropuertos.v01.txt");
+        lectorAeropuertos.Leer("D:\\Documentos\\Cursos\\Noveno ciclo\\DP1\\Algoritmos\\Datos_entrada\\c.inf226.22-2.lista.aeropuertos.v01.txt");
         aeropuertos = lectorAeropuertos.getAeropuertos();
 
         LectorArcoAeropuerto lectorArcos = new LectorArcoAeropuerto(aeropuertos);
-        lectorArcos.Leer("D:\\DOCUMENTOS\\FACI\\2022-2\\DP1\\c.inf226.22-2.planes_vuelo.v01.txt");
+        lectorArcos.Leer("D:\\Documentos\\Cursos\\Noveno ciclo\\DP1\\Algoritmos\\Datos_entrada\\c.inf226.22-2.planes_vuelo.v01.txt");
         arcos = lectorArcos.getArcos();
 
         // Generar data de envios:
 //        GenerateTestData test = new GenerateTestData();
-//        test.GenerateData("D:\\DOCUMENTOS\\FACI\\2022-2\\DP1\\data.prueba.01.txt",aeropuertos,100,6);
+//        test.GenerateData("D:\\Documentos\\Cursos\\Noveno ciclo\\DP1\\Algoritmos\\Datos_entrada\\data.prueba.01.txt",aeropuertos,100,6);
 
         LectorEnviosCorto lectorEnviosCorto = new LectorEnviosCorto(aeropuertos);
-        lectorEnviosCorto.Leer("D:\\DOCUMENTOS\\FACI\\2022-2\\DP1\\data.prueba.01.txt");
+        lectorEnviosCorto.Leer("D:\\Documentos\\Cursos\\Noveno ciclo\\DP1\\Algoritmos\\Datos_entrada\\data.prueba.01.txt");
 
 //        for(Aeropuerto a: lectorEnviosCorto.getDestinos()){
 //            System.out.println(a.getCodigo());
@@ -38,6 +38,7 @@ public class ExecutionAlgorithms {
         aviones.add(a);
         TablaTiempos grafo = new TablaTiempos(arcos, aeropuertos, aviones);
 
+        System.out.println("Tamanhio archivo: " + lectorEnviosCorto.getDestinos().size());
         for(int i=0; i<lectorEnviosCorto.getDestinos().size(); i++){
             /* Llenamos los atributos de la clase grafo */
             grafo.calcularHeuristica(lectorEnviosCorto.getDestinos().get(i)); // calculamos la heuristica segun el nodo final Praga

@@ -119,21 +119,21 @@ public class AStarSearch {
     // este metodo nos permite saber si el nodo esta en la lista abierta o cerrada
     // si no esta en la lista abierta lo agrega y si ya esta entonces actualizamos f = g(n) + h(n).
     private void checkNode(Aeropuerto adjacentNode, Aeropuerto currentNode, int costo){
-        System.out.println("El costo es: " + costo);
-        System.out.println("El aeropuerto adyacente es: " + adjacentNode.getCodigo());
+//        System.out.println("El costo es: " + costo);
+//        System.out.println("El aeropuerto adyacente es: " + adjacentNode.getCodigo());
         if(!this.closedList.contains(adjacentNode)){
             if(!this.openList.contains(adjacentNode) && this.costoTotal + costo <= this.plazoMaximoEntrega ){
                 adjacentNode.setNodeData(currentNode, costo);
                 this.openList.add(adjacentNode);
                 this.costoTotal += costo;
-                System.out.println("El costo total en el if es: " + this.costoTotal);
+//                System.out.println("El costo total en el if es: " + this.costoTotal);
             }else{
                 boolean changed = adjacentNode.checkBetterPath(currentNode, costo);
                 if(changed){
                     this.costoTotal += costo;
                     // removemos y agregamos el nodo adyacente, para que la cola de prioridad
                     // para que pueda ordenar de nuevo sus contenidos con el valor modificado de finalCost.
-                    System.out.println("El costo total en el else es: " + this.costoTotal);
+//                    System.out.println("El costo total en el else es: " + this.costoTotal);
                     this.openList.remove(adjacentNode);
                     this.openList.add(adjacentNode);
                 }
