@@ -26,13 +26,13 @@ public class ExecutionAlgorithms {
         lectorArcos.Leer("D:\\DOCUMENTOS\\FACI\\2022-2\\DP1\\c.inf226.22-2.planes_vuelo.v01.txt");
         arcos = lectorArcos.getArcos();
 
-        // Generar data de envios:
-//        Random rand = new Random();
-//        for(int i=0; i<12; i++){
-//            GenerateTestData test = new GenerateTestData();
-//            test.GenerateData("D:\\DOCUMENTOS\\FACI\\2022-2\\DP1\\DatosPruebaExperimentos\\data.prueba." + i + ".txt",aeropuertos,rand.nextInt(4000) + 1001,6);
-//
-//        }
+        //  Generar data de envios:
+        Random rand = new Random();
+        for(int i=0; i<20; i++){
+            GenerateTestData test = new GenerateTestData();
+            test.GenerateData("D:\\DOCUMENTOS\\FACI\\2022-2\\DP1\\DatosPruebaExperimentos\\data.prueba." + i + ".txt",aeropuertos,rand.nextInt(9500) + 501,6);
+
+        }
 
         // Lectura de datos de un solo archivo
 //        GenerateTestData test = new GenerateTestData();
@@ -43,73 +43,73 @@ public class ExecutionAlgorithms {
 //        }
 
         // Creación del archivo de tiempos de ejecución
-//        FileWriter fw = null;
-//        String resultado, resultadosAStar = "D:\\DOCUMENTOS\\FACI\\2022-2\\DP1\\Resultados.AStar.txt";
-//        try {
-//            fw = new FileWriter(resultadosAStar);
-//        } catch (IOException e) {
-//            throw new RuntimeException(e);
-//        }
+        FileWriter fw = null;
+        String resultado, resultadosAStar = "D:\\DOCUMENTOS\\FACI\\2022-2\\DP1\\Resultados.AStar.txt";
+        try {
+            fw = new FileWriter(resultadosAStar);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
 
-        // Lectura y procesamiento del algoritmo
-//        for(int i=0; i<12; i++){
-//            // Lectura del archivo data.prueba.i.txt
-//            LectorEnviosCorto lectorEnviosCorto = new LectorEnviosCorto(aeropuertos);
-//            lectorEnviosCorto.Leer("D:\\DOCUMENTOS\\FACI\\2022-2\\DP1\\DatosPruebaExperimentos\\data.prueba." + i + ".txt");
-//
-//            Avion a = new Avion("EBC1EBCI000000001");
-//            ArrayList<Avion> aviones = new ArrayList<>();
-//            aviones.add(a);
-//            TablaTiempos grafo = new TablaTiempos(arcos, aeropuertos, aviones);
-//            long tiempoTranscurrido = 0;
-//            System.out.println("Numero de envios del archivo data.prueba." + i + ".txt: " + lectorEnviosCorto.getDestinos().size());
-//
-//            for(int j=0; j<lectorEnviosCorto.getDestinos().size(); j++){
-//                /* Llenamos los atributos de la clase grafo */
-//                grafo.calcularHeuristica(lectorEnviosCorto.getDestinos().get(j)); // calculamos la heuristica segun el nodo final Praga
-//
-//                /* Luego, instanciamos la clase que buscara la ruta mas corta segun el nodo inicial */
-//                AStarSearch aStarSearch = new AStarSearch(grafo);
-//
-//                lectorEnviosCorto.getOrigenes().get(j).setParent(null);
-//
-//                /* Nodo inicial y final */
-//                aStarSearch.setInitialNode(lectorEnviosCorto.getOrigenes().get(j));
-//                aStarSearch.setFinalNode(lectorEnviosCorto.getDestinos().get(j));
-//
-//                /* Finalmente probamos el algoritmo */
-//                ArrayList<Aeropuerto> rutaConseguida;
-//
-//                double start = System.nanoTime();
-//                rutaConseguida = aStarSearch.findPath();
-//                double end = System.nanoTime();
-//                tiempoTranscurrido += end - start;
-//                System.out.println("Tiempo en milisegundos: "+ (end-start)/1000000.00);
-//
-//                if(rutaConseguida != null){
-//                    System.out.println("Se encontro una solucion");
-////                    for (Aeropuerto avion : rutaConseguida) {
-////                        System.out.println(avion);
-////                    }
-//                }else{
-//                    System.out.println("No se encontro solucion");
-//                }
-//            }
-//
-//            resultado = String.valueOf(tiempoTranscurrido / 1000000000.00);
-//            System.out.println("Tiempo de ejec. del archivo Resultados.AStar." + i + ".txt en segundos: " + resultado);
-//            try {
-//                fw.write(resultado + "\n");
-//            } catch (IOException e) {
-//                throw new RuntimeException(e);
-//            }
-//        }
-//
-//        try {
-//            fw.close();
-//        } catch (IOException e) {
-//            throw new RuntimeException(e);
-//        }
+        // TIEMPOS DE EJECUCION DEL A*
+        for(int i=0; i<20; i++){
+            // Lectura del archivo data.prueba.i.txt
+            LectorEnviosCorto lectorEnviosCorto = new LectorEnviosCorto(aeropuertos);
+            lectorEnviosCorto.Leer("D:\\DOCUMENTOS\\FACI\\2022-2\\DP1\\DatosPruebaExperimentos\\data.prueba." + i + ".txt");
+
+            Avion a = new Avion("EBC1EBCI000000001");
+            ArrayList<Avion> aviones = new ArrayList<>();
+            aviones.add(a);
+            TablaTiempos grafo = new TablaTiempos(arcos, aeropuertos, aviones);
+            long tiempoTranscurrido = 0;
+            System.out.println("Numero de envios del archivo data.prueba." + i + ".txt: " + lectorEnviosCorto.getDestinos().size());
+
+            for(int j=0; j<lectorEnviosCorto.getDestinos().size(); j++){
+                /* Llenamos los atributos de la clase grafo */
+                grafo.calcularHeuristica(lectorEnviosCorto.getDestinos().get(j)); // calculamos la heuristica segun el nodo final Praga
+
+                /* Luego, instanciamos la clase que buscara la ruta mas corta segun el nodo inicial */
+                AStarSearch aStarSearch = new AStarSearch(grafo);
+
+                lectorEnviosCorto.getOrigenes().get(j).setParent(null);
+
+                /* Nodo inicial y final */
+                aStarSearch.setInitialNode(lectorEnviosCorto.getOrigenes().get(j));
+                aStarSearch.setFinalNode(lectorEnviosCorto.getDestinos().get(j));
+
+                /* Finalmente probamos el algoritmo */
+                ArrayList<Aeropuerto> rutaConseguida;
+
+                double start = System.nanoTime();
+                rutaConseguida = aStarSearch.findPath();
+                double end = System.nanoTime();
+                tiempoTranscurrido += end - start;
+                System.out.println("Tiempo en milisegundos: "+ (end-start)/1000000.00);
+
+                if(rutaConseguida != null){
+                    System.out.println("Se encontro una solucion");
+//                    for (Aeropuerto avion : rutaConseguida) {
+//                        System.out.println(avion);
+//                    }
+                }else{
+                    System.out.println("No se encontro solucion");
+                }
+            }
+
+            resultado = String.valueOf(tiempoTranscurrido / 1000000000.00);
+            System.out.println("Tiempo de ejec. del archivo Resultados.AStar." + i + ".txt en segundos: " + resultado);
+            try {
+                fw.write(resultado + "\n");
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        try {
+            fw.close();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
 
 //        Avion a = new Avion("EBC1EBCI000000001");
 //        ArrayList<Avion> aviones = new ArrayList<>();
@@ -170,15 +170,16 @@ public class ExecutionAlgorithms {
 //            throw new RuntimeException(e);
 //        }
 
-        FileWriter fw = null;
-        String resultado, resultadosAStar = "D:\\DOCUMENTOS\\FACI\\2022-2\\DP1\\Resultados.ACO.txt";
+        // TIEMPOS DE EJECUCION ACO
+        FileWriter fw2 = null;
+        String resultado2, resultadosACO = "D:\\DOCUMENTOS\\FACI\\2022-2\\DP1\\Resultados.ACO.txt";
         try {
-            fw = new FileWriter(resultadosAStar);
+            fw2 = new FileWriter(resultadosACO);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
 
-        for(int i=0; i<12; i++){
+        for(int i=0; i<20; i++){
             // Lectura del archivo data.prueba.i.txt
             LectorEnviosCorto lectorEnviosCorto = new LectorEnviosCorto(aeropuertos);
             lectorEnviosCorto.Leer("D:\\DOCUMENTOS\\FACI\\2022-2\\DP1\\DatosPruebaExperimentos\\data.prueba." + i + ".txt");
@@ -199,16 +200,16 @@ public class ExecutionAlgorithms {
                 System.out.println("Elapsed Time in milli seconds: "+ (end1-start1));
                 tiempoTranscurrido += end1 - start1;
             }
-            resultado = String.valueOf(tiempoTranscurrido / 1000000000.00);
+            resultado2 = String.valueOf(tiempoTranscurrido / 1000000000.00);
             try {
-                fw.write(resultado + "\n");
+                fw2.write(resultado2 + "\n");
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
         }
 
         try {
-            fw.close();
+            fw2.close();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
