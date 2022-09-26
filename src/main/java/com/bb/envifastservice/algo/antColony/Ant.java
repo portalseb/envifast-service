@@ -17,7 +17,7 @@ public class Ant {
     private ArrayList<Integer> posiblesCaminosIndices; //Indices (en el arreglo caminos de Antside) de los caminos que puede recorrer la hormiga, no se cambia
     private ArrayList<Integer> caminoIndices; //Indices (en el arreglo caminos de Antside) de los caminos que recorre la hormiga, no se cambia
     private double costoTotal;//Costo del camino que siguio la hormiga, no se cambia
-    public double cntQ= 100;//Aprendizaje
+    public double cntQ= 1000;//Aprendizaje
     private AntSide ambienteGlobal=null;
     private ArrayList<Aeropuerto> caminoNodos; //Cambiar tipo de dato -> Aeropuerto
     private ArrayList<Double> caminoCostos; //Cambiar tipo de dato -> ArcoAeropuerto
