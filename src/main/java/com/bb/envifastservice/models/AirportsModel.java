@@ -30,7 +30,7 @@ public class AirportsModel {
     @Column(name="_country_name")
     private String countryName;
     @Column(name = "_continent")
-    private int continent; //1 SA, 2 EU
+    private String continent; //1 SA, 2 EU
     @Column(name = "_active")
     private int active;
 
