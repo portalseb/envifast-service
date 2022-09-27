@@ -7,7 +7,7 @@ import java.util.Collection;
 
 @Data
 @Entity
-@Table(name= "user")
+@Table(name= "SysUser")
 public class UserModel {
         @Id
         @GeneratedValue(strategy = GenerationType.AUTO)
