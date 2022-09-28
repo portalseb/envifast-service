@@ -4,10 +4,13 @@ import lombok.Data;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @Entity
-@Table(name= "flight")
+@Table(name= "Flight")
 public class FlightModel {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -27,12 +30,13 @@ public class FlightModel {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "_airport_arrival_id", insertable = false, updatable = false)
     private AirportsModel arrivalAirport;
+    @ManyToMany(mappedBy = "route")
+    private List<PackageModel> cargo = new ArrayList<>();
     @Column(name = "_departure_date")
-    private LocalDateTime departureDate;
+    private LocalDateTime departureTime;
     @Column(name = "_arrival_date")
-    private LocalDateTime arrivalDate;
-    @Column(name = "_flying_time")
-    private LocalDateTime flyingTime;
+    private LocalDateTime arrivalTime;
+    private int isFlying;
     @Column(name = "_active")
     private int active;
 

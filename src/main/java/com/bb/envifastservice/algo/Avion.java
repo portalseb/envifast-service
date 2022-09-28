@@ -19,7 +19,7 @@ public class Avion {
     }
 
     public void setCargo(ArrayList<Paquete> cargo) {
-        this.cargo = cargo;
+        this.cargo=cargo;
     }
 
     public void setCapacidad(Integer capacidad) {
