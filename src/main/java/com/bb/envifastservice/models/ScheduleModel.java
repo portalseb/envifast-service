@@ -3,12 +3,11 @@ package com.bb.envifastservice.models;
 import lombok.Data;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 
 @Data
 @Entity
-@Table(name= "flight")
-public class FlightModel {
+@Table(name= "Schedule")
+public class ScheduleModel {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "_id_flight")
@@ -28,11 +27,9 @@ public class FlightModel {
     @JoinColumn(name = "_airport_arrival_id", insertable = false, updatable = false)
     private AirportsModel arrivalAirport;
     @Column(name = "_departure_date")
-    private LocalDateTime departureDate;
+    private String departureTime;
     @Column(name = "_arrival_date")
-    private LocalDateTime arrivalDate;
-    @Column(name = "_flying_time")
-    private LocalDateTime flyingTime;
+    private String arrivalTime;
     @Column(name = "_active")
     private int active;
 
