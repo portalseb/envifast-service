@@ -3,6 +3,8 @@ package com.bb.envifastservice.algo;
 import org.springframework.data.convert.Jsr310Converters;
 
 import java.time.*;
+import java.util.ArrayList;
+import java.util.Date;
 
 public class ArcoAeropuerto {
 
@@ -12,17 +14,99 @@ public class ArcoAeropuerto {
     private LocalTime horaPartida;
     private LocalTime horaLlegada;
 
+
+    private LocalDate diaPartida;
+    private LocalDate diaLLegada;
+
+    private ArrayList<Paquete> cargo;
+
+    private Integer capacidadDisponible;
+
+
     public ArcoAeropuerto(){
 
     }
 
     public ArcoAeropuerto(String nombreVuelo, Aeropuerto aeropuerto1, Aeropuerto aeropuerto2, String partida, String llegada){
-        this.flight = new Avion(nombreVuelo);
+        //this.flight = new Avion(nombreVuelo);
         this.aeropuerto1 = aeropuerto1;
         this.aeropuerto2 = aeropuerto2;
         this.horaPartida = LocalTime.parse(partida);
         this.horaLlegada = LocalTime.parse(llegada);
+        if(aeropuerto1.getCiudad().getContinente().equals(aeropuerto2.getCiudad().getContinente())) {
+            if(aeropuerto1.getCiudad().getContinente().equals("Europa")){
+                this.flight = new Avion(nombreVuelo, 250); //Se debera pasar el avion
+                this.capacidadDisponible = 250;
+            }
+            else {
+                this.flight = new Avion(nombreVuelo, 300); //Se debera pasar el avion
+                this.capacidadDisponible = 300;
+            }
+        }
+        else {
+            this.flight = new Avion(nombreVuelo, 350); //Se debera pasar el avion
+            this.capacidadDisponible = 350;
+        }
+        this.cargo = new ArrayList<Paquete>();
     }
+
+
+    public ArcoAeropuerto(String nombreVuelo, Aeropuerto aeropuerto1, Aeropuerto aeropuerto2, String partida, String llegada, String dPartida, String dLlegada){
+        //this.flight = new Avion(nombreVuelo);
+        this.aeropuerto1 = aeropuerto1;
+        this.aeropuerto2 = aeropuerto2;
+        this.horaPartida = LocalTime.parse(partida);
+        this.horaLlegada = LocalTime.parse(llegada);
+        this.diaPartida = LocalDate.parse(dPartida);
+        this.diaLLegada = LocalDate.parse(dLlegada);
+
+        if(aeropuerto1.getCiudad().getContinente().equals(aeropuerto2.getCiudad().getContinente())) {
+            if(aeropuerto1.getCiudad().getContinente().equals("Europa")){
+                this.flight = new Avion(nombreVuelo, 250); //Se debera pasar el avion
+                this.capacidadDisponible = 250;
+            }
+            else {
+                this.flight = new Avion(nombreVuelo, 300); //Se debera pasar el avion
+                this.capacidadDisponible = 300;
+            }
+        }
+        else {
+            this.flight = new Avion(nombreVuelo, 350); //Se debera pasar el avion
+            this.capacidadDisponible = 350;
+        }
+        this.cargo = new ArrayList<Paquete>();
+    }
+
+
+    public ArrayList<Paquete> getCargo() {
+        return cargo;
+    }
+
+    public void setCargo(ArrayList<Paquete> cargo) {
+        this.cargo = cargo;
+    }
+
+    public Integer getCapacidadDisponible() {
+        return capacidadDisponible;
+    }
+
+    public void setCapacidadDisponible(Integer capacidadDisponible) {
+        this.capacidadDisponible = capacidadDisponible;
+    }
+
+
+    public void agregarPaquete(Paquete pac) {
+        this.cargo.add(pac);
+        this.capacidadDisponible=this.capacidadDisponible-1;
+        //pac.actualizarEstado(null, this.flight); //Esto se deberia hacer en tiempo real
+    }
+
+
+    public void removerPaquete(Paquete pac) {
+        this.cargo.remove(pac);
+        this.capacidadDisponible=this.capacidadDisponible+1;
+    }
+
 
     public void setFlight(Avion flight) {
         this.flight = flight;
@@ -42,6 +126,23 @@ public class ArcoAeropuerto {
 
     public void setHoraLlegada(LocalTime horaLlegada) {
         this.horaLlegada = horaLlegada;
+    }
+
+
+    public LocalDate getDiaPartida() {
+        return diaPartida;
+    }
+
+    public void setDiaPartida(LocalDate diaPartida) {
+        this.diaPartida = diaPartida;
+    }
+
+    public LocalDate getDiaLLegada() {
+        return diaLLegada;
+    }
+
+    public void setDiaLLegada(LocalDate diaLLegada) {
+        this.diaLLegada = diaLLegada;
     }
 
     public Avion getFlight() {
@@ -64,13 +165,13 @@ public class ArcoAeropuerto {
         return horaLlegada;
     }
 
-    public Integer obtenerCapacidadDeAvionYAeropuertoDestino(TablaTiempos tablaTiempos){
-        Integer flightIdx = tablaTiempos.obtenerIndiceAvionPorNombre(this.flight.getNombre());
-        Integer capacidadUsada = tablaTiempos.aviones.get(flightIdx).getCapacidad();
-        Integer airportIdx = tablaTiempos.obtenerIndiceAeropuertoPorID(this.aeropuerto2.getId());
-        capacidadUsada += tablaTiempos.aeropuertos.get(airportIdx).getCapacidad();
-        return capacidadUsada;
-    }
+//    public Integer obtenerCapacidadDeAvionYAeropuertoDestino(TablaTiempos tablaTiempos){
+//        Integer flightIdx = tablaTiempos.obtenerIndiceAvionPorNombre(this.flight.getNombre());
+//        Integer capacidadUsada = tablaTiempos.aviones.get(flightIdx).getCapacidad();
+//        Integer airportIdx = tablaTiempos.obtenerIndiceAeropuertoPorID(this.aeropuerto2.getId());
+//        capacidadUsada += tablaTiempos.aeropuertos.get(airportIdx).getCapacidad();
+//        return capacidadUsada;
+//    }
 
     public Duration obtenerDuracionVuelo(){
 //        LocalDateTime ldt_takeoff = this.horaPartida.atDate(LocalDate.now());

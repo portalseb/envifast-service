@@ -6,7 +6,7 @@ import java.util.Comparator;
 import java.util.Map;
 import java.util.TimeZone;
 
-public class Aeropuerto implements Comparable<Aeropuerto> {
+public class Aeropuerto {//implements Comparable<Aeropuerto> {
 
     public static final Integer CAPACIDAD_AEROPUERTO = 500;
     private Integer id;
@@ -14,8 +14,10 @@ public class Aeropuerto implements Comparable<Aeropuerto> {
     private Ciudad ciudad;
     private String nombre;
     private TimeZone timeZone;
-    private ArrayList<Paquete> deposito = new ArrayList<>();
+    //private ArrayList<Paquete> deposito;
     private Integer capacidad;
+
+    private ArrayList<CapacidadAeropuerto> capacidadDisponible;
 
     private Aeropuerto parent;
 
@@ -48,7 +50,25 @@ public class Aeropuerto implements Comparable<Aeropuerto> {
         this.g = 0;
         this.h = 0;
         this.timeZone = TimeZone.getTimeZone(timeZone);
-        this.capacidad = CAPACIDAD_AEROPUERTO;
+
+        if(continente.equals("Europa")) {
+            this.capacidad = 900; //almacenes de EU
+        }
+        else {
+            this.capacidad = 850; //almacenes de SA
+        }
+
+        this.capacidadDisponible = new ArrayList<CapacidadAeropuerto>();
+
+        //this.capacidad = CAPACIDAD_AEROPUERTO;
+    }
+
+    public ArrayList<CapacidadAeropuerto> getCapacidadDisponible() {
+        return capacidadDisponible;
+    }
+
+    public void setCapacidadDisponible(ArrayList<CapacidadAeropuerto> capacidadDisponible) {
+        this.capacidadDisponible = capacidadDisponible;
     }
 
     public void setNodeData(Aeropuerto currentNode, int costo){
@@ -92,9 +112,7 @@ public class Aeropuerto implements Comparable<Aeropuerto> {
         this.timeZone = timeZone;
     }
 
-    public void setDeposito(ArrayList<Paquete> deposito) {
-        this.deposito = deposito;
-    }
+
 
     public void setCapacidad(Integer capacidad) {
         this.capacidad = capacidad;
@@ -120,9 +138,6 @@ public class Aeropuerto implements Comparable<Aeropuerto> {
         return timeZone;
     }
 
-    public ArrayList<Paquete> getDeposito() {
-        return deposito;
-    }
 
     public Integer getCapacidad() {
         return capacidad;
@@ -133,15 +148,13 @@ public class Aeropuerto implements Comparable<Aeropuerto> {
                 this.ciudad.paraImprimir();
     }
 
-    public Integer getUso() {
-        return this.deposito.size();
-    }
 
-    public void agregarPaquete(Paquete pac){
-        this.deposito.add(pac);
-        pac.actualizarEstado(this, null);
-        setCapacidad(this.capacidad + 1);// aumentamos la capacidad
-    }
+
+//    public void agregarPaquete(Paquete pac){
+//        this.deposito.add(pac);
+//        //pac.actualizarEstado(this, null);
+//        setCapacidad(this.capacidad + 1);// aumentamos la capacidad
+//    }
 
     @Override
     public String toString() {
@@ -156,13 +169,13 @@ public class Aeropuerto implements Comparable<Aeropuerto> {
                 '}';
     }
 
-    @Override
-    public int compareTo(Aeropuerto o) {
-        if(o.getUso() < this.getUso()){
-            return 1; // o > este mismo
-        }
-        return 0;
-    }
+//    @Override
+//    public int compareTo(Aeropuerto o) {
+//        if(o.getUso() < this.getUso()){
+//            return 1; // o > este mismo
+//        }
+//        return 0;
+//    }
 
     @Override
     public boolean equals(Object obj) {
@@ -203,4 +216,19 @@ public class Aeropuerto implements Comparable<Aeropuerto> {
     public void setG(Integer g) {
         this.g = g;
     }
+
+    public int getCapacidadIndex(int hora, int minuto, int dia, int mes, int anio){
+        int i=0;
+        for(i=0;i<this.capacidadDisponible.size();i++){
+            if(capacidadDisponible.get(i).getFechaHora().getHora().getMinute() == minuto
+            && capacidadDisponible.get(i).getFechaHora().getHora().getHour() == hora
+            && capacidadDisponible.get(i).getFechaHora().getDia().getDayOfMonth()==dia
+            && capacidadDisponible.get(i).getFechaHora().getDia().getMonth().getValue()==mes
+            && capacidadDisponible.get(i).getFechaHora().getDia().getYear()==anio)
+                return i;
+        }
+        return -1;
+    }
+
+
 }
