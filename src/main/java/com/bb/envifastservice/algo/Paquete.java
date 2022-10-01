@@ -12,10 +12,12 @@ public class Paquete {
     private ArrayList<ArcoAeropuerto> ruta;
     private Aeropuerto aeropuertoActual;
     private Avion vueloActual;
-    private String destino;
-    private String origen;
+    private Aeropuerto destino;
+    private Aeropuerto origen;
 
-    public Paquete(String id, LocalDate dia, LocalTime hora, String destino, String origen) {
+    private int estado; // volando, enviandose, etc
+
+    public Paquete(String id, LocalDate dia, LocalTime hora, Aeropuerto destino, Aeropuerto origen) {
         this.id = id;
         this.dia = dia;
         this.hora = hora;
@@ -78,14 +80,6 @@ public class Paquete {
         this.vueloActual = vueloActual;
     }
 
-    public void setDestino(String destino) {
-        this.destino = destino;
-    }
-
-    public void setOrigen(String origen) {
-        this.origen = origen;
-    }
-
     public String getId() {
         return id;
     }
@@ -110,11 +104,19 @@ public class Paquete {
         return vueloActual;
     }
 
-    public String getDestino() {
+    public Aeropuerto getDestino() {
         return destino;
     }
 
-    public String getOrigen() {
+    public Aeropuerto getOrigen() {
         return origen;
+    }
+
+    public void setDestino(Aeropuerto destino) {
+        this.destino = destino;
+    }
+
+    public void setOrigen(Aeropuerto origen) {
+        this.origen = origen;
     }
 }
