@@ -167,7 +167,12 @@ public class Ant {
             destino = new Aeropuerto(camino.getAeropuerto2());
             horaSalidaSiguienteVuelo = (double) camino.getHoraPartida().getHour()*60 + camino.getHoraPartida().getMinute();
 
-            //Aqui se verifica que el destino no puede ser un nodo anterior y que se cumplan restricciones de tiempo
+            //int k = destino.getCapacidadIndex(...);
+            //if(k==-1) {System.out.println("Indice de capacidad no encontrado"); return;}
+            //int capacidadAeropuertoDestino = destino.getCapacidadDisponible().get(k);
+
+            //int capacidadVuelo = camino.getCapacidadDisponible();
+
 
             if(
              (origen.getId() == nodoAct.getId() && nodoAct.getId() == ambienteGlob.getNodoInicial().getId() &&
@@ -175,16 +180,22 @@ public class Ant {
              //¿Aqui tambien se pondria lo del transbordo, desde la hora actual hasta cuando salga el vuelo?
              (
              (horaLLegadaUltimoVuelo <= horaSalidaSiguienteVuelo && this.costoTotal + (horaSalidaSiguienteVuelo - horaLLegadaUltimoVuelo) + (double) camino.obtenerDuracionVuelo().toMinutes() <= ambienteGlob.getPlazoMaximoEntrega())
-             ||
+             //&& diaLlegadaUltimoVuelo == diaSalidaSiguienteVuelo
+                     //&& capacidadVuelo >= #paquetes
+                     //&& capacidadAeropuertoDestino >= #paquetes
+                     ||
              (horaLLegadaUltimoVuelo > horaSalidaSiguienteVuelo && this.costoTotal + (horaSalidaSiguienteVuelo + 24 * 60 - horaLLegadaUltimoVuelo) + (double) camino.obtenerDuracionVuelo().toMinutes() <= ambienteGlob.getPlazoMaximoEntrega())
+                     //&& diaLlegadaUltimoVuelo + 1 == diaSalidaSiguienteVuelo
              )
              && !this.caminoNodos.contains(camino.getAeropuerto2())
              ) ||
              (origen.getId() == nodoAct.getId() && destino.getId()!=nodoAnt.getId() &&
              (
              (horaLLegadaUltimoVuelo <= horaSalidaSiguienteVuelo && this.costoTotal + (horaSalidaSiguienteVuelo - horaLLegadaUltimoVuelo) + (double) camino.obtenerDuracionVuelo().toMinutes() <= ambienteGlob.getPlazoMaximoEntrega())
-             ||
+                     //&& diaLlegadaUltimoVuelo == diaSalidaSiguienteVuelo
+                     ||
              (horaLLegadaUltimoVuelo > horaSalidaSiguienteVuelo && this.costoTotal + (horaSalidaSiguienteVuelo + 24 * 60 - horaLLegadaUltimoVuelo) + (double) camino.obtenerDuracionVuelo().toMinutes() <= ambienteGlob.getPlazoMaximoEntrega())
+                     //&& diaLlegadaUltimoVuelo + 1 == diaSalidaSiguienteVuelo
              )
              && !this.caminoNodos.contains(camino.getAeropuerto2())
              )
