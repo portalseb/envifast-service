@@ -19,7 +19,6 @@ public class Aeropuerto {//implements Comparable<Aeropuerto> {
 
     private ArrayList<CapacidadAeropuerto> capacidadDisponible;
 
-    private Aeropuerto parent;
 
     private Integer f;
     private Integer h;
@@ -71,26 +70,13 @@ public class Aeropuerto {//implements Comparable<Aeropuerto> {
         this.capacidadDisponible = capacidadDisponible;
     }
 
-    public void setNodeData(Aeropuerto currentNode, int costo){
-        int gCost = currentNode.getG() + costo;
-        setParent(currentNode);
-        setG(gCost);
-        calculateFinalCost();
-    }
 
     public void calculateFinalCost(){
         int finalCost = getG() + getH();
         setF(finalCost);
     }
 
-    public boolean checkBetterPath(Aeropuerto currentNode, int cost) {
-        int gCost = currentNode.getG() + cost;
-        if (gCost < getG()) {
-            setNodeData(currentNode, cost);
-            return true;
-        }
-        return false;
-    }
+
 
     public void setId(Integer id) {
         this.id = id;
@@ -185,13 +171,6 @@ public class Aeropuerto {//implements Comparable<Aeropuerto> {
         return otroAeropuerto.getCodigo() == this.getCodigo();
     }
 
-    public Aeropuerto getParent() {
-        return parent;
-    }
-
-    public void setParent(Aeropuerto parent) {
-        this.parent = parent;
-    }
 
     public Integer getF() {
         return f;

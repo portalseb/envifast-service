@@ -1,15 +1,12 @@
 package com.bb.envifastservice;
 
 import com.bb.envifastservice.algo.Aeropuerto;
-import com.bb.envifastservice.algo.PlanVuelo;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
 
 import java.io.FileWriter;
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
 
 public class GenerateTestData {
 
