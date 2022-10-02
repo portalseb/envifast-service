@@ -48,23 +48,23 @@ public class Paquete {
         this.vueloActual = null;
     }
 
-    public Avion obtenerSiguienteAvion(Aeropuerto aeropuerto){
-        for(ArcoAeropuerto ec :this.ruta){
-            if(ec.getAeropuerto1().getId() == aeropuerto.getId()){
-                return ec.getFlight();
-            }
-        }
-        return null;
-    }
-
-    public Aeropuerto obtenerSiguienteAeropuerto(Avion avion){
-        for(ArcoAeropuerto ec: ruta){
-            if(ec.getFlight().getNombre() == avion.getNombre()){
-                return ec.getAeropuerto2();
-            }
-        }
-        return null;
-    }
+//    public Avion obtenerSiguienteAvion(Aeropuerto aeropuerto){
+//        for(ArcoAeropuerto ec :this.ruta){
+//            if(ec.getAeropuerto1().getId() == aeropuerto.getId()){
+//                return ec.getFlight();
+//            }
+//        }
+//        return null;
+//    }
+//
+//    public Aeropuerto obtenerSiguienteAeropuerto(Avion avion){
+//        for(ArcoAeropuerto ec: ruta){
+//            if(ec.getFlight().getNombre() == avion.getNombre()){
+//                return ec.getAeropuerto2();
+//            }
+//        }
+//        return null;
+//    }
 
     public void actualizarEstado(Aeropuerto aeropuerto, Avion avion){
         if(aeropuerto != null){

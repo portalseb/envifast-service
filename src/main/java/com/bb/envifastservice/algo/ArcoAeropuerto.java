@@ -8,7 +8,6 @@ import java.util.Date;
 
 public class ArcoAeropuerto {
 
-    private Avion flight;
     private Aeropuerto aeropuerto1;
     private Aeropuerto aeropuerto2;
     private LocalTime horaPartida;
@@ -37,18 +36,18 @@ public class ArcoAeropuerto {
         this.horaLlegada = LocalTime.parse(llegada);
         if(aeropuerto1.getCiudad().getContinente().equals(aeropuerto2.getCiudad().getContinente())) {
             if(aeropuerto1.getCiudad().getContinente().equals("Europa")){
-                this.flight = new Avion(nombreVuelo, 250); //Se debera pasar el avion
+                //this.flight = new Avion(nombreVuelo, 250);
                 this.capacidadMaxima = 250;
                 this.capacidadDisponible = 250;
             }
             else {
-                this.flight = new Avion(nombreVuelo, 300); //Se debera pasar el avion
+                //this.flight = new Avion(nombreVuelo, 300);
                 this.capacidadMaxima = 250;
                 this.capacidadDisponible = 300;
             }
         }
         else {
-            this.flight = new Avion(nombreVuelo, 350); //Se debera pasar el avion
+            //this.flight = new Avion(nombreVuelo, 350);
             this.capacidadMaxima = 250;
             this.capacidadDisponible = 350;
         }
@@ -67,18 +66,18 @@ public class ArcoAeropuerto {
 
         if(aeropuerto1.getCiudad().getContinente().equals(aeropuerto2.getCiudad().getContinente())) {
             if(aeropuerto1.getCiudad().getContinente().equals("Europa")){
-                this.flight = new Avion(nombreVuelo, 250); //Se debera pasar el avion
+                //this.flight = new Avion(nombreVuelo, 250);
                 this.capacidadMaxima = 250;
                 this.capacidadDisponible = 250;
             }
             else {
-                this.flight = new Avion(nombreVuelo, 300); //Se debera pasar el avion
+                //this.flight = new Avion(nombreVuelo, 300);
                 this.capacidadMaxima = 300;
                 this.capacidadDisponible = 300;
             }
         }
         else {
-            this.flight = new Avion(nombreVuelo, 350); //Se debera pasar el avion
+            //this.flight = new Avion(nombreVuelo, 350);
             this.capacidadMaxima = 350;
             this.capacidadDisponible = 350;
         }
@@ -116,9 +115,7 @@ public class ArcoAeropuerto {
     }
 
 
-    public void setFlight(Avion flight) {
-        this.flight = flight;
-    }
+
 
     public void setAeropuerto1(Aeropuerto aeropuerto1) {
         this.aeropuerto1 = aeropuerto1;
@@ -153,9 +150,7 @@ public class ArcoAeropuerto {
         this.diaLLegada = diaLLegada;
     }
 
-    public Avion getFlight() {
-        return flight;
-    }
+
 
     public Aeropuerto getAeropuerto1() {
         return aeropuerto1;
@@ -200,7 +195,7 @@ public class ArcoAeropuerto {
     }
 
     public String toString(){
-        return "Avion: " + getFlight().getNombre() + " desde " + getAeropuerto1().getCiudad().getNombre() +
+        return "Avion desde " + getAeropuerto1().getCiudad().getNombre() +
                 " hacia " + getAeropuerto2().getCiudad().getNombre() + " en "
                +  obtenerDuracionVuelo().toString();
      }

@@ -129,7 +129,6 @@ public class Aco {
             arco.setAeropuerto2(arcos.get(i).getAeropuerto2());
             arco.setHoraPartida(arcos.get(i).getHoraPartida());
             arco.setHoraLlegada(arcos.get(i).getHoraLlegada());
-            arco.setFlight(arcos.get(i).getFlight());
             arco.setCapacidadMaxima(arcos.get(i).getCapacidadMaxima());
             arco.setCapacidadDisponible(arcos.get(i).getCapacidadDisponible());
 
@@ -154,7 +153,6 @@ public class Aco {
             arco.setAeropuerto2(arcos.get(i).getAeropuerto2());
             arco.setHoraPartida(arcos.get(i).getHoraPartida());
             arco.setHoraLlegada(arcos.get(i).getHoraLlegada());
-            arco.setFlight(arcos.get(i).getFlight());
             arco.setCapacidadMaxima(arcos.get(i).getCapacidadMaxima());
             arco.setCapacidadDisponible(arcos.get(i).getCapacidadDisponible());
 
