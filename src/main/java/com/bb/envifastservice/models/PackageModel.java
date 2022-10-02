@@ -18,7 +18,7 @@ import java.util.List;
 public class PackageModel {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+    private String id;
     private LocalDateTime dateTime;
     @ManyToMany
     @JoinTable(
@@ -28,9 +28,9 @@ public class PackageModel {
     )
     private List<FlightModel> route = new ArrayList<>();
 
-    private AirportsModel currentAirport;
-    private FlightModel currentFlight;
+    private Long currentAirportId;
+    private Long currentFlightId;
     private String destino;
     private String origen;
-
+    private int active;
 }

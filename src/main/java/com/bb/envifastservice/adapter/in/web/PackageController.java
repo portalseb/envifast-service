@@ -1,7 +1,7 @@
 package com.bb.envifastservice.adapter.in.web;
 
-import com.bb.envifastservice.algo.Aeropuerto;
-import com.bb.envifastservice.application.port.in.ListAllAirportsService;
+import com.bb.envifastservice.algo.Paquete;
+import com.bb.envifastservice.application.port.in.ListPackagesService;
 import com.bb.envifastservice.hexagonal.WebAdapter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -10,16 +10,20 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Optional;
 
 @WebAdapter
 @CrossOrigin
 @RestController
 @RequiredArgsConstructor
-@RequestMapping(value = "/airports")
-public class ListAllAirportsController {
-    private final ListAllAirportsService listAllAirportsService;
+@RequestMapping(value = "/packages")
+public class PackageController {
+    private final ListPackagesService listPackagesService;
     @GetMapping(value = "")
-    public List<Aeropuerto> listAllAeropuertos(){
-        return listAllAirportsService.listAllAirpoirts();
+    public List<Paquete> listPaquetes(Optional<String> input){
+        if (input.isPresent()){
+        return listPackagesService.listByFields(input.get());}
+        else{
+        return listPackagesService.listByFields("");}
     }
 }

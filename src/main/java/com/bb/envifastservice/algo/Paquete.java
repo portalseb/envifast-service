@@ -23,6 +23,10 @@ public class Paquete {
         this.origen = origen;
     }
 
+    public Paquete() {
+
+    }
+
     public void setId(String id) {
         this.id = id;
     }
