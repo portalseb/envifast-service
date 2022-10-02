@@ -4,6 +4,7 @@ import com.bb.envifastservice.algo.*;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
 
 public class Aco {
@@ -171,18 +172,72 @@ public class Aco {
             arcos.add(arco);
         }
 
-        //Se crean las capacidades de aeropuertos para los siguiente 3 dias
-//        for(int i=0;i<aeropuertos.size();i++){
-//            CapacidadAeropuerto capacidad = new CapacidadAeropuerto();
-//
-//
-//        }
 
-        //Se crean los paquetes
+
+        //Se crean los paquetes (Esto se debe leer en la clase principal)
         ArrayList<Paquete> paquetes = new ArrayList<Paquete>();
         for(int i=0;i<5;i++){
             Paquete paquete = new Paquete();//Ponerle el detalle
             paquetes.add(paquete);
+        }
+
+
+        //Se crean las capacidades de aeropuertos para los siguiente 3 dias
+        for(int i=0;i<aeropuertos.size();i++){
+            for(int j=0;j<24;j++){
+                for(int k=0;k<60;k++){
+                    FechaHora fechaHora = new FechaHora();
+                    fechaHora.setDia(LocalDate.parse("2022-10-01"));
+                    fechaHora.setHora(LocalTime.of(j,k));
+
+                    CapacidadAeropuerto capacidad = new CapacidadAeropuerto();
+                    capacidad.setFechaHora(fechaHora);
+                    capacidad.setCapacidadDisponible(aeropuertos.get(i).getCapacidad());
+                    aeropuertos.get(i).getCapacidadDisponible().add(capacidad);
+                }
+            }
+
+            for(int j=0;j<24;j++){
+                for(int k=0;k<60;k++){
+                    FechaHora fechaHora = new FechaHora();
+                    fechaHora.setDia(LocalDate.parse("2022-10-02"));
+                    fechaHora.setHora(LocalTime.of(j,k));
+
+                    CapacidadAeropuerto capacidad = new CapacidadAeropuerto();
+                    capacidad.setFechaHora(fechaHora);
+                    capacidad.setCapacidadDisponible(aeropuertos.get(i).getCapacidad());
+                    aeropuertos.get(i).getCapacidadDisponible().add(capacidad);
+                }
+            }
+
+
+            for(int j=0;j<24;j++){
+                for(int k=0;k<60;k++){
+                    FechaHora fechaHora = new FechaHora();
+                    fechaHora.setDia(LocalDate.parse("2022-10-03"));
+                    fechaHora.setHora(LocalTime.of(j,k));
+
+                    CapacidadAeropuerto capacidad = new CapacidadAeropuerto();
+                    capacidad.setFechaHora(fechaHora);
+                    capacidad.setCapacidadDisponible(aeropuertos.get(i).getCapacidad());
+                    aeropuertos.get(i).getCapacidadDisponible().add(capacidad);
+                }
+            }
+
+            for(int j=0;j<24;j++){
+                for(int k=0;k<60;k++){
+                    FechaHora fechaHora = new FechaHora();
+                    fechaHora.setDia(LocalDate.parse("2022-10-04"));
+                    fechaHora.setHora(LocalTime.of(j,k));
+
+                    CapacidadAeropuerto capacidad = new CapacidadAeropuerto();
+                    capacidad.setFechaHora(fechaHora);
+                    capacidad.setCapacidadDisponible(aeropuertos.get(i).getCapacidad());
+                    aeropuertos.get(i).getCapacidadDisponible().add(capacidad);
+                }
+            }
+
+
         }
 
 

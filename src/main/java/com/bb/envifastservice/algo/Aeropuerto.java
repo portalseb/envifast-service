@@ -42,6 +42,7 @@ public class Aeropuerto {//implements Comparable<Aeropuerto> {
         this.nombre = aeropuerto.getNombre();
         this.timeZone = aeropuerto.getTimeZone();
         this.capacidad = aeropuerto.getCapacidad();
+        this.capacidadDisponible = aeropuerto.getCapacidadDisponible();
     }
 
     public Aeropuerto(Integer id, String codigo, String nombreCiudad, String ciudadAbreviada,

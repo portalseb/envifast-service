@@ -198,11 +198,10 @@ public class Ant {
 //            System.out.println(horaLLegadaUltimoVuelo);
 //            System.out.println(horaSalidaSiguienteVuelo);
 
-            //int k = destino.getCapacidadIndex(camino.getHoraLlegada().getHour(),camino.getHoraLlegada().getMinute(),camino.getDiaLLegada().getDayOfMonth(),camino.getDiaLLegada().getMonthValue(),camino.getDiaLLegada().getYear());
-            //if(k==-1) {System.out.println("Indice de capacidad no encontrado"); return;}
-            //int capacidadAeropuertoDestino = destino.getCapacidadDisponible().get(k);
-
-            //int capacidadVuelo = camino.getCapacidadDisponible();
+            k = destino.getCapacidadIndex(camino.getHoraLlegada().getHour(),camino.getHoraLlegada().getMinute(),camino.getDiaLLegada().getDayOfMonth(),camino.getDiaLLegada().getMonthValue(),camino.getDiaLLegada().getYear());
+            if(k==-1) {System.out.println("Indice de capacidad no encontrado"); }
+            capacidadAeropuertoDestino = destino.getCapacidadDisponible().get(k).getCapacidadDisponible();
+            capacidadVuelo = camino.getCapacidadDisponible();
 
             if(
              (origen.getId() == nodoAct.getId() && nodoAct.getId() == ambienteGlob.getNodoInicial().getId() &&
@@ -220,8 +219,8 @@ public class Ant {
              )
              )
              && !this.caminoNodos.contains(camino.getAeropuerto2())
-                     //&& capacidadVuelo >= this.ambienteGlobal.getPaquetesEnvio().size()
-                     //&& capacidadAeropuertoDestino >= this.ambienteGlobal.getPaquetesEnvio().size()
+                     && capacidadVuelo >= this.ambienteGlobal.getPaquetesEnvio().size()
+                     && capacidadAeropuertoDestino >= this.ambienteGlobal.getPaquetesEnvio().size()
 
              ) ||
              (origen.getId() == nodoAct.getId() && destino.getId()!=nodoAnt.getId() &&
@@ -235,8 +234,8 @@ public class Ant {
              )
              )
              && !this.caminoNodos.contains(camino.getAeropuerto2())
-                     //&& capacidadVuelo >= this.ambienteGlobal.getPaquetesEnvio().size()
-                     //&& capacidadAeropuertoDestino >= this.ambienteGlobal.getPaquetesEnvio().size()
+                     && capacidadVuelo >= this.ambienteGlobal.getPaquetesEnvio().size()
+                     && capacidadAeropuertoDestino >= this.ambienteGlobal.getPaquetesEnvio().size()
              )
              )
             {
@@ -263,7 +262,6 @@ public class Ant {
 //                posiblesCaminosIndices.add(i);
 //            }
         }
-        //if (caminosHormiga.getCaminos().size() == 0);
 
         return caminosHormiga;
     }
