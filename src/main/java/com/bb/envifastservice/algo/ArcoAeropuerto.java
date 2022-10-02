@@ -26,7 +26,7 @@ public class ArcoAeropuerto {
 
 
     public ArcoAeropuerto(){
-
+        this.cargo = new ArrayList<Paquete>();
     }
 
     public ArcoAeropuerto(String nombreVuelo, Aeropuerto aeropuerto1, Aeropuerto aeropuerto2, String partida, String llegada){
@@ -38,15 +38,18 @@ public class ArcoAeropuerto {
         if(aeropuerto1.getCiudad().getContinente().equals(aeropuerto2.getCiudad().getContinente())) {
             if(aeropuerto1.getCiudad().getContinente().equals("Europa")){
                 this.flight = new Avion(nombreVuelo, 250); //Se debera pasar el avion
+                this.capacidadMaxima = 250;
                 this.capacidadDisponible = 250;
             }
             else {
                 this.flight = new Avion(nombreVuelo, 300); //Se debera pasar el avion
+                this.capacidadMaxima = 250;
                 this.capacidadDisponible = 300;
             }
         }
         else {
             this.flight = new Avion(nombreVuelo, 350); //Se debera pasar el avion
+            this.capacidadMaxima = 250;
             this.capacidadDisponible = 350;
         }
         this.cargo = new ArrayList<Paquete>();
@@ -65,15 +68,18 @@ public class ArcoAeropuerto {
         if(aeropuerto1.getCiudad().getContinente().equals(aeropuerto2.getCiudad().getContinente())) {
             if(aeropuerto1.getCiudad().getContinente().equals("Europa")){
                 this.flight = new Avion(nombreVuelo, 250); //Se debera pasar el avion
+                this.capacidadMaxima = 250;
                 this.capacidadDisponible = 250;
             }
             else {
                 this.flight = new Avion(nombreVuelo, 300); //Se debera pasar el avion
+                this.capacidadMaxima = 300;
                 this.capacidadDisponible = 300;
             }
         }
         else {
             this.flight = new Avion(nombreVuelo, 350); //Se debera pasar el avion
+            this.capacidadMaxima = 350;
             this.capacidadDisponible = 350;
         }
         this.cargo = new ArrayList<Paquete>();
