@@ -1,5 +1,6 @@
 package com.bb.envifastservice.adapter.in.web;
 
+import com.bb.envifastservice.algo.Envio;
 import com.bb.envifastservice.algo.Paquete;
 import com.bb.envifastservice.application.port.in.ListPackagesService;
 import com.bb.envifastservice.hexagonal.WebAdapter;
@@ -20,7 +21,7 @@ import java.util.Optional;
 public class PackageController {
     private final ListPackagesService listPackagesService;
     @GetMapping(value = "")
-    public List<Paquete> listPaquetes(Optional<String> input){
+    public List<Envio> listPaquetes(Optional<String> input){
         if (input.isPresent()){
         return listPackagesService.listByFields(input.get());}
         else{

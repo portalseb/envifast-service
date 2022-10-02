@@ -29,6 +29,7 @@ public class PackageModel {
     private List<FlightModel> route = new ArrayList<>();
 
     private Long currentAirportId;
+
     private Long currentFlightId;
     private String destino;
     private String origen;

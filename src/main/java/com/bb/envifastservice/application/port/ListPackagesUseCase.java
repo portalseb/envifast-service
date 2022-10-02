@@ -1,5 +1,6 @@
 package com.bb.envifastservice.application.port;
 
+import com.bb.envifastservice.algo.Envio;
 import com.bb.envifastservice.algo.Paquete;
 import com.bb.envifastservice.application.port.in.ListPackagesService;
 import com.bb.envifastservice.application.port.out.ListPackagesPort;
@@ -13,7 +14,7 @@ import java.util.List;
 public class ListPackagesUseCase implements ListPackagesService {
     private final ListPackagesPort listPackagesPort;
     @Override
-    public List<Paquete> listByFields(String input) {
+    public List<Envio> listByFields(String input) {
         return listPackagesPort.listByFields(input);
     }
 }
