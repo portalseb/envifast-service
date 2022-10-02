@@ -95,11 +95,23 @@ public class Aco {
         /* Leemos los aeropuertos y los planes de vuelo */
         LectorAeropuertos lectorAeropuertos = new LectorAeropuertos();
         lectorAeropuertos.Leer("C:\\Users\\Fernando\\Desktop\\fernando\\Archivos Pucp\\ciclo 9\\dp1\\algoritmos\\c.inf226.22-2.lista.aeropuertos.v01.txt");
+//        lectorAeropuertos.Leer("D:\\Documentos\\Cursos\\Noveno ciclo\\DP1\\Algoritmos\\Datos_entrada\\c.inf226.22-2.lista.aeropuertos.v01.txt");
         aeropuertos = lectorAeropuertos.getAeropuertos();
 
         LectorArcoAeropuerto lectorArcos = new LectorArcoAeropuerto(aeropuertos);
         lectorArcos.Leer("C:\\Users\\Fernando\\Desktop\\fernando\\Archivos Pucp\\ciclo 9\\dp1\\algoritmos\\c.inf226.22-2.planes_vuelo.v01.txt");
+//        lectorArcos.Leer("D:\\Documentos\\Cursos\\Noveno ciclo\\DP1\\Algoritmos\\Datos_entrada\\c.inf226.22-2.planes_vuelo.v01.txt");
         arcos = lectorArcos.getArcos();
+
+        //Se crea los arcos para los siguientes 3 dias:
+//        for(int i =0;i<arcos.size();i++){
+//            ArcoAeropuerto arco = new ArcoAeropuerto();
+//            arcos.add(arco);
+//
+//        }
+
+
+
         // Creamos el ambiente
         /**Este constructor se cambiará, debe aceptar el arreglo de vuelos y aeropuertos, aeropuerto de inicio y fin, (mas adelante la cantidad de paquetes)*/
         AntSide ambiente= new AntSide(aeropuertos,arcos);

@@ -1,29 +1,27 @@
 package com.bb.envifastservice.algo;
 
+import javax.persistence.criteria.CriteriaBuilder;
 import java.util.ArrayList;
 
 public class Avion {
-
     private String nombre;
-    private ArrayList<Paquete> cargo = new ArrayList<>();
-    private Integer capacidad;
+
+    private Integer capacidadTotal;
+
     private int estaVolando;
 
     public Avion(String nombre){
         this.nombre = nombre;
-        this.capacidad = 500; // inicialmente
+        this.capacidadTotal = 500; // inicialmente
+    }
+
+    public Avion(String nombre, Integer capacidadTotal) {
+        this.nombre = nombre;
+        this.capacidadTotal = capacidadTotal;
     }
 
     public void setNombre(String nombre) {
         this.nombre = nombre;
-    }
-
-    public void setCargo(ArrayList<Paquete> cargo) {
-        this.cargo=cargo;
-    }
-
-    public void setCapacidad(Integer capacidad) {
-        this.capacidad = capacidad;
     }
 
     public void setEstaVolando(int estaVolando) {
@@ -34,24 +32,17 @@ public class Avion {
         return nombre;
     }
 
-    public ArrayList<Paquete> getCargo() {
-        return cargo;
-    }
 
-    public Integer getCapacidad() {
-        return this.cargo.size();
-    }
-
-    public Integer getUso() {
-        return this.cargo.size();
-    }
     public int getEstaVolando() {
         return estaVolando;
     }
 
-    public void agregarPaquete(Paquete pac) {
-        this.cargo.add(pac);
-        pac.actualizarEstado(null, this);
+    public Integer getCapacidadTotal() {
+        return capacidadTotal;
+    }
+
+    public void setCapacidadTotal(Integer capacidadTotal) {
+        this.capacidadTotal = capacidadTotal;
     }
 
 }
