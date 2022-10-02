@@ -22,6 +22,8 @@ public class ArcoAeropuerto {
 
     private Integer capacidadDisponible;
 
+    private Integer capacidadMaxima;
+
 
     public ArcoAeropuerto(){
 
@@ -197,4 +199,11 @@ public class ArcoAeropuerto {
                +  obtenerDuracionVuelo().toString();
      }
 
+    public Integer getCapacidadMaxima() {
+        return capacidadMaxima;
+    }
+
+    public void setCapacidadMaxima(Integer capacidadMaxima) {
+        this.capacidadMaxima = capacidadMaxima;
+    }
 }
