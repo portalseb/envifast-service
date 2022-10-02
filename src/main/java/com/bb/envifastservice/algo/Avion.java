@@ -20,6 +20,10 @@ public class Avion {
         this.capacidadTotal = capacidadTotal;
     }
 
+    public Avion() {
+
+    }
+
     public void setNombre(String nombre) {
         this.nombre = nombre;
     }

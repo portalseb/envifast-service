@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
-
+//TODO: FILTRO PARA FECHA Y CANTIDADES!!!
 public interface OrderRepository extends JpaRepository<OrderModel, Long> {
 
     @Query("SELECT o from OrderModel  o WHERE o.codigo like %:campos% or lower(o.destino) like lower(concat('%', :campos, '%')) or lower(o.origen) like lower(concat('%', :campos, '%')) or lower(o.emisorApellidoM) like lower(concat('%', :campos, '%'))or lower(o.emisorApellidoP) like lower(concat('%', :campos, '%'))" +
