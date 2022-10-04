@@ -112,12 +112,12 @@ public class Aco {
             horaLlegada = (double) arco.getHoraLlegada().getHour()*60 + arco.getHoraLlegada().getMinute();
 
             if(horaPartida < horaLlegada){
-                arco.setDiaPartida(LocalDate.parse("2022-10-01"));
-                arco.setDiaLLegada(LocalDate.parse("2022-10-01"));
+                arco.setDiaPartida(LocalDate.parse("2022-10-03"));
+                arco.setDiaLLegada(LocalDate.parse("2022-10-03"));
             }
             else{
-                arco.setDiaPartida(LocalDate.parse("2022-10-01"));
-                arco.setDiaLLegada(LocalDate.parse("2022-10-02"));
+                arco.setDiaPartida(LocalDate.parse("2022-10-03"));
+                arco.setDiaLLegada(LocalDate.parse("2022-10-04"));
             }
             arcos.set(i,arco);
         }
@@ -126,6 +126,7 @@ public class Aco {
 
         for(int i =0;i<total;i++){
             ArcoAeropuerto arco = new ArcoAeropuerto();
+            arco.setId(total+i);
             arco.setAeropuerto1(arcos.get(i).getAeropuerto1());
             arco.setAeropuerto2(arcos.get(i).getAeropuerto2());
             arco.setHoraPartida(arcos.get(i).getHoraPartida());
@@ -138,18 +139,19 @@ public class Aco {
             horaLlegada = (double) arcos.get(i).getHoraLlegada().getHour()*60 + arcos.get(i).getHoraLlegada().getMinute();
 
             if(horaPartida < horaLlegada){
-                arco.setDiaPartida(LocalDate.parse("2022-10-02"));
-                arco.setDiaLLegada(LocalDate.parse("2022-10-02"));
+                arco.setDiaPartida(LocalDate.parse("2022-10-04"));
+                arco.setDiaLLegada(LocalDate.parse("2022-10-04"));
             }
             else{
-                arco.setDiaPartida(LocalDate.parse("2022-10-02"));
-                arco.setDiaLLegada(LocalDate.parse("2022-10-03"));
+                arco.setDiaPartida(LocalDate.parse("2022-10-04"));
+                arco.setDiaLLegada(LocalDate.parse("2022-10-05"));
             }
             arcos.add(arco);
         }
 
         for(int i =0;i<total;i++){
             ArcoAeropuerto arco = new ArcoAeropuerto();
+            arco.setId(total+total+i);
             arco.setAeropuerto1(arcos.get(i).getAeropuerto1());
             arco.setAeropuerto2(arcos.get(i).getAeropuerto2());
             arco.setHoraPartida(arcos.get(i).getHoraPartida());
@@ -162,55 +164,22 @@ public class Aco {
             horaLlegada = (double) arcos.get(i).getHoraLlegada().getHour()*60 + arcos.get(i).getHoraLlegada().getMinute();
 
             if(horaPartida < horaLlegada){
-                arco.setDiaPartida(LocalDate.parse("2022-10-03"));
-                arco.setDiaLLegada(LocalDate.parse("2022-10-03"));
+                arco.setDiaPartida(LocalDate.parse("2022-10-05"));
+                arco.setDiaLLegada(LocalDate.parse("2022-10-05"));
             }
             else{
-                arco.setDiaPartida(LocalDate.parse("2022-10-03"));
-                arco.setDiaLLegada(LocalDate.parse("2022-10-04"));
+                arco.setDiaPartida(LocalDate.parse("2022-10-05"));
+                arco.setDiaLLegada(LocalDate.parse("2022-10-06"));
             }
             arcos.add(arco);
         }
 
 
 
-        //Se crean los paquetes (Esto se debe leer en la clase principal)
-        ArrayList<Paquete> paquetes = new ArrayList<Paquete>();
-        for(int i=0;i<5;i++){
-            Paquete paquete = new Paquete();//Ponerle el detalle
-            paquetes.add(paquete);
-        }
 
 
         //Se crean las capacidades de aeropuertos para los siguiente 3 dias
         for(int i=0;i<aeropuertos.size();i++){
-            for(int j=0;j<24;j++){
-                for(int k=0;k<60;k++){
-                    FechaHora fechaHora = new FechaHora();
-                    fechaHora.setDia(LocalDate.parse("2022-10-01"));
-                    fechaHora.setHora(LocalTime.of(j,k));
-
-                    CapacidadAeropuerto capacidad = new CapacidadAeropuerto();
-                    capacidad.setFechaHora(fechaHora);
-                    capacidad.setCapacidadDisponible(aeropuertos.get(i).getCapacidad());
-                    aeropuertos.get(i).getCapacidadDisponible().add(capacidad);
-                }
-            }
-
-            for(int j=0;j<24;j++){
-                for(int k=0;k<60;k++){
-                    FechaHora fechaHora = new FechaHora();
-                    fechaHora.setDia(LocalDate.parse("2022-10-02"));
-                    fechaHora.setHora(LocalTime.of(j,k));
-
-                    CapacidadAeropuerto capacidad = new CapacidadAeropuerto();
-                    capacidad.setFechaHora(fechaHora);
-                    capacidad.setCapacidadDisponible(aeropuertos.get(i).getCapacidad());
-                    aeropuertos.get(i).getCapacidadDisponible().add(capacidad);
-                }
-            }
-
-
             for(int j=0;j<24;j++){
                 for(int k=0;k<60;k++){
                     FechaHora fechaHora = new FechaHora();
@@ -238,6 +207,33 @@ public class Aco {
             }
 
 
+            for(int j=0;j<24;j++){
+                for(int k=0;k<60;k++){
+                    FechaHora fechaHora = new FechaHora();
+                    fechaHora.setDia(LocalDate.parse("2022-10-05"));
+                    fechaHora.setHora(LocalTime.of(j,k));
+
+                    CapacidadAeropuerto capacidad = new CapacidadAeropuerto();
+                    capacidad.setFechaHora(fechaHora);
+                    capacidad.setCapacidadDisponible(aeropuertos.get(i).getCapacidad());
+                    aeropuertos.get(i).getCapacidadDisponible().add(capacidad);
+                }
+            }
+
+            for(int j=0;j<24;j++){
+                for(int k=0;k<60;k++){
+                    FechaHora fechaHora = new FechaHora();
+                    fechaHora.setDia(LocalDate.parse("2022-10-06"));
+                    fechaHora.setHora(LocalTime.of(j,k));
+
+                    CapacidadAeropuerto capacidad = new CapacidadAeropuerto();
+                    capacidad.setFechaHora(fechaHora);
+                    capacidad.setCapacidadDisponible(aeropuertos.get(i).getCapacidad());
+                    aeropuertos.get(i).getCapacidadDisponible().add(capacidad);
+                }
+            }
+
+
         }
 
 
@@ -246,22 +242,35 @@ public class Aco {
         AntSide ambiente= new AntSide(aeropuertos,arcos);
 
 
-        // Fijamos los aeropuertos de origen y destino (Ej: 0: Bogotá - 6: Lima
-        ambiente.setNodoInicialFinal(aeropuertos.get(0),aeropuertos.get(6));
-        //Fijamos los paquetes
-        ambiente.setPaquetesEnvio(paquetes);
 
+        for(int j=0;j<6;j++) {
+            // Fijamos los aeropuertos de origen y destino (Ej: 0: Bogotá - 6: Lima
+            ambiente.setNodoInicialFinal(aeropuertos.get(0), aeropuertos.get(j+1));
 
-        // Creamos la solución
-        Aco algoritmoHormigas = new Aco();
-        long start1 = System.currentTimeMillis();
-        algoritmoHormigas.activarHormigas(ambiente);
-        long end1 = System.currentTimeMillis();
-        System.out.println("Elapsed Time in milli seconds: "+ (end1-start1));
+            //Se crean los paquetes (Esto se debe leer en la clase principal)
+            ArrayList<Paquete> paquetes = new ArrayList<Paquete>();
+            for (int i = 0; i < 5; i++) {
+                Paquete paquete = new Paquete();//Ponerle el detalle
+                paquetes.add(paquete);
+            }
 
-        //Se imprime la solucion
-        System.out.println("Camino: " + algoritmoHormigas.getSolucionCamino().toString() + algoritmoHormigas.getSolucionCosto());
+            //Fijamos los paquetes
+            ambiente.setPaquetesEnvio(paquetes);
 
+            // Creamos la solución
+            Aco algoritmoHormigas = new Aco();
+            long start1 = System.currentTimeMillis();
+            algoritmoHormigas.activarHormigas(ambiente);
+            long end1 = System.currentTimeMillis();
+            System.out.println("Elapsed Time in milli seconds: " + (end1 - start1));
+
+            //Se imprime la solucion
+            System.out.println("Envio "+ j +" - Camino: " + algoritmoHormigas.getSolucionCamino().toString() + algoritmoHormigas.getSolucionCosto());
+
+            //Actualizar capacidades
+            ambiente.actualizarCapacidades(algoritmoHormigas.getSolucionCamino());
+
+        }
     }
 }
 
