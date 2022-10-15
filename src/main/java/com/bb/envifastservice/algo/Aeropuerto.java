@@ -19,6 +19,10 @@ public class Aeropuerto {//implements Comparable<Aeropuerto> {
 
     private ArrayList<CapacidadAeropuerto> capacidadDisponible;
 
+    private double posX;
+
+    private double posY;
+
 
     private Integer f;
     private Integer h;
@@ -38,6 +42,7 @@ public class Aeropuerto {//implements Comparable<Aeropuerto> {
         this.nombre = aeropuerto.getNombre();
         this.timeZone = aeropuerto.getTimeZone();
         this.capacidad = aeropuerto.getCapacidad();
+        this.capacidadDisponible = aeropuerto.getCapacidadDisponible();
     }
 
     public Aeropuerto(Integer id, String codigo, String nombreCiudad, String ciudadAbreviada,
@@ -210,4 +215,19 @@ public class Aeropuerto {//implements Comparable<Aeropuerto> {
     }
 
 
+    public double getPosX() {
+        return posX;
+    }
+
+    public void setPosX(double posX) {
+        this.posX = posX;
+    }
+
+    public double getPosY() {
+        return posY;
+    }
+
+    public void setPosY(double posY) {
+        this.posY = posY;
+    }
 }
