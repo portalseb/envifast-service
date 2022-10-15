@@ -10,12 +10,14 @@ public class CapacidadAeropuerto {
     private ArrayList<Paquete> deposito;
 
     public CapacidadAeropuerto() {
+        this.deposito = new ArrayList<Paquete>();
     }
 
     public CapacidadAeropuerto(Integer id, FechaHora fechaHora, Integer capacidadDisponible) {
         this.id = id;
         this.fechaHora = fechaHora;
         this.capacidadDisponible = capacidadDisponible;
+        this.deposito = new ArrayList<Paquete>();
     }
 
     public Integer getId() {
