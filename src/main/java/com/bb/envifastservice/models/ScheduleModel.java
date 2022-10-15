@@ -3,11 +3,15 @@ package com.bb.envifastservice.models;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @Entity
-@Table(name= "Schedule")
-public class ScheduleModel {
+@Table(name= "Flight")
+public class FlightModel {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "_id_flight")
@@ -26,10 +30,13 @@ public class ScheduleModel {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "_airport_arrival_id", insertable = false, updatable = false)
     private AirportsModel arrivalAirport;
+    @ManyToMany(mappedBy = "route")
+    private List<PackageModel> cargo = new ArrayList<>();
     @Column(name = "_departure_date")
-    private String departureTime;
+    private LocalDateTime departureTime;
     @Column(name = "_arrival_date")
-    private String arrivalTime;
+    private LocalDateTime arrivalTime;
+    private int isFlying;
     @Column(name = "_active")
     private int active;
 

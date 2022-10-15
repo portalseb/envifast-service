@@ -1,6 +1,8 @@
 package com.bb.envifastservice.adapter.in.web;
 
+import com.bb.envifastservice.adapter.out.persistence.dtos.AirportCoord;
 import com.bb.envifastservice.algo.Aeropuerto;
+import com.bb.envifastservice.application.port.in.ListAirportCoordService;
 import com.bb.envifastservice.application.port.in.ListAllAirportsService;
 import com.bb.envifastservice.hexagonal.WebAdapter;
 import lombok.RequiredArgsConstructor;
@@ -16,10 +18,17 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping(value = "/airports")
-public class ListAllAirportsController {
+public class AirportsController {
     private final ListAllAirportsService listAllAirportsService;
+    private final ListAirportCoordService listAirportCoordService;
     @GetMapping(value = "")
     public List<Aeropuerto> listAllAeropuertos(){
         return listAllAirportsService.listAllAirpoirts();
     }
+
+    @GetMapping(value = "/coordinates")
+    public List<AirportCoord>getCoordinates() {
+        return  listAirportCoordService.listCoordinates();
+    }
+
 }

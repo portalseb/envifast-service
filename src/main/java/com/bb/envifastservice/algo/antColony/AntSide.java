@@ -2,6 +2,7 @@ package com.bb.envifastservice.algo.antColony;
 
 import com.bb.envifastservice.algo.Aeropuerto;
 import com.bb.envifastservice.algo.ArcoAeropuerto;
+import com.bb.envifastservice.algo.Paquete;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import java.util.ArrayList;
@@ -21,6 +22,8 @@ public class AntSide {
     public int tipoEnvio; //1: mismo continente, 2: diferentes contientes
     public double plazoMaximoEntrega;
 
+    public ArrayList<Paquete> paquetesEnvio;
+
     public AntSide(){
         caminos = new ArrayList<ArcoAeropuerto>();
         //caminos = new ArrayList<ArcoAeropuerto>();
@@ -32,6 +35,7 @@ public class AntSide {
         probabilidadDeSerEscogido = new ArrayList<Double>();
         numeroVecesDeSerEscogigo = new ArrayList<Integer>();
         posiblesCaminosIndices = new ArrayList<Integer>();
+        paquetesEnvio = new ArrayList<Paquete>();
     }
 
     public AntSide(ArrayList<Aeropuerto> aeropuertos, ArrayList<ArcoAeropuerto> vuelos){
@@ -45,6 +49,7 @@ public class AntSide {
         probabilidadDeSerEscogido = new ArrayList<Double>(vuelos.size());
         numeroVecesDeSerEscogigo = new ArrayList<Integer>(vuelos.size());
         posiblesCaminosIndices = new ArrayList<Integer>();
+        paquetesEnvio = new ArrayList<Paquete>();
     }
 
     public AntSide(int numeroAristas, int numeroNodos) {
@@ -61,6 +66,7 @@ public class AntSide {
         probabilidadDeSerEscogido = new ArrayList<Double>(numeroAristas);
         numeroVecesDeSerEscogigo = new ArrayList<Integer>(numeroAristas);
         posiblesCaminosIndices = new ArrayList<Integer>();
+        paquetesEnvio = new ArrayList<Paquete>();
     }
 
     public AntSide(int numeroAristas, int numeroNodos, Aeropuerto nodoIni, Aeropuerto nodoFin) {
@@ -88,7 +94,38 @@ public class AntSide {
             this.plazoMaximoEntrega=2880.00; //2 dias en minutos
         }
         posiblesCaminosIndices = new ArrayList<Integer>();
+        paquetesEnvio = new ArrayList<Paquete>();
     }
+
+    public AntSide(int numeroAristas, int numeroNodos, Aeropuerto nodoIni, Aeropuerto nodoFin, ArrayList<Paquete> paquetes) {
+        caminos = new ArrayList<ArcoAeropuerto>(numeroAristas);
+        //caminos = new ArrayList<ArcoAeropuerto>(numeroAristas);
+        nodos = new ArrayList<Aeropuerto>(numeroNodos);
+        //nodos = new ArrayList <Aeropuerto>(numeroNodos);
+        costos = new ArrayList<Double>(numeroAristas);
+        visibilidad = new ArrayList<Double>(numeroAristas);
+        cantidadFeromonasCamino = new ArrayList<Double>(numeroAristas);
+        for(int i=0;i<numeroAristas;i++){
+            cantidadFeromonasCamino.add(0.1);
+        }
+        probabilidadDeSerEscogido = new ArrayList<Double>(numeroAristas);
+        numeroVecesDeSerEscogigo = new ArrayList<Integer>(numeroAristas);
+
+        this.nodoInicial = nodoIni;
+        this.nodoFinal = nodoFin;
+        if(nodoInicial.getCiudad().getContinente().equals(nodoFinal.getCiudad().getContinente())) {
+            this.tipoEnvio = 1;
+            this.plazoMaximoEntrega= 1440.00; //1 dia en minutos
+        }
+        else {
+            this.tipoEnvio = 2;
+            this.plazoMaximoEntrega=2880.00; //2 dias en minutos
+        }
+        posiblesCaminosIndices = new ArrayList<Integer>();
+        paquetesEnvio = paquetes;
+    }
+
+
 
     public Aeropuerto getNodoInicial() {
         return nodoInicial;
@@ -118,7 +155,39 @@ public class AntSide {
             this.tipoEnvio = 2;
             this.plazoMaximoEntrega=2880.00; //2 dias en minutos
         }
+        paquetesEnvio = new ArrayList<Paquete>();
     }
+
+    public void setNodoInicialFinalPaquetes(Aeropuerto nodoInicial, Aeropuerto nodoFinal, ArrayList<Paquete> paquetes) {
+        this.nodoInicial = nodoInicial;
+        this.nodoFinal = nodoFinal;
+        if(nodoInicial.getCiudad().getContinente().equals(nodoFinal.getCiudad().getContinente())) {
+            this.tipoEnvio = 1;
+            this.plazoMaximoEntrega= 1440.00; //1 dia en minutos
+        }
+        else {
+            this.tipoEnvio = 2;
+            this.plazoMaximoEntrega=2880.00; //2 dias en minutos
+        }
+        this.paquetesEnvio = paquetes;
+    }
+
+    public void setTipoEnvio(int tipoEnvio) {
+        this.tipoEnvio = tipoEnvio;
+    }
+
+    public void setPlazoMaximoEntrega(double plazoMaximoEntrega) {
+        this.plazoMaximoEntrega = plazoMaximoEntrega;
+    }
+
+    public ArrayList<Paquete> getPaquetesEnvio() {
+        return paquetesEnvio;
+    }
+
+    public void setPaquetesEnvio(ArrayList<Paquete> paquetesEnvio) {
+        this.paquetesEnvio = paquetesEnvio;
+    }
+
     public int getTipoEnvio() {
         return tipoEnvio;
     }

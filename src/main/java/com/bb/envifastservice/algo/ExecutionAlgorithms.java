@@ -3,7 +3,6 @@ package com.bb.envifastservice.algo;
 import com.bb.envifastservice.GenerateTestData;
 import com.bb.envifastservice.algo.antColony.Aco;
 import com.bb.envifastservice.algo.antColony.AntSide;
-import com.bb.envifastservice.algo.astar.AStarSearch;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -65,35 +64,35 @@ public class ExecutionAlgorithms {
             System.out.println("Numero de envios del archivo data.prueba." + i + ".txt: " + lectorEnviosCorto.getDestinos().size());
 
             for(int j=0; j<lectorEnviosCorto.getDestinos().size(); j++){
-                /* Llenamos los atributos de la clase grafo */
-                grafo.calcularHeuristica(lectorEnviosCorto.getDestinos().get(j)); // calculamos la heuristica segun el nodo final Praga
-
-                /* Luego, instanciamos la clase que buscara la ruta mas corta segun el nodo inicial */
-                AStarSearch aStarSearch = new AStarSearch(grafo);
-
-                lectorEnviosCorto.getOrigenes().get(j).setParent(null);
-
-                /* Nodo inicial y final */
-                aStarSearch.setInitialNode(lectorEnviosCorto.getOrigenes().get(j));
-                aStarSearch.setFinalNode(lectorEnviosCorto.getDestinos().get(j));
-
-                /* Finalmente probamos el algoritmo */
-                ArrayList<Aeropuerto> rutaConseguida;
-
-                double start = System.nanoTime();
-                rutaConseguida = aStarSearch.findPath();
-                double end = System.nanoTime();
-                tiempoTranscurrido += end - start;
-                System.out.println("Tiempo en milisegundos: "+ (end-start)/1000000.00);
-
-                if(rutaConseguida != null){
-                    System.out.println("Se encontro una solucion");
-//                    for (Aeropuerto avion : rutaConseguida) {
-//                        System.out.println(avion);
-//                    }
-                }else{
-                    System.out.println("No se encontro solucion");
-                }
+//                /* Llenamos los atributos de la clase grafo */
+//                grafo.calcularHeuristica(lectorEnviosCorto.getDestinos().get(j)); // calculamos la heuristica segun el nodo final Praga
+//
+//                /* Luego, instanciamos la clase que buscara la ruta mas corta segun el nodo inicial */
+//                AStarSearch aStarSearch = new AStarSearch(grafo);
+//
+//                lectorEnviosCorto.getOrigenes().get(j).setParent(null);
+//
+//                /* Nodo inicial y final */
+//                aStarSearch.setInitialNode(lectorEnviosCorto.getOrigenes().get(j));
+//                aStarSearch.setFinalNode(lectorEnviosCorto.getDestinos().get(j));
+//
+//                /* Finalmente probamos el algoritmo */
+//                ArrayList<Aeropuerto> rutaConseguida;
+//
+//                double start = System.nanoTime();
+//                rutaConseguida = aStarSearch.findPath();
+//                double end = System.nanoTime();
+//                tiempoTranscurrido += end - start;
+//                System.out.println("Tiempo en milisegundos: "+ (end-start)/1000000.00);
+//
+//                if(rutaConseguida != null){
+//                    System.out.println("Se encontro una solucion");
+////                    for (Aeropuerto avion : rutaConseguida) {
+////                        System.out.println(avion);
+////                    }
+//                }else{
+//                    System.out.println("No se encontro solucion");
+//                }
             }
 
             resultado = String.valueOf(tiempoTranscurrido / 1000000000.00);
