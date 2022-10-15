@@ -5,6 +5,10 @@ import com.bb.envifastservice.algo.ArcoAeropuerto;
 import com.bb.envifastservice.algo.Paquete;
 
 import javax.persistence.criteria.CriteriaBuilder;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 
 public class AntSide {
@@ -279,4 +283,57 @@ public class AntSide {
             i++;
         }
     }
+
+    public void actualizarCapacidades(ArrayList<ArcoAeropuerto> caminoSolucion){
+        int minutosHastaElVuelo=0;
+        LocalDateTime horaAct = LocalDateTime.now();
+        LocalDateTime horaAnt = LocalDateTime.of(horaAct.getYear(),horaAct.getMonthValue(),horaAct.getDayOfMonth(),horaAct.getHour(),horaAct.getMinute());
+
+        for(int i=0;i<caminoSolucion.size();i++){
+            ArcoAeropuerto camino = caminoSolucion.get(i);
+            Aeropuerto origen = camino.getAeropuerto1();
+            Aeropuerto destino = camino.getAeropuerto2();
+
+            //Calcular minutos entre horaAnt y camino.horaSalida
+            minutosHastaElVuelo = (int) ChronoUnit.MINUTES.between(horaAnt,LocalDateTime.of(camino.getDiaPartida().getYear(),camino.getDiaPartida().getMonthValue(),camino.getDiaPartida().getDayOfMonth(),camino.getHoraPartida().getHour(),camino.getHoraPartida().getMinute()));
+
+
+            //Se llena la capacidad de aeropuerto origen desde la hora de llegada anterior hasta la hora de partida del vuelo
+            for(int k=0;k<minutosHastaElVuelo;k++){
+                int hora=horaAnt.getHour();
+                int minuto = horaAnt.getMinute();
+                int dia = horaAnt.getDayOfMonth();
+                int mes = horaAnt.getMonthValue();
+                int anio = horaAnt.getYear();
+                int ind = nodos.get(nodos.indexOf(origen)).getCapacidadIndex(hora, minuto, dia, mes, anio);
+                for(int j=0;j<paquetesEnvio.size();j++) {
+                    nodos.get(nodos.indexOf(origen)).getCapacidadDisponible().get(ind).agregarPaquete(paquetesEnvio.get(j));
+                }
+                horaAnt = horaAnt.plusMinutes(1);
+            }
+
+            for(int j=0;j<paquetesEnvio.size();j++) {
+                caminos.get(caminos.indexOf(camino)).agregarPaquete(paquetesEnvio.get(j));
+            }
+
+            //Se llena la capacidad de aeropuerto destino desde la hora de llegada hasta 1 hora despues
+            horaAnt = LocalDateTime.of(camino.getDiaLLegada().getYear(),camino.getDiaLLegada().getMonthValue(),camino.getDiaLLegada().getDayOfMonth(),camino.getHoraLlegada().getHour(),camino.getHoraLlegada().getMinute());
+
+
+            for(int k=0;k<60;k++){
+                int hora=horaAnt.getHour();
+                int minuto = horaAnt.getMinute();
+                int dia = horaAnt.getDayOfMonth();
+                int mes = horaAnt.getMonthValue();
+                int anio = horaAnt.getYear();
+                int ind = nodos.get(nodos.indexOf(destino)).getCapacidadIndex(hora, minuto, dia, mes, anio);
+                for(int j=0;j<paquetesEnvio.size();j++) {
+                    nodos.get(nodos.indexOf(destino)).getCapacidadDisponible().get(ind).agregarPaquete(paquetesEnvio.get(j));
+                }
+                horaAnt = horaAnt.plusMinutes(1);
+            }
+        }
+    }
+
+
 }

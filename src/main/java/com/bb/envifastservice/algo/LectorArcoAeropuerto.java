@@ -20,6 +20,7 @@ public class LectorArcoAeropuerto {
     public void Leer(String ruta)  throws FileNotFoundException {
         File archivo = new File (ruta);
         BufferedReader br = new BufferedReader(new FileReader(archivo));
+        Integer idArco=1;
         try {
             String data;
             int i = 0; // estableceremos como contador para no tomar en cuanta ciertas lineas
@@ -43,12 +44,13 @@ public class LectorArcoAeropuerto {
                         }
                     }
                     // ahora ya nos aseguramos que esta leyendo bien los datos
-                    ArcoAeropuerto pv = new ArcoAeropuerto(nombreVuelo, this.aeropuertos.get(j_aeropuerto1),
+                    ArcoAeropuerto pv = new ArcoAeropuerto(idArco,nombreVuelo, this.aeropuertos.get(j_aeropuerto1),
                             this.aeropuertos.get(j_aeropuerto2), parts[2], parts[3]);
 //                    pv.setHoraInicio(parts[2]);
 //                    pv.setHoraFin(parts[3]);
 //                    this.vuelos.add(pv);
                     this.arcos.add(pv);
+                    idArco++;
                 }
                 i++;
             }
