@@ -3,6 +3,7 @@ package com.bb.envifastservice.algo;
 import lombok.Data;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 @Data
@@ -32,7 +33,7 @@ public class Envio {
     private Aeropuerto origen;
     private Aeropuerto destino;
 
-    private LocalDate fechaEnvio;
+    private LocalDateTime fechaEnvio;
     private double tiempoTotal;
 
     private String token;
