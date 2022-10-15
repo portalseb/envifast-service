@@ -179,9 +179,10 @@ public class Ant {
 
         }
         else {
-            horaLLegadaUltimoVuelo = (double) LocalTime.now().getHour() *60 + LocalTime.now().getMinute(); //aqui poner la hora actual
-            diaLlegadaUltimoVuelo = (double) LocalDate.now().getYear()*10000 + LocalDate.now().getMonthValue()*100 + LocalDate.now().getDayOfMonth(); //ver si esta bien
             dateLlegadaUltimoVuelo = LocalDate.now();
+            horaLLegadaUltimoVuelo = (double) LocalTime.now().getHour() *60 + LocalTime.now().getMinute(); //aqui poner la hora actual
+            diaLlegadaUltimoVuelo = (double) dateLlegadaUltimoVuelo.getYear()*10000 + dateLlegadaUltimoVuelo.getMonthValue()*100 + dateLlegadaUltimoVuelo.getDayOfMonth(); //ver si esta bien
+
         }
         for(int i=0;i<ambienteGlob.getCaminos().size();i++){
             camino = ambienteGlob.getCaminos().get(i);
@@ -199,7 +200,7 @@ public class Ant {
 //            System.out.println(horaSalidaSiguienteVuelo);
 
             k = destino.getCapacidadIndex(camino.getHoraLlegada().getHour(),camino.getHoraLlegada().getMinute(),camino.getDiaLLegada().getDayOfMonth(),camino.getDiaLLegada().getMonthValue(),camino.getDiaLLegada().getYear());
-            if(k==-1) {System.out.println("Indice de capacidad no encontrado"); }
+            if(k==-1) {System.out.println("Indice de capacidad no encontrado"); continue;}
             capacidadAeropuertoDestino = destino.getCapacidadDisponible().get(k).getCapacidadDisponible();
             capacidadVuelo = camino.getCapacidadDisponible();
 
