@@ -7,6 +7,7 @@ import com.bb.envifastservice.algo.Aeropuerto;
 import com.bb.envifastservice.algo.Ciudad;
 import com.bb.envifastservice.algo.Envio;
 import com.bb.envifastservice.algo.Paquete;
+import com.bb.envifastservice.application.port.out.InsertOrderPort;
 import com.bb.envifastservice.application.port.out.ListPackagesPort;
 import com.bb.envifastservice.hexagonal.PersistenceAdapter;
 import com.bb.envifastservice.models.OrderModel;
@@ -17,7 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 @PersistenceAdapter
 @RequiredArgsConstructor
-public class OrderAdapter implements ListPackagesPort {
+public class OrderAdapter implements ListPackagesPort, InsertOrderPort {
     private final PackageRepository packageRepository;
     private final AirportRepository airportRepository;
     private final OrderRepository orderRepository;
@@ -112,6 +113,40 @@ public class OrderAdapter implements ListPackagesPort {
         }
 
         return envios;
+    }
+
+    @Override
+    public Envio insertOrd(Envio envio){
+        var envioNuevo =new OrderModel();
+        envioNuevo.setCodigo(envio.getCodigo());
+        envioNuevo.setEmisorNombres(envio.getEmisorNombres());
+        envioNuevo.setDestinatarioNombres(envio.getDestinatarioNombres());
+
+
+
+        envioNuevo.setCantidad(envio.getCantidadPaquetes());
+        //envioNuevo.setFechaEnvio(envio.getFechaEnvio());
+
+        envioNuevo.setToken(envio.getToken());
+
+        //envioNuevo.setOrigen(envio.getOrigen().getCiudad().getNombre());
+        //envioNuevo.setDestino(envio.getDestino().getCiudad().getNombre());
+
+        envioNuevo.setTiempoTotal(0.0);
+        envioNuevo.setActive(1);
+
+        orderRepository.save(envioNuevo);
+
+        //for(int i=0;i<envio.getPaquetes().size();i++){
+            //var paqueteNuevo = new PackageModel();
+            //paqueteNuevo.setOrigen(envio.getPaquetes().get(i).getOrigen().getNombre());
+            //paqueteNuevo.setDestino(envio.getPaquetes().get(i).getDestino().getNombre());
+            //packageRepository.save(new PackageModel());
+        //}
+
+        envio.setId(envioNuevo.getId());
+
+    return envio;
     }
 
 }
