@@ -30,9 +30,7 @@ public class Paquete {
         this.ruta = new ArrayList<ArcoAeropuerto>();
     }
 
-    public Paquete() {
 
-    }
 
     public void setId(String id) {
         this.id = id;
