@@ -3,6 +3,8 @@ package com.bb.envifastservice.models;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 @Data
@@ -25,6 +27,11 @@ public class AirportsModel {
     private int maxCapacity;
     @Column(name = "_available_capacity")
     private int availableCapacity;
+
+    @Column(name = "_capacity")
+    @OneToMany(mappedBy = "airport")
+    private List<AirportsCapacityModel> capacity = new ArrayList<>();
+
     @Column(name = "_city_short_name")
     private String cityShortName;
     @Column(name="_country_name")

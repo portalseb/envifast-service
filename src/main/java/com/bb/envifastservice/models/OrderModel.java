@@ -5,6 +5,7 @@ import lombok.Data;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,7 +36,7 @@ public class OrderModel {
     @JoinColumn(name="order_id")
     private List<PackageModel> packs = new ArrayList<>();
     private Integer cantidad;
-    private LocalDate fechaEnvio;
+    private LocalDateTime fechaEnvio;
     private double tiempoTotal;
     @Column(name = "secretToken")
     private String token;
