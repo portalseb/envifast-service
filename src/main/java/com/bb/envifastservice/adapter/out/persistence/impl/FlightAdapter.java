@@ -4,18 +4,26 @@ package com.bb.envifastservice.adapter.out.persistence.impl;
 import com.bb.envifastservice.adapter.out.persistence.repos.AirportRepository;
 import com.bb.envifastservice.adapter.out.persistence.repos.FlightRepository;
 import com.bb.envifastservice.algo.*;
+import com.bb.envifastservice.application.port.out.GenerateNextWeekFlightsPort;
 import com.bb.envifastservice.application.port.out.ListFlightByIdPort;
 import com.bb.envifastservice.hexagonal.PersistenceAdapter;
+import com.bb.envifastservice.models.FlightModel;
 import com.bb.envifastservice.models.PackageModel;
 import lombok.RequiredArgsConstructor;
-
+import java.io.FileNotFoundException;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Optional;
+import java.util.Scanner;
 
 @PersistenceAdapter
 @RequiredArgsConstructor
-public class FlightAdapter implements ListFlightByIdPort {
+public class FlightAdapter implements ListFlightByIdPort, GenerateNextWeekFlightsPort {
     private final FlightRepository flightRepository;
     private final AirportRepository airportRepository;
     @Override
@@ -87,5 +95,53 @@ public class FlightAdapter implements ListFlightByIdPort {
         }
         arco.setCargo(paquetes);
         return arco;
+    }
+
+    @Override
+    public void generateNextWeekFlights() {
+        File planes = new File("C:\\Workspace\\spring\\envifast-service\\c.inf226.22-2.planes_vuelo.v01.txt");
+        Scanner myReader = null;
+        for (int i = 0; i<7;i++){
+            try {
+                myReader = new Scanner(planes);
+            } catch (FileNotFoundException e) {
+                throw new RuntimeException(e);
+            }
+            while (myReader.hasNextLine()) {
+                var vuelo = new FlightModel();
+                final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
+                var nextLine = myReader.nextLine();
+                var data=  nextLine.split("-");
+                var depAirport=  airportRepository.findByCityShortNameAndActive(data[0],1);
+                var arrivalAirport=  airportRepository.findByCityShortNameAndActive(data[1],1);
+                vuelo.setActive(1);
+                vuelo.setArrivalAirport(arrivalAirport);
+                vuelo.setDepartureAirport(depAirport);
+                if(arrivalAirport.getContinent().equals("EUROPA") && depAirport.getContinent().equals("EUROPA")){
+                    vuelo.setMaxCapacity(250L);
+                    vuelo.setAvailableCapacity(250L);
+                }
+
+                if(arrivalAirport.getContinent().equals("AMERICA DEL SUR") && depAirport.getContinent().equals("AMERICA DEL SUR"))
+                {
+                    vuelo.setMaxCapacity(300L);
+                    vuelo.setAvailableCapacity(300L);
+                }
+                if(!arrivalAirport.getContinent().equals(depAirport.getContinent()))
+                {
+                    vuelo.setMaxCapacity(350L);
+                    vuelo.setAvailableCapacity(350L);
+                }
+                var sale = LocalDateTime.now().with(LocalTime.parse(data[2], formatter)).plusDays(i);
+                var llega = LocalDateTime.now().with(LocalTime.parse(data[3], formatter)).plusDays(i);
+
+
+                vuelo.setArrivalTime(llega);
+                vuelo.setDepartureTime(sale);
+                flightRepository.save(vuelo);
+            }
+            myReader.close();
+        }
+
     }
 }

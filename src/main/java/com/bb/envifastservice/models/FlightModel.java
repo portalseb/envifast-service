@@ -24,11 +24,11 @@ public class FlightModel {
     private Boolean departed;
     @Column(name = "_arrived")
     private Boolean arrived;
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "_airport_departure_id", insertable = false, updatable = false)
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "_airport_departure_id", insertable = true, updatable = true)
     private AirportsModel departureAirport;
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "_airport_arrival_id", insertable = false, updatable = false)
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "_airport_arrival_id", insertable = true, updatable = true)
     private AirportsModel arrivalAirport;
     @ManyToMany(mappedBy = "route")
     private List<PackageModel> cargo = new ArrayList<>();
