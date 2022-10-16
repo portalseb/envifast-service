@@ -125,25 +125,29 @@ public class OrderAdapter implements ListPackagesPort, InsertOrderPort {
 
 
         envioNuevo.setCantidad(envio.getCantidadPaquetes());
-        //envioNuevo.setFechaEnvio(envio.getFechaEnvio());
+        envioNuevo.setFechaEnvio(envio.getFechaEnvio());
 
         envioNuevo.setToken(envio.getToken());
 
-        //envioNuevo.setOrigen(envio.getOrigen().getCiudad().getNombre());
-        //envioNuevo.setDestino(envio.getDestino().getCiudad().getNombre());
+        envioNuevo.setOrigen(envio.getOrigen().getCiudad().getNombre());
+        envioNuevo.setDestino(envio.getDestino().getCiudad().getNombre());
 
         envioNuevo.setTiempoTotal(0.0);
         envioNuevo.setActive(1);
 
-        orderRepository.save(envioNuevo);
+        List<PackageModel> paquetes = new ArrayList<PackageModel>();
 
-        //for(int i=0;i<envio.getPaquetes().size();i++){
-            //var paqueteNuevo = new PackageModel();
-            //paqueteNuevo.setOrigen(envio.getPaquetes().get(i).getOrigen().getNombre());
-            //paqueteNuevo.setDestino(envio.getPaquetes().get(i).getDestino().getNombre());
+        for(int i=0;i<envio.getPaquetes().size();i++){
+            var paqueteNuevo = new PackageModel();
+            paqueteNuevo.setOrigen(envio.getPaquetes().get(i).getOrigen().getCiudad().getNombre());
+            paqueteNuevo.setDestino(envio.getPaquetes().get(i).getDestino().getCiudad().getNombre());
+            paquetes.add(paqueteNuevo);
             //packageRepository.save(new PackageModel());
-        //}
+        }
 
+        envioNuevo.setPacks(paquetes);
+
+        orderRepository.save(envioNuevo);
         envio.setId(envioNuevo.getId());
 
     return envio;

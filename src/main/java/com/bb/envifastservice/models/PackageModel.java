@@ -4,6 +4,7 @@ import com.bb.envifastservice.algo.Aeropuerto;
 import com.bb.envifastservice.algo.ArcoAeropuerto;
 import com.bb.envifastservice.algo.Avion;
 import lombok.Data;
+import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -17,7 +18,8 @@ import java.util.List;
 @Table(name = "Package")
 public class PackageModel {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(generator="system-uuid")
+    @GenericGenerator(name="system-uuid", strategy = "uuid")
     private String id;
     private LocalDateTime dateTime;
     @ManyToMany
