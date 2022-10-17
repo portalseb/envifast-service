@@ -9,21 +9,25 @@ import com.bb.envifastservice.models.FlightModel;
 import com.bb.envifastservice.models.PackageModel;
 import lombok.RequiredArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.List;
-//TODO: terminar, verificar que se devuelva
+//TODO: verificar que se devuelva
 @PersistenceAdapter
 @RequiredArgsConstructor
 public class PackageAdapter implements ShowPackageRoutePort {
     private final PackageRepository packageRepository;
     private final AirportRepository airportRepository;
+    private final FlightAdapter flightAdapter;
     @Override
     public List<ArcoAeropuerto> showRoute(String id) {
-        var pack = packageRepository.findByIdAndActive(id, 1);
-        for (FlightModel vuelo:pack.getRoute()
+        var vuelos = new ArrayList<ArcoAeropuerto>();
+        var flights = packageRepository.findFlightsInPackageRouteAndActive(id,1);
+        for (FlightModel vuelo:flights
              ) {
-            var arco = new ArcoAeropuerto();
+            var arco = flightAdapter.listById(vuelo.getId());
+            vuelos.add(arco);
 
         }
-        return null;
+        return vuelos;
     }
 }

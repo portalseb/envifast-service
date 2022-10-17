@@ -36,6 +36,7 @@ public class FlightAdapter implements ListFlightByIdPort, GenerateNextWeekFlight
         var aeropuertoLlegada = new Aeropuerto();
         var paquetes = new ArrayList<Paquete>();
         //Aeropuertos Salida:
+        arco.setId(Math.toIntExact(bdVuelo.getId()));
         aeropuertoSalida.setId(Math.toIntExact(bdVuelo.getDepartureAirport().getId()));
         aeropuertoSalida.setCapacidad(bdVuelo.getDepartureAirport().getMaxCapacity());
         aeropuertoSalida.setCodigo(bdVuelo.getDepartureAirport().getAirportCode());
@@ -94,6 +95,7 @@ public class FlightAdapter implements ListFlightByIdPort, GenerateNextWeekFlight
             paquetes.add(paquete);
         }
         arco.setCargo(paquetes);
+
         return arco;
     }
 
