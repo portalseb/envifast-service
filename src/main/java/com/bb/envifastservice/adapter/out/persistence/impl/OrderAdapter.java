@@ -1,15 +1,18 @@
 package com.bb.envifastservice.adapter.out.persistence.impl;
 
 import com.bb.envifastservice.adapter.out.persistence.repos.AirportRepository;
+import com.bb.envifastservice.adapter.out.persistence.repos.FlightRepository;
 import com.bb.envifastservice.adapter.out.persistence.repos.OrderRepository;
 import com.bb.envifastservice.adapter.out.persistence.repos.PackageRepository;
-import com.bb.envifastservice.algo.Aeropuerto;
-import com.bb.envifastservice.algo.Ciudad;
-import com.bb.envifastservice.algo.Envio;
-import com.bb.envifastservice.algo.Paquete;
+import com.bb.envifastservice.algo.*;
+import com.bb.envifastservice.algo.antColony.Aco;
+import com.bb.envifastservice.algo.antColony.AntSide;
 import com.bb.envifastservice.application.port.out.InsertOrderPort;
 import com.bb.envifastservice.application.port.out.ListPackagesPort;
+import com.bb.envifastservice.application.port.out.PlanOrderRoutePort;
 import com.bb.envifastservice.hexagonal.PersistenceAdapter;
+import com.bb.envifastservice.models.AirportsModel;
+import com.bb.envifastservice.models.FlightModel;
 import com.bb.envifastservice.models.OrderModel;
 import com.bb.envifastservice.models.PackageModel;
 import lombok.RequiredArgsConstructor;
@@ -18,10 +21,13 @@ import java.util.ArrayList;
 import java.util.List;
 @PersistenceAdapter
 @RequiredArgsConstructor
-public class OrderAdapter implements ListPackagesPort, InsertOrderPort {
+public class OrderAdapter implements ListPackagesPort, InsertOrderPort, PlanOrderRoutePort {
     private final PackageRepository packageRepository;
     private final AirportRepository airportRepository;
     private final OrderRepository orderRepository;
+
+    private final FlightRepository flightRepository;
+
     @Override
     public List<Envio> listByFields(String input) {
         var registros = orderRepository.findAllByFieldsLikeAndActive(input);
@@ -120,33 +126,122 @@ public class OrderAdapter implements ListPackagesPort, InsertOrderPort {
         var envioNuevo =new OrderModel();
         envioNuevo.setCodigo(envio.getCodigo());
         envioNuevo.setEmisorNombres(envio.getEmisorNombres());
+        envioNuevo.setEmisorApellidoP(envio.getEmisorApellidoP());
+        envioNuevo.setEmisorApellidoM(envio.getEmisorApellidoM());
+        envioNuevo.setEmisorDocumentoTipo(envio.getEmisorDocumentoTipo());
+        envioNuevo.setEmisorDocumentoNumero(envio.getEmisorDocumentoNumero());
+        envioNuevo.setEmisorCorreo(envio.getEmisorCorreo());
+        envioNuevo.setEmisorTelefonoNumero(envio.getEmisorTelefonoNumero());
+
         envioNuevo.setDestinatarioNombres(envio.getDestinatarioNombres());
-
-
+        envioNuevo.setDestinatarioApellidoP(envio.getDestinatarioApellidoP());
+        envioNuevo.setDestinatarioApellidoM(envio.getDestinatarioApellidoM());
+        envioNuevo.setDestinatarioDocumentoTipo(envio.getDestinatarioDocumentoTipo());
+        envioNuevo.setDestinatarioDocumentoNumero(envio.getDestinatarioDocumentoNumero());
+        envioNuevo.setDestinatarioCorreo(envio.getDestinatarioCorreo());
+        envioNuevo.setDestinatarioTelefonoNumero(envio.getDestinatarioTelefonoNumero());
 
         envioNuevo.setCantidad(envio.getCantidadPaquetes());
-        //envioNuevo.setFechaEnvio(envio.getFechaEnvio());
-
-        envioNuevo.setToken(envio.getToken());
-
-        //envioNuevo.setOrigen(envio.getOrigen().getCiudad().getNombre());
-        //envioNuevo.setDestino(envio.getDestino().getCiudad().getNombre());
+        envioNuevo.setFechaEnvio(envio.getFechaEnvio());
 
         envioNuevo.setTiempoTotal(0.0);
+        envioNuevo.setToken(envio.getToken());
+        envioNuevo.setOrigen(envio.getOrigen().getCiudad().getNombre());
+        envioNuevo.setDestino(envio.getDestino().getCiudad().getNombre());
         envioNuevo.setActive(1);
 
+        List<PackageModel> paquetes = new ArrayList<PackageModel>();
+
+        for(int i=0;i<envio.getPaquetes().size();i++){
+            var paqueteNuevo = new PackageModel();
+            paqueteNuevo.setDateTime(envio.getFechaEnvio());
+            paqueteNuevo.setCurrentAirportId(envio.getPaquetes().get(i).getOrigen().getId().longValue());
+            paqueteNuevo.setOrigen(envio.getPaquetes().get(i).getOrigen().getCiudad().getNombre());
+            paqueteNuevo.setDestino(envio.getPaquetes().get(i).getDestino().getCiudad().getNombre());
+            paqueteNuevo.setActive(1);
+            paquetes.add(paqueteNuevo);
+        }
+
+        envioNuevo.setPacks(paquetes);
+
         orderRepository.save(envioNuevo);
-
-        //for(int i=0;i<envio.getPaquetes().size();i++){
-            //var paqueteNuevo = new PackageModel();
-            //paqueteNuevo.setOrigen(envio.getPaquetes().get(i).getOrigen().getNombre());
-            //paqueteNuevo.setDestino(envio.getPaquetes().get(i).getDestino().getNombre());
-            //packageRepository.save(new PackageModel());
-        //}
-
         envio.setId(envioNuevo.getId());
 
     return envio;
+    }
+
+    @Override
+    public int planOrdRoute(List<Envio> envios){
+        //Planear y guardar en BD las rutas para los envios
+        var aeropuertosRegistros = airportRepository.findAllByActive(1);
+        var arcosGeneralRegistros = flightRepository.findAll();
+        ArrayList<Aeropuerto> aeropuertos= new ArrayList<>();
+        ArrayList<ArcoAeropuerto> arcosGeneral = new ArrayList<>();
+
+
+        for(AirportsModel airport: aeropuertosRegistros){
+            Aeropuerto aeropuerto = new Aeropuerto();
+            aeropuerto.setId((int)(long)airport.getId());
+            //Falta agregar mas campos
+
+            aeropuertos.add(aeropuerto);
+        }
+        for(FlightModel flight: arcosGeneralRegistros){
+            ArcoAeropuerto arcoAeropuerto = new ArcoAeropuerto();
+            arcoAeropuerto.setId((int)(long)flight.getId());
+            //Falta agregar mas campos
+
+            arcosGeneral.add(arcoAeropuerto);
+        }
+
+        AntSide ambiente = new AntSide();
+
+        //Setear aeropuertos, debe estar con su arreglo capacidadesAeropuertos
+        ambiente.setNodos(aeropuertos);
+
+        for(int i=0;i<envios.size();i++){
+            //Variables... modificar
+            ArrayList<ArcoAeropuerto> arcos = ambiente.sacarArcosPosibles(arcosGeneral,envios.get(i));
+
+            ambiente.setCaminos(arcos);
+            ambiente.setNodoInicialFinal(envios.get(i).getOrigen(),envios.get(i).getDestino());
+            ambiente.setPaquetesEnvio(envios.get(i).getPaquetes());
+            ambiente.setFechaInicial(envios.get(i).getFechaEnvio());
+
+            Aco algoritmoHormigas = new Aco();
+            long start1 = System.currentTimeMillis();
+//            algoritmoHormigas.activarHormigas(ambiente);
+            long end1 = System.currentTimeMillis();
+            System.out.println("Elapsed Time in milli seconds: " + (end1 - start1));
+//
+//            //Se imprime la solucion
+//            System.out.println("Envio "+ i +" - Camino: " + algoritmoHormigas.getSolucionCamino().toString() + algoritmoHormigas.getSolucionCosto());
+//
+//            //Actualizar capacidades
+//            ambiente.actualizarCapacidades(algoritmoHormigas.getSolucionCamino());
+//
+//            //Actualizar rutas de paquetes
+//            for(int j=0;j<=envios.get(i).getPaquetes().size();j++){
+//                envios.get(i).getPaquetes().get(i).setRuta(algoritmoHormigas.getSolucionCamino());
+//            }
+
+            //Actualizar arcosGeneral (arcos)
+
+        }
+
+        //Actualizar en BD:
+        //ambiente.getNodos();  //capacidades de ambientes
+        //arcosGeneral;         //capacidades de vuelos
+
+        //Actualizar rutas de paquetes en BD:
+//        for(int i=0;i<envios.size();i++) {
+//            ArrayList<Paquete> paquetes = envios.get(i).getPaquetes();
+//        for(int j=0;j<=paquetes.size();j++){
+//            paquetes.get(i) //ruta
+//        }
+//        }
+
+        return 1;
     }
 
 }

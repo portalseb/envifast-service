@@ -2,6 +2,7 @@ package com.bb.envifastservice.algo.antColony;
 
 import com.bb.envifastservice.algo.Aeropuerto;
 import com.bb.envifastservice.algo.ArcoAeropuerto;
+import com.bb.envifastservice.algo.Envio;
 import com.bb.envifastservice.algo.Paquete;
 
 import javax.persistence.criteria.CriteriaBuilder;
@@ -27,6 +28,8 @@ public class AntSide {
     public double plazoMaximoEntrega;
 
     public ArrayList<Paquete> paquetesEnvio;
+
+    public LocalDateTime fechaInicial;
 
     public AntSide(){
         caminos = new ArrayList<ArcoAeropuerto>();
@@ -129,7 +132,42 @@ public class AntSide {
         paquetesEnvio = paquetes;
     }
 
+    public AntSide(int numeroAristas, int numeroNodos, Aeropuerto nodoIni, Aeropuerto nodoFin, ArrayList<Paquete> paquetes,LocalDateTime fechaIni) {
+        caminos = new ArrayList<ArcoAeropuerto>(numeroAristas);
+        //caminos = new ArrayList<ArcoAeropuerto>(numeroAristas);
+        nodos = new ArrayList<Aeropuerto>(numeroNodos);
+        //nodos = new ArrayList <Aeropuerto>(numeroNodos);
+        costos = new ArrayList<Double>(numeroAristas);
+        visibilidad = new ArrayList<Double>(numeroAristas);
+        cantidadFeromonasCamino = new ArrayList<Double>(numeroAristas);
+        for(int i=0;i<numeroAristas;i++){
+            cantidadFeromonasCamino.add(0.1);
+        }
+        probabilidadDeSerEscogido = new ArrayList<Double>(numeroAristas);
+        numeroVecesDeSerEscogigo = new ArrayList<Integer>(numeroAristas);
 
+        this.nodoInicial = nodoIni;
+        this.nodoFinal = nodoFin;
+        if(nodoInicial.getCiudad().getContinente().equals(nodoFinal.getCiudad().getContinente())) {
+            this.tipoEnvio = 1;
+            this.plazoMaximoEntrega= 1440.00; //1 dia en minutos
+        }
+        else {
+            this.tipoEnvio = 2;
+            this.plazoMaximoEntrega=2880.00; //2 dias en minutos
+        }
+        posiblesCaminosIndices = new ArrayList<Integer>();
+        paquetesEnvio = paquetes;
+        fechaInicial = fechaIni;
+    }
+
+    public LocalDateTime getFechaInicial() {
+        return fechaInicial;
+    }
+
+    public void setFechaInicial(LocalDateTime fechaInicial) {
+        this.fechaInicial = fechaInicial;
+    }
 
     public Aeropuerto getNodoInicial() {
         return nodoInicial;
@@ -212,6 +250,10 @@ public class AntSide {
 
     public void setCaminos(ArrayList<ArcoAeropuerto> caminos) {
         this.caminos = caminos;
+        cantidadFeromonasCamino = new ArrayList<Double>(caminos.size());
+        for(int i=0;i<caminos.size();i++) {
+            cantidadFeromonasCamino.add(0.1);
+        }
     }
 
     public ArrayList<Aeropuerto> getNodos() {
@@ -286,7 +328,7 @@ public class AntSide {
 
     public void actualizarCapacidades(ArrayList<ArcoAeropuerto> caminoSolucion){
         int minutosHastaElVuelo=0;
-        LocalDateTime horaAct = LocalDateTime.now();
+        LocalDateTime horaAct = fechaInicial;
         LocalDateTime horaAnt = LocalDateTime.of(horaAct.getYear(),horaAct.getMonthValue(),horaAct.getDayOfMonth(),horaAct.getHour(),horaAct.getMinute());
 
         for(int i=0;i<caminoSolucion.size();i++){
@@ -333,6 +375,64 @@ public class AntSide {
                 horaAnt = horaAnt.plusMinutes(1);
             }
         }
+    }
+
+    public ArrayList<ArcoAeropuerto> sacarArcosPosibles(ArrayList<ArcoAeropuerto> arcosGeneral, Envio envio){
+        ArrayList<ArcoAeropuerto> arcos = new ArrayList<>();
+        if(envio.getOrigen().getCiudad().getContinente().equals(envio.getDestino().getCiudad().getContinente())) {
+            for (int i = 0; i <= arcosGeneral.size(); i++) {
+                ArcoAeropuerto arco = arcosGeneral.get(i);
+                double horaPartida = (double) arco.getHoraPartida().getHour() * 60 + arco.getHoraPartida().getMinute();
+                double horaLlegada = (double) arco.getHoraLlegada().getHour() * 60 + arco.getHoraLlegada().getMinute();
+                LocalDate fechaActual = LocalDate.of(envio.getFechaEnvio().getYear(),envio.getFechaEnvio().getMonth(),envio.getFechaEnvio().getDayOfMonth());
+                LocalDate diaSig = fechaActual.plusDays(1);
+                LocalDate diaSigSig = fechaActual.plusDays(2);
+                LocalTime horaActual = LocalTime.of(envio.getFechaEnvio().getHour(),envio.getFechaEnvio().getMinute());
+                double horaActualValor = (double) horaActual.getHour() * 60 + horaActual.getMinute();
+                if (
+
+                        (
+                                (fechaActual.isEqual(arco.getDiaPartida()) && fechaActual.isEqual(arco.getDiaLLegada()) && horaActualValor <= horaPartida)
+                                        ||
+                                        (fechaActual.isEqual(arco.getDiaPartida()) && diaSig.isEqual(arco.getDiaLLegada()) && horaActualValor <= horaPartida && horaActualValor - 60 >= horaLlegada)
+                                        ||
+                                        (diaSig.isEqual(arco.getDiaPartida()) && diaSig.isEqual(arco.getDiaLLegada()) && horaActualValor - 60 >= horaLlegada)
+                        )
+                                && arco.getCapacidadDisponible() > envio.getPaquetes().size()
+                )
+                    arcos.add(arco);
+            }
+        }
+        else{
+            for (int i = 0; i <= arcosGeneral.size(); i++) {
+                ArcoAeropuerto arco = arcosGeneral.get(i);
+                double horaPartida = (double) arco.getHoraPartida().getHour() * 60 + arco.getHoraPartida().getMinute();
+                double horaLlegada = (double) arco.getHoraLlegada().getHour() * 60 + arco.getHoraLlegada().getMinute();
+                LocalDate fechaActual = LocalDate.of(envio.getFechaEnvio().getYear(),envio.getFechaEnvio().getMonth(),envio.getFechaEnvio().getDayOfMonth());
+                LocalDate diaSig = fechaActual.plusDays(1);
+                LocalDate diaSigSig = fechaActual.plusDays(2);
+                LocalTime horaActual = LocalTime.of(envio.getFechaEnvio().getHour(),envio.getFechaEnvio().getMinute());
+                double horaActualValor = (double) horaActual.getHour() * 60 + horaActual.getMinute();
+                if(
+                        (
+                                (fechaActual.isEqual(arco.getDiaPartida()) && fechaActual.isEqual(arco.getDiaLLegada()) && horaActualValor<=horaPartida)
+                                        ||
+                                        (fechaActual.isEqual(arco.getDiaPartida()) && diaSig.isEqual(arco.getDiaLLegada()) && horaActualValor<=horaPartida)
+                                    ||
+                                        (diaSig.isEqual(arco.getDiaPartida())  && diaSig.isEqual(arco.getDiaLLegada()))
+                                     ||
+                                        (diaSig.isEqual(arco.getDiaPartida())  && diaSigSig.isEqual(arco.getDiaLLegada()) && horaActualValor-60>=horaLlegada)
+                                     ||
+                                        (diaSigSig.isEqual(arco.getDiaPartida())  && diaSigSig.isEqual(arco.getDiaLLegada()) && horaActualValor-60>=horaLlegada)
+                                     ||
+                                        (fechaActual.isEqual(arco.getDiaPartida())  && diaSigSig.isEqual(arco.getDiaLLegada()) && horaActualValor<=horaPartida && horaActualValor-60>=horaLlegada)
+                                  )
+                                  && arco.getCapacidadDisponible()>envio.getPaquetes().size()
+                )
+                    arcos.add(arco);
+            }
+        }
+        return  arcos;
     }
 
 

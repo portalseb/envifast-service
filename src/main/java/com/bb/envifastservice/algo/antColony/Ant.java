@@ -156,7 +156,6 @@ public class Ant {
         AntSide caminosHormiga = new AntSide();
         ArcoAeropuerto camino;
         Aeropuerto origen, destino;
-        Calendar now = Calendar.getInstance();
         posiblesCaminosIndices = new ArrayList<Integer>(); //0: 1, 1: 3
         int k, capacidadAeropuertoDestino, capacidadVuelo;
         LocalDate dateSalidaSiguienteVuelo, dateLlegadaUltimoVuelo;
@@ -179,8 +178,8 @@ public class Ant {
 
         }
         else {
-            dateLlegadaUltimoVuelo = LocalDate.now();
-            horaLLegadaUltimoVuelo = (double) LocalTime.now().getHour() *60 + LocalTime.now().getMinute(); //aqui poner la hora actual
+            dateLlegadaUltimoVuelo = ambienteGlob.getFechaInicial().toLocalDate();
+            horaLLegadaUltimoVuelo = (double) ambienteGlob.getFechaInicial().getHour() *60 + ambienteGlob.getFechaInicial().getMinute(); //aqui poner la hora actual
             diaLlegadaUltimoVuelo = (double) dateLlegadaUltimoVuelo.getYear()*10000 + dateLlegadaUltimoVuelo.getMonthValue()*100 + dateLlegadaUltimoVuelo.getDayOfMonth(); //ver si esta bien
 
         }

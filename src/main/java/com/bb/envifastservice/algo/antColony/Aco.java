@@ -11,11 +11,11 @@ import java.util.Collections;
 import java.util.Iterator;
 
 public class Aco {
-    private double solucionCosto;//No se deberia cambiar
-    private ArrayList<ArcoAeropuerto> solucionCamino; //Cambiar tipo de dato
+    private double solucionCosto;
+    private ArrayList<ArcoAeropuerto> solucionCamino;
     public Aco() {
         solucionCosto=999999;
-        solucionCamino=new ArrayList<ArcoAeropuerto>(); //Cambiar tipo de dato
+        solucionCamino=new ArrayList<ArcoAeropuerto>();
     }
     public double getSolucionCosto() {
         return solucionCosto;
@@ -24,10 +24,7 @@ public class Aco {
         return solucionCamino;
     }
     public void activarHormigas(AntSide ambiente) {
-        /*****************************************************************************************************************/
-        /**Definir cual va a ser el limite y la cantidad de hormigas*/
         int contProb1=0, contProb2=0;
-        //for(int i=0; i<100;i++){
         while(true) {
             // Inicializar hormiga 1
             Ant hormiga1 = new Ant(ambiente);
@@ -37,55 +34,38 @@ public class Aco {
             Ant hormiga2 = new Ant(ambiente);
             hormiga2.explorar();
 
-
-            // Impresion para verificar el camino de las hormigas, se deberia guardar el mejor camino en el ambiente tambien
-//            System.out.println("Camino de hormiga 1");
-//            System.out.println(hormiga1.getCaminoNodos().toString());
-//            System.out.println(hormiga1.getCostoTotal());
-
-//            System.out.println(hormiga1.getCaminoProbabilidades().toString());
-
-//            System.out.println("Camino de hormiga 2");
-//            System.out.println(hormiga2.getCaminoNodos().toString());
-//            System.out.println(hormiga2.getCostoTotal());
-
-//            System.out.println(hormiga2.getCaminoProbabilidades().toString());
-
             // Actualizar rastro de feromonas
             if(hormiga1.isEncontroCamino() && hormiga2.isEncontroCamino())
             {
-            ambiente.actualizarFeromonasEnElCamino(hormiga1, hormiga2);
-
-            if (solucionCosto > hormiga1.getCostoTotal() || solucionCosto > hormiga2.getCostoTotal()) {
-                if (hormiga1.getCostoTotal() < hormiga2.getCostoTotal()) {
-                    solucionCamino = new ArrayList<ArcoAeropuerto>();
-                    for (int j = 0; j < hormiga1.getCaminoIndices().size(); j++) {
-                        //System.out.println(ambiente.getCaminos().get(hormiga1.getCaminoIndices().get(j)));
-                        solucionCamino.add(ambiente.getCaminos().get(hormiga1.getCaminoIndices().get(j)));
+                ambiente.actualizarFeromonasEnElCamino(hormiga1, hormiga2);
+                if (solucionCosto > hormiga1.getCostoTotal() || solucionCosto > hormiga2.getCostoTotal()) {
+                    if (hormiga1.getCostoTotal() < hormiga2.getCostoTotal()) {
+                        solucionCamino = new ArrayList<ArcoAeropuerto>();
+                        for (int j = 0; j < hormiga1.getCaminoIndices().size(); j++) {
+                            solucionCamino.add(ambiente.getCaminos().get(hormiga1.getCaminoIndices().get(j)));
+                        }
+                        solucionCosto = hormiga1.getCostoTotal();
+                    } else {
+                        solucionCamino = new ArrayList<ArcoAeropuerto>();
+                        for (int j = 0; j < hormiga2.getCaminoIndices().size(); j++) {
+                            solucionCamino.add(ambiente.getCaminos().get(hormiga2.getCaminoIndices().get(j)));
+                        }
+                        solucionCosto = hormiga2.getCostoTotal();
                     }
-                    solucionCosto = hormiga1.getCostoTotal();
-                } else {
-                    solucionCamino = new ArrayList<ArcoAeropuerto>();
-                    for (int j = 0; j < hormiga2.getCaminoIndices().size(); j++) {
-                        //System.out.println(ambiente.getCaminos().get(hormiga2.getCaminoIndices().get(j)));
-                        solucionCamino.add(ambiente.getCaminos().get(hormiga2.getCaminoIndices().get(j)));
-                    }
-                    solucionCosto = hormiga2.getCostoTotal();
+                }
+                contProb1 = 0;
+                for (int p = 0; p < hormiga1.getCaminoProbabilidades().size(); p++)
+                    if (hormiga1.getCaminoProbabilidades().get(p) >= 0.9)
+                        contProb1++;
+                contProb2 = 0;
+                for (int p = 0; p < hormiga2.getCaminoProbabilidades().size(); p++)
+                    if (hormiga2.getCaminoProbabilidades().get(p) >= 0.9)
+                        contProb2++;
+                if (contProb1 == hormiga1.getCaminoProbabilidades().size() || contProb2 == hormiga2.getCaminoProbabilidades().size()) {
+                    System.out.println("Se llego al limite");
+                    break;
                 }
             }
-            contProb1 = 0;
-            for (int p = 0; p < hormiga1.getCaminoProbabilidades().size(); p++)
-                if (hormiga1.getCaminoProbabilidades().get(p) >= 0.9)
-                    contProb1++;
-            contProb2 = 0;
-            for (int p = 0; p < hormiga2.getCaminoProbabilidades().size(); p++)
-                if (hormiga2.getCaminoProbabilidades().get(p) >= 0.9)
-                    contProb2++;
-            if (contProb1 == hormiga1.getCaminoProbabilidades().size() || contProb2 == hormiga2.getCaminoProbabilidades().size()) {
-                System.out.println("Se llego al limite");
-                break;
-            }
-        }
         }
     }
 
@@ -107,27 +87,27 @@ public class Aco {
 
 
         double horaPartida, horaLlegada;
-
+        int total=arcos.size();
 
         //Se crea los arcos para los siguientes 3 dias:
+        //Vuelos del dia 1 y dia1-dia2
         for(int i =0;i<arcos.size();i++){
             ArcoAeropuerto arco = arcos.get(i);
             horaPartida = (double) arco.getHoraPartida().getHour()*60 + arco.getHoraPartida().getMinute();
             horaLlegada = (double) arco.getHoraLlegada().getHour()*60 + arco.getHoraLlegada().getMinute();
 
             if(horaPartida < horaLlegada){
-                arco.setDiaPartida(LocalDate.parse("2022-10-14"));
-                arco.setDiaLLegada(LocalDate.parse("2022-10-14"));
+                arco.setDiaPartida(LocalDate.parse("2022-10-16"));
+                arco.setDiaLLegada(LocalDate.parse("2022-10-16"));
             }
             else{
-                arco.setDiaPartida(LocalDate.parse("2022-10-14"));
-                arco.setDiaLLegada(LocalDate.parse("2022-10-15"));
+                arco.setDiaPartida(LocalDate.parse("2022-10-16"));
+                arco.setDiaLLegada(LocalDate.parse("2022-10-17"));
             }
             arcos.set(i,arco);
         }
 
-        int total=arcos.size();
-
+        //Vuelos del dia 2 y dia2-dia3
         for(int i =0;i<total;i++){
             ArcoAeropuerto arco = new ArcoAeropuerto();
             arco.setId(total+i);
@@ -137,22 +117,21 @@ public class Aco {
             arco.setHoraLlegada(arcos.get(i).getHoraLlegada());
             arco.setCapacidadMaxima(arcos.get(i).getCapacidadMaxima());
             arco.setCapacidadDisponible(arcos.get(i).getCapacidadDisponible());
-
-
             horaPartida = (double) arcos.get(i).getHoraPartida().getHour()*60 + arcos.get(i).getHoraPartida().getMinute();
             horaLlegada = (double) arcos.get(i).getHoraLlegada().getHour()*60 + arcos.get(i).getHoraLlegada().getMinute();
 
             if(horaPartida < horaLlegada){
-                arco.setDiaPartida(LocalDate.parse("2022-10-15"));
-                arco.setDiaLLegada(LocalDate.parse("2022-10-15"));
+                arco.setDiaPartida(LocalDate.parse("2022-10-17"));
+                arco.setDiaLLegada(LocalDate.parse("2022-10-17"));
             }
             else{
-                arco.setDiaPartida(LocalDate.parse("2022-10-15"));
-                arco.setDiaLLegada(LocalDate.parse("2022-10-16"));
+                arco.setDiaPartida(LocalDate.parse("2022-10-17"));
+                arco.setDiaLLegada(LocalDate.parse("2022-10-18"));
             }
             arcos.add(arco);
         }
 
+        //Vuelos del dia 3 y dia3-dia4
         for(int i =0;i<total;i++){
             ArcoAeropuerto arco = new ArcoAeropuerto();
             arco.setId(total+total+i);
@@ -163,17 +142,16 @@ public class Aco {
             arco.setCapacidadMaxima(arcos.get(i).getCapacidadMaxima());
             arco.setCapacidadDisponible(arcos.get(i).getCapacidadDisponible());
 
-
             horaPartida = (double) arcos.get(i).getHoraPartida().getHour()*60 + arcos.get(i).getHoraPartida().getMinute();
             horaLlegada = (double) arcos.get(i).getHoraLlegada().getHour()*60 + arcos.get(i).getHoraLlegada().getMinute();
 
             if(horaPartida < horaLlegada){
-                arco.setDiaPartida(LocalDate.parse("2022-10-16"));
-                arco.setDiaLLegada(LocalDate.parse("2022-10-16"));
+                arco.setDiaPartida(LocalDate.parse("2022-10-18"));
+                arco.setDiaLLegada(LocalDate.parse("2022-10-18"));
             }
             else{
-                arco.setDiaPartida(LocalDate.parse("2022-10-16"));
-                arco.setDiaLLegada(LocalDate.parse("2022-10-17"));
+                arco.setDiaPartida(LocalDate.parse("2022-10-18"));
+                arco.setDiaLLegada(LocalDate.parse("2022-10-19"));
             }
             arcos.add(arco);
         }
@@ -244,36 +222,9 @@ public class Aco {
 
 
 
-
         //Se crean las capacidades de aeropuertos para los siguiente 3 dias
         for(int i=0;i<aeropuertos.size();i++){
-            for(int j=0;j<24;j++){
-                for(int k=0;k<60;k++){
-                    FechaHora fechaHora = new FechaHora();
-                    fechaHora.setDia(LocalDate.parse("2022-10-14"));
-                    fechaHora.setHora(LocalTime.of(j,k));
-
-                    CapacidadAeropuerto capacidad = new CapacidadAeropuerto();
-                    capacidad.setFechaHora(fechaHora);
-                    capacidad.setCapacidadDisponible(aeropuertos.get(i).getCapacidad());
-                    aeropuertos.get(i).getCapacidadDisponible().add(capacidad);
-                }
-            }
-
-            for(int j=0;j<24;j++){
-                for(int k=0;k<60;k++){
-                    FechaHora fechaHora = new FechaHora();
-                    fechaHora.setDia(LocalDate.parse("2022-10-15"));
-                    fechaHora.setHora(LocalTime.of(j,k));
-
-                    CapacidadAeropuerto capacidad = new CapacidadAeropuerto();
-                    capacidad.setFechaHora(fechaHora);
-                    capacidad.setCapacidadDisponible(aeropuertos.get(i).getCapacidad());
-                    aeropuertos.get(i).getCapacidadDisponible().add(capacidad);
-                }
-            }
-
-
+            //dia1:
             for(int j=0;j<24;j++){
                 for(int k=0;k<60;k++){
                     FechaHora fechaHora = new FechaHora();
@@ -286,7 +237,7 @@ public class Aco {
                     aeropuertos.get(i).getCapacidadDisponible().add(capacidad);
                 }
             }
-
+            //dia2:
             for(int j=0;j<24;j++){
                 for(int k=0;k<60;k++){
                     FechaHora fechaHora = new FechaHora();
@@ -299,14 +250,39 @@ public class Aco {
                     aeropuertos.get(i).getCapacidadDisponible().add(capacidad);
                 }
             }
+            //dia3:
+            for(int j=0;j<24;j++){
+                for(int k=0;k<60;k++){
+                    FechaHora fechaHora = new FechaHora();
+                    fechaHora.setDia(LocalDate.parse("2022-10-18"));
+                    fechaHora.setHora(LocalTime.of(j,k));
 
+                    CapacidadAeropuerto capacidad = new CapacidadAeropuerto();
+                    capacidad.setFechaHora(fechaHora);
+                    capacidad.setCapacidadDisponible(aeropuertos.get(i).getCapacidad());
+                    aeropuertos.get(i).getCapacidadDisponible().add(capacidad);
+                }
+            }
+            //dia4:
+            for(int j=0;j<24;j++){
+                for(int k=0;k<60;k++){
+                    FechaHora fechaHora = new FechaHora();
+                    fechaHora.setDia(LocalDate.parse("2022-10-19"));
+                    fechaHora.setHora(LocalTime.of(j,k));
 
+                    CapacidadAeropuerto capacidad = new CapacidadAeropuerto();
+                    capacidad.setFechaHora(fechaHora);
+                    capacidad.setCapacidadDisponible(aeropuertos.get(i).getCapacidad());
+                    aeropuertos.get(i).getCapacidadDisponible().add(capacidad);
+                }
+            }
         }
 
-
         // Creamos el ambiente
-        /**Este constructor se cambiará, solo se colocarán aeropuertos*/
         AntSide ambiente= new AntSide(aeropuertos,arcos);
+        // Hora actual
+        LocalDateTime horaActual = LocalDateTime.now();
+
 
         //Se debe tener un arreglo de arcos general (ya se tiene) y feromonas general.
         //ArrayList<Double> feromonas = new ArrayList<Double>();
@@ -334,6 +310,7 @@ public class Aco {
 
             //Fijamos los paquetes
             ambiente.setPaquetesEnvio(paquetes);
+            ambiente.setFechaInicial(horaActual);
 
             // Creamos la solución
             Aco algoritmoHormigas = new Aco();
