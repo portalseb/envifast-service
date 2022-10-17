@@ -99,7 +99,7 @@ public class FlightAdapter implements ListFlightByIdPort, GenerateNextWeekFlight
 
     @Override
     public void generateNextWeekFlights() {
-        File planes = new File("C:\\Workspace\\spring\\envifast-service\\c.inf226.22-2.planes_vuelo.v01.txt");
+        File planes = new File("src/main/java/com/bb/envifastservice/c.inf226.22-2.planes_vuelo.v02.txt");
         Scanner myReader = null;
         for (int i = 0; i<7;i++){
             try {
