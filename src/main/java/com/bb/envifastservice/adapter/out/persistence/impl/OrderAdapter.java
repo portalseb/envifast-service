@@ -265,14 +265,23 @@ public class OrderAdapter implements ListPackagesPort, InsertOrderPort, PlanOrde
         for(int i=0;i<envios.size();i++){
             //Variables... modificar
             ArrayList<ArcoAeropuerto> arcos = ambiente.sacarArcosPosibles(arcosGeneral,envios.get(i));
-
             ambiente.setCaminos(arcos);
-            ambiente.setNodoInicialFinal(envios.get(i).getOrigen(),envios.get(i).getDestino());
+
+            int origen =0;
+            int destino = 0;
+            for(int j=0;j<aeropuertos.size();j++){
+                if(aeropuertos.get(j).getId()==envios.get(i).getOrigen().getId()){
+                    origen=j;
+                }
+                if(aeropuertos.get(j).getId()==envios.get(i).getDestino().getId()){
+                    destino=j;
+                }
+            }
+
+            ambiente.setNodoInicialFinal(aeropuertos.get(origen),aeropuertos.get(destino));
             ambiente.setPaquetesEnvio(envios.get(i).getPaquetes());
             ambiente.setFechaInicial(envios.get(i).getFechaEnvio());
 
-            System.out.println("Arcos posibles");
-            System.out.println(arcos);
 
             Aco algoritmoHormigas = new Aco();
             long start1 = System.currentTimeMillis();
@@ -298,10 +307,18 @@ public class OrderAdapter implements ListPackagesPort, InsertOrderPort, PlanOrde
         }
 
         //Actualizar en BD:
-        //ambiente.getNodos();  //capacidades de ambientes
-        //arcosGeneral;         //capacidades de vuelos
+        //Arcos
+//        for(int j=0;j<arcosGeneral.size();j++){
+//            FlightModel flightModel = flightRepository.findById(arcosGeneral.get(j).getId());
+//            if((int)(long)flightModel.getAvailableCapacity()!=arcosGeneral.get(j).getCapacidadDisponible()){
+//                flightModel.setCargo();
+//                flightModel.setAvailableCapacity();
+//                flightRepository.save(flightModel);
+//            }
+//        }
+        //Aeropuertos
 
-        //Actualizar rutas de paquetes en BD:
+        //Rutas de paquetes
 //        for(int i=0;i<envios.size();i++) {
 //            ArrayList<Paquete> paquetes = envios.get(i).getPaquetes();
 //        for(int j=0;j<=paquetes.size();j++){

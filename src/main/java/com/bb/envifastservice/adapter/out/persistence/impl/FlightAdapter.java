@@ -135,9 +135,10 @@ public class FlightAdapter implements ListFlightByIdPort, GenerateNextWeekFlight
                     vuelo.setAvailableCapacity(350L);
                 }
                 var sale = LocalDateTime.now().with(LocalTime.parse(data[2], formatter)).plusDays(i);
-                var llega = LocalDateTime.now().with(LocalTime.parse(data[3], formatter)).plusDays(i);
-
-
+                var llega =LocalDateTime.now().with(LocalTime.parse(data[3], formatter)).plusDays(i);
+                if(LocalTime.parse(data[3], formatter).compareTo(LocalTime.parse(data[2], formatter))<=0){
+                    llega = LocalDateTime.now().with(LocalTime.parse(data[3], formatter)).plusDays(i+1);
+                }
                 vuelo.setArrivalTime(llega);
                 vuelo.setDepartureTime(sale);
                 flightRepository.save(vuelo);

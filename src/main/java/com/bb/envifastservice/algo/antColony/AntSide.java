@@ -384,7 +384,7 @@ public class AntSide {
                 ArcoAeropuerto arco = arcosGeneral.get(i);
                 double horaPartida = (double) arco.getHoraPartida().getHour() * 60 + arco.getHoraPartida().getMinute();
                 double horaLlegada = (double) arco.getHoraLlegada().getHour() * 60 + arco.getHoraLlegada().getMinute();
-                LocalDate fechaActual = LocalDate.of(envio.getFechaEnvio().getYear(),envio.getFechaEnvio().getMonth(),envio.getFechaEnvio().getDayOfMonth());
+                LocalDate fechaActual = LocalDate.of(envio.getFechaEnvio().getYear(),envio.getFechaEnvio().getMonthValue(),envio.getFechaEnvio().getDayOfMonth());
                 LocalDate diaSig = fechaActual.plusDays(1);
                 LocalDate diaSigSig = fechaActual.plusDays(2);
                 LocalTime horaActual = LocalTime.of(envio.getFechaEnvio().getHour(),envio.getFechaEnvio().getMinute());
@@ -408,7 +408,7 @@ public class AntSide {
                 ArcoAeropuerto arco = arcosGeneral.get(i);
                 double horaPartida = (double) arco.getHoraPartida().getHour() * 60 + arco.getHoraPartida().getMinute();
                 double horaLlegada = (double) arco.getHoraLlegada().getHour() * 60 + arco.getHoraLlegada().getMinute();
-                LocalDate fechaActual = LocalDate.of(envio.getFechaEnvio().getYear(),envio.getFechaEnvio().getMonth(),envio.getFechaEnvio().getDayOfMonth());
+                LocalDate fechaActual = LocalDate.of(envio.getFechaEnvio().getYear(),envio.getFechaEnvio().getMonthValue(),envio.getFechaEnvio().getDayOfMonth());
                 LocalDate diaSig = fechaActual.plusDays(1);
                 LocalDate diaSigSig = fechaActual.plusDays(2);
                 LocalTime horaActual = LocalTime.of(envio.getFechaEnvio().getHour(),envio.getFechaEnvio().getMinute());
