@@ -2,6 +2,7 @@ package com.bb.envifastservice.adapter.in.web;
 
 import com.bb.envifastservice.adapter.out.persistence.dtos.AirportCoord;
 import com.bb.envifastservice.algo.Aeropuerto;
+import com.bb.envifastservice.application.port.in.GenerateNextWeekDateTimeService;
 import com.bb.envifastservice.application.port.in.ListAirportCoordService;
 import com.bb.envifastservice.application.port.in.ListAllAirportsService;
 import com.bb.envifastservice.hexagonal.WebAdapter;
@@ -21,6 +22,8 @@ import java.util.List;
 public class AirportsController {
     private final ListAllAirportsService listAllAirportsService;
     private final ListAirportCoordService listAirportCoordService;
+    private final GenerateNextWeekDateTimeService generateNextWeekDateTimeService;
+
     @GetMapping(value = "")
     public List<Aeropuerto> listAllAeropuertos(){
         return listAllAirportsService.listAllAirpoirts();
@@ -29,6 +32,11 @@ public class AirportsController {
     @GetMapping(value = "/coordinates")
     public List<AirportCoord>getCoordinates() {
         return  listAirportCoordService.listCoordinates();
+    }
+
+    @GetMapping(value = "/dateTimes")
+    public void generarFechasHora(){
+        generateNextWeekDateTimeService.generateNextWeekDateTime();
     }
 
 }

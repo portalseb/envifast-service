@@ -380,7 +380,7 @@ public class AntSide {
     public ArrayList<ArcoAeropuerto> sacarArcosPosibles(ArrayList<ArcoAeropuerto> arcosGeneral, Envio envio){
         ArrayList<ArcoAeropuerto> arcos = new ArrayList<>();
         if(envio.getOrigen().getCiudad().getContinente().equals(envio.getDestino().getCiudad().getContinente())) {
-            for (int i = 0; i <= arcosGeneral.size(); i++) {
+            for (int i = 0; i < arcosGeneral.size(); i++) {
                 ArcoAeropuerto arco = arcosGeneral.get(i);
                 double horaPartida = (double) arco.getHoraPartida().getHour() * 60 + arco.getHoraPartida().getMinute();
                 double horaLlegada = (double) arco.getHoraLlegada().getHour() * 60 + arco.getHoraLlegada().getMinute();
@@ -404,7 +404,7 @@ public class AntSide {
             }
         }
         else{
-            for (int i = 0; i <= arcosGeneral.size(); i++) {
+            for (int i = 0; i < arcosGeneral.size(); i++) {
                 ArcoAeropuerto arco = arcosGeneral.get(i);
                 double horaPartida = (double) arco.getHoraPartida().getHour() * 60 + arco.getHoraPartida().getMinute();
                 double horaLlegada = (double) arco.getHoraLlegada().getHour() * 60 + arco.getHoraLlegada().getMinute();

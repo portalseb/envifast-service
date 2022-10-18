@@ -30,6 +30,7 @@ public class Aeropuerto {//implements Comparable<Aeropuerto> {
 
     public Aeropuerto(){
         ciudad = new Ciudad();
+        this.capacidadDisponible = new ArrayList<CapacidadAeropuerto>();
 //        this.timeZone = TimeZone.getTimeZone(timeZone);
 //        this.capacidad = CAPACIDAD_AEROPUERTO;
     }
@@ -99,8 +100,8 @@ public class Aeropuerto {//implements Comparable<Aeropuerto> {
         this.nombre = nombre;
     }
 
-    public void setTimeZone(TimeZone timeZone) {
-        this.timeZone = timeZone;
+    public void setTimeZone(String timeZone) {
+        this.timeZone = TimeZone.getTimeZone(timeZone);
     }
 
 

@@ -28,8 +28,8 @@ public class AirportsModel {
     @Column(name = "_available_capacity")
     private int availableCapacity;
 
-    @Column(name = "_capacity")
-    @OneToMany(mappedBy = "airport")
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name="airport_id")
     private List<AirportsCapacityModel> capacity = new ArrayList<>();
 
     @Column(name = "_city_short_name")

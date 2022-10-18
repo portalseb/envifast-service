@@ -191,13 +191,6 @@ public class Ant {
             diaSalidaSiguienteVuelo = (double) camino.getDiaPartida().getYear()*10000 + camino.getDiaPartida().getMonth().getValue()*100 + camino.getDiaPartida().getDayOfMonth();
             dateSalidaSiguienteVuelo = camino.getDiaPartida();
 
-//            System.out.println(diaLlegadaUltimoVuelo);
-//            System.out.println(diaSalidaSiguienteVuelo);
-//            System.out.println(DAYS.between(dateLlegadaUltimoVuelo,dateSalidaSiguienteVuelo));
-//
-//            System.out.println(horaLLegadaUltimoVuelo);
-//            System.out.println(horaSalidaSiguienteVuelo);
-
             k = destino.getCapacidadIndex(camino.getHoraLlegada().getHour(),camino.getHoraLlegada().getMinute(),camino.getDiaLLegada().getDayOfMonth(),camino.getDiaLLegada().getMonthValue(),camino.getDiaLLegada().getYear());
             if(k==-1) {System.out.println("Indice de capacidad no encontrado"); continue;}
             capacidadAeropuertoDestino = destino.getCapacidadDisponible().get(k).getCapacidadDisponible();

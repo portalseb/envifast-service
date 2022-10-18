@@ -225,9 +225,11 @@ public class ArcoAeropuerto {
     }
 
     public String toString(){
-        return "Avion desde " + getAeropuerto1().getCiudad().getNombre() +
-                " hacia " + getAeropuerto2().getCiudad().getNombre() + " en "
-               +  obtenerDuracionVuelo().toString();
+//        return "Avion desde " + getAeropuerto1().getCiudad().getNombre() +
+//                " hacia " + getAeropuerto2().getCiudad().getNombre() + " en "
+//               +  obtenerDuracionVuelo().toString();
+
+        return getDiaPartida() + "-"+ getHoraPartida() + " / " + getAeropuerto1().getCiudad().getNombre() + " --> " +getDiaLLegada() + "-" + getHoraLlegada()+ " / " +getAeropuerto2().getCiudad().getNombre() + "\n";
      }
 
     public Integer getCapacidadMaxima() {

@@ -17,13 +17,9 @@ public class AirportsCapacityModel {
     @Column(name = "idAirportCapacity")
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "idDateTime", insertable = false, updatable = false)
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "idDateTime", insertable = true, updatable = true)
     private DateTimeModel dateTime;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "idAirport", insertable = false, updatable = false)
-    private AirportsModel airport;
 
     private int availableCapacity;
 

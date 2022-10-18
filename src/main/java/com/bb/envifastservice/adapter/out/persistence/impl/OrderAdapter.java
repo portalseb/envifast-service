@@ -11,14 +11,15 @@ import com.bb.envifastservice.application.port.out.InsertOrderPort;
 import com.bb.envifastservice.application.port.out.ListPackagesPort;
 import com.bb.envifastservice.application.port.out.PlanOrderRoutePort;
 import com.bb.envifastservice.hexagonal.PersistenceAdapter;
-import com.bb.envifastservice.models.AirportsModel;
-import com.bb.envifastservice.models.FlightModel;
-import com.bb.envifastservice.models.OrderModel;
-import com.bb.envifastservice.models.PackageModel;
+import com.bb.envifastservice.models.*;
 import lombok.RequiredArgsConstructor;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.TimeZone;
+
 @PersistenceAdapter
 @RequiredArgsConstructor
 public class OrderAdapter implements ListPackagesPort, InsertOrderPort, PlanOrderRoutePort {
@@ -178,18 +179,80 @@ public class OrderAdapter implements ListPackagesPort, InsertOrderPort, PlanOrde
         ArrayList<Aeropuerto> aeropuertos= new ArrayList<>();
         ArrayList<ArcoAeropuerto> arcosGeneral = new ArrayList<>();
 
-
         for(AirportsModel airport: aeropuertosRegistros){
             Aeropuerto aeropuerto = new Aeropuerto();
             aeropuerto.setId((int)(long)airport.getId());
-            //Falta agregar mas campos
+            aeropuerto.setCodigo(airport.getAirportCode());
+            aeropuerto.setPosX(airport.getXPos());
+            aeropuerto.setPosY(airport.getYPos());
+            aeropuerto.setCapacidad(airport.getMaxCapacity());
+            aeropuerto.setTimeZone(TimeZone.getTimeZone(airport.getCityName()).toString());
+
+            Ciudad ciudad = new Ciudad();
+            ciudad.setNombre(airport.getCityName());
+            ciudad.setAbreviacion(airport.getCityShortName());
+            ciudad.setContinente(airport.getContinent());
+            ciudad.setPais(airport.getCountryName());
+            aeropuerto.setCiudad(ciudad);
+
+            for(AirportsCapacityModel airportsCapacityModel: airport.getCapacity()){
+                CapacidadAeropuerto capacidadAeropuerto = new CapacidadAeropuerto();
+                capacidadAeropuerto.setId((int)(long)airportsCapacityModel.getId());
+                capacidadAeropuerto.setCapacidadDisponible(airportsCapacityModel.getAvailableCapacity());
+
+                FechaHora fechaHora = new FechaHora();
+                fechaHora.setId((int)(long)airportsCapacityModel.getDateTime().getId());
+                fechaHora.setDia(airportsCapacityModel.getDateTime().getDate());
+                fechaHora.setHora(airportsCapacityModel.getDateTime().getTime());
+
+                capacidadAeropuerto.setFechaHora(fechaHora);
+
+                //Agregar el cargo (arreglo de paquetes)
+                for(PackageModel packageModel: airportsCapacityModel.getWarehouse()){
+                    Paquete paquete = new Paquete();
+                    paquete.setId(packageModel.getId());
+                    //Faltan mas campos
+
+                    capacidadAeropuerto.getDeposito().add(paquete);
+                }
+
+                aeropuerto.getCapacidadDisponible().add(capacidadAeropuerto);
+            }
 
             aeropuertos.add(aeropuerto);
         }
         for(FlightModel flight: arcosGeneralRegistros){
             ArcoAeropuerto arcoAeropuerto = new ArcoAeropuerto();
             arcoAeropuerto.setId((int)(long)flight.getId());
-            //Falta agregar mas campos
+            arcoAeropuerto.setCapacidadMaxima((int)(long)flight.getMaxCapacity());
+            arcoAeropuerto.setCapacidadDisponible((int)(long)flight.getAvailableCapacity());
+
+            int origen =0;
+            int destino = 0;
+            for(int i=0;i<aeropuertos.size();i++){
+                if(aeropuertos.get(i).getId()==(int)(long)flight.getDepartureAirport().getId()){
+                    origen=i;
+                }
+                if(aeropuertos.get(i).getId()==(int)(long)flight.getArrivalAirport().getId()){
+                    destino=i;
+                }
+            }
+            arcoAeropuerto.setAeropuerto1(aeropuertos.get(origen));
+            arcoAeropuerto.setAeropuerto2(aeropuertos.get(destino));
+
+            arcoAeropuerto.setDiaPartida(LocalDate.of(flight.getDepartureTime().getYear(),flight.getDepartureTime().getMonthValue(),flight.getDepartureTime().getDayOfMonth()));
+            arcoAeropuerto.setDiaLLegada(LocalDate.of(flight.getArrivalTime().getYear(),flight.getArrivalTime().getMonthValue(),flight.getArrivalTime().getDayOfMonth()));
+            arcoAeropuerto.setHoraPartida(LocalTime.of(flight.getDepartureTime().getHour(),flight.getDepartureTime().getMinute()));
+            arcoAeropuerto.setHoraLlegada(LocalTime.of(flight.getArrivalTime().getHour(),flight.getArrivalTime().getMinute()));
+
+            //Agregar el cargo (arreglo de paquetes)
+            for(PackageModel packageModel: flight.getCargo()){
+                Paquete paquete = new Paquete();
+                paquete.setId(packageModel.getId());
+                //Faltan mas campos
+
+                arcoAeropuerto.getCargo().add(paquete);
+            }
 
             arcosGeneral.add(arcoAeropuerto);
         }
@@ -208,24 +271,29 @@ public class OrderAdapter implements ListPackagesPort, InsertOrderPort, PlanOrde
             ambiente.setPaquetesEnvio(envios.get(i).getPaquetes());
             ambiente.setFechaInicial(envios.get(i).getFechaEnvio());
 
+            System.out.println("Arcos posibles");
+            System.out.println(arcos);
+
             Aco algoritmoHormigas = new Aco();
             long start1 = System.currentTimeMillis();
-//            algoritmoHormigas.activarHormigas(ambiente);
+            algoritmoHormigas.activarHormigas(ambiente);
             long end1 = System.currentTimeMillis();
             System.out.println("Elapsed Time in milli seconds: " + (end1 - start1));
-//
-//            //Se imprime la solucion
-//            System.out.println("Envio "+ i +" - Camino: " + algoritmoHormigas.getSolucionCamino().toString() + algoritmoHormigas.getSolucionCosto());
-//
-//            //Actualizar capacidades
-//            ambiente.actualizarCapacidades(algoritmoHormigas.getSolucionCamino());
-//
-//            //Actualizar rutas de paquetes
-//            for(int j=0;j<=envios.get(i).getPaquetes().size();j++){
-//                envios.get(i).getPaquetes().get(i).setRuta(algoritmoHormigas.getSolucionCamino());
-//            }
+
+            //Se imprime la solucion
+            System.out.println("Envio "+ i +" - Camino: " + algoritmoHormigas.getSolucionCamino().toString() + algoritmoHormigas.getSolucionCosto());
+
+            //Actualizar capacidades
+            ambiente.actualizarCapacidades(algoritmoHormigas.getSolucionCamino());
+
+            //Actualizar rutas de paquetes
+            for(int j=0;j<=envios.get(i).getPaquetes().size();j++){
+                envios.get(i).getPaquetes().get(i).setRuta(algoritmoHormigas.getSolucionCamino());
+            }
 
             //Actualizar arcosGeneral (arcos)
+            //ambiente.getCaminos();
+            //ambiente.getNodos();
 
         }
 

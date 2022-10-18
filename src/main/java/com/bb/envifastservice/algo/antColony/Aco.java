@@ -97,12 +97,12 @@ public class Aco {
             horaLlegada = (double) arco.getHoraLlegada().getHour()*60 + arco.getHoraLlegada().getMinute();
 
             if(horaPartida < horaLlegada){
-                arco.setDiaPartida(LocalDate.parse("2022-10-16"));
-                arco.setDiaLLegada(LocalDate.parse("2022-10-16"));
+                arco.setDiaPartida(LocalDate.parse("2022-10-17"));
+                arco.setDiaLLegada(LocalDate.parse("2022-10-17"));
             }
             else{
-                arco.setDiaPartida(LocalDate.parse("2022-10-16"));
-                arco.setDiaLLegada(LocalDate.parse("2022-10-17"));
+                arco.setDiaPartida(LocalDate.parse("2022-10-17"));
+                arco.setDiaLLegada(LocalDate.parse("2022-10-18"));
             }
             arcos.set(i,arco);
         }
@@ -121,12 +121,12 @@ public class Aco {
             horaLlegada = (double) arcos.get(i).getHoraLlegada().getHour()*60 + arcos.get(i).getHoraLlegada().getMinute();
 
             if(horaPartida < horaLlegada){
-                arco.setDiaPartida(LocalDate.parse("2022-10-17"));
-                arco.setDiaLLegada(LocalDate.parse("2022-10-17"));
+                arco.setDiaPartida(LocalDate.parse("2022-10-18"));
+                arco.setDiaLLegada(LocalDate.parse("2022-10-18"));
             }
             else{
-                arco.setDiaPartida(LocalDate.parse("2022-10-17"));
-                arco.setDiaLLegada(LocalDate.parse("2022-10-18"));
+                arco.setDiaPartida(LocalDate.parse("2022-10-18"));
+                arco.setDiaLLegada(LocalDate.parse("2022-10-19"));
             }
             arcos.add(arco);
         }
@@ -146,12 +146,12 @@ public class Aco {
             horaLlegada = (double) arcos.get(i).getHoraLlegada().getHour()*60 + arcos.get(i).getHoraLlegada().getMinute();
 
             if(horaPartida < horaLlegada){
-                arco.setDiaPartida(LocalDate.parse("2022-10-18"));
-                arco.setDiaLLegada(LocalDate.parse("2022-10-18"));
+                arco.setDiaPartida(LocalDate.parse("2022-10-19"));
+                arco.setDiaLLegada(LocalDate.parse("2022-10-19"));
             }
             else{
-                arco.setDiaPartida(LocalDate.parse("2022-10-18"));
-                arco.setDiaLLegada(LocalDate.parse("2022-10-19"));
+                arco.setDiaPartida(LocalDate.parse("2022-10-19"));
+                arco.setDiaLLegada(LocalDate.parse("2022-10-20"));
             }
             arcos.add(arco);
         }
@@ -228,7 +228,7 @@ public class Aco {
             for(int j=0;j<24;j++){
                 for(int k=0;k<60;k++){
                     FechaHora fechaHora = new FechaHora();
-                    fechaHora.setDia(LocalDate.parse("2022-10-16"));
+                    fechaHora.setDia(LocalDate.parse("2022-10-17"));
                     fechaHora.setHora(LocalTime.of(j,k));
 
                     CapacidadAeropuerto capacidad = new CapacidadAeropuerto();
@@ -241,7 +241,7 @@ public class Aco {
             for(int j=0;j<24;j++){
                 for(int k=0;k<60;k++){
                     FechaHora fechaHora = new FechaHora();
-                    fechaHora.setDia(LocalDate.parse("2022-10-17"));
+                    fechaHora.setDia(LocalDate.parse("2022-10-18"));
                     fechaHora.setHora(LocalTime.of(j,k));
 
                     CapacidadAeropuerto capacidad = new CapacidadAeropuerto();
@@ -254,7 +254,7 @@ public class Aco {
             for(int j=0;j<24;j++){
                 for(int k=0;k<60;k++){
                     FechaHora fechaHora = new FechaHora();
-                    fechaHora.setDia(LocalDate.parse("2022-10-18"));
+                    fechaHora.setDia(LocalDate.parse("2022-10-19"));
                     fechaHora.setHora(LocalTime.of(j,k));
 
                     CapacidadAeropuerto capacidad = new CapacidadAeropuerto();
@@ -267,7 +267,7 @@ public class Aco {
             for(int j=0;j<24;j++){
                 for(int k=0;k<60;k++){
                     FechaHora fechaHora = new FechaHora();
-                    fechaHora.setDia(LocalDate.parse("2022-10-19"));
+                    fechaHora.setDia(LocalDate.parse("2022-10-20"));
                     fechaHora.setHora(LocalTime.of(j,k));
 
                     CapacidadAeropuerto capacidad = new CapacidadAeropuerto();
