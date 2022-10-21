@@ -24,6 +24,8 @@ public class ArcoAeropuerto {
 
     private Integer capacidadMaxima;
 
+    private int duracion;
+
 
     public ArcoAeropuerto(){
         this.cargo = new ArrayList<Paquete>();
@@ -246,5 +248,13 @@ public class ArcoAeropuerto {
 
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    public int getDuracion() {
+        return duracion;
+    }
+
+    public void setDuracion(int duracion) {
+        this.duracion = duracion;
     }
 }

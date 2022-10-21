@@ -1,9 +1,6 @@
 package com.bb.envifastservice.adapter.out.persistence.impl;
 
-import com.bb.envifastservice.adapter.out.persistence.repos.AirportRepository;
-import com.bb.envifastservice.adapter.out.persistence.repos.FlightRepository;
-import com.bb.envifastservice.adapter.out.persistence.repos.OrderRepository;
-import com.bb.envifastservice.adapter.out.persistence.repos.PackageRepository;
+import com.bb.envifastservice.adapter.out.persistence.repos.*;
 import com.bb.envifastservice.algo.*;
 import com.bb.envifastservice.algo.antColony.Aco;
 import com.bb.envifastservice.algo.antColony.AntSide;
@@ -29,6 +26,7 @@ public class OrderAdapter implements ListPackagesPort, InsertOrderPort, PlanOrde
 
     private final FlightRepository flightRepository;
 
+    private final AirportCapacityRepository airportCapacityRepository;
     @Override
     public List<Envio> listByFields(String input) {
         var registros = orderRepository.findAllByFieldsLikeAndActive(input);
@@ -309,14 +307,29 @@ public class OrderAdapter implements ListPackagesPort, InsertOrderPort, PlanOrde
         //Actualizar en BD:
         //Arcos
 //        for(int j=0;j<arcosGeneral.size();j++){
-//            FlightModel flightModel = flightRepository.findById(arcosGeneral.get(j).getId());
-//            if((int)(long)flightModel.getAvailableCapacity()!=arcosGeneral.get(j).getCapacidadDisponible()){
-//                flightModel.setCargo();
-//                flightModel.setAvailableCapacity();
+//            if((int)(long)arcosGeneralRegistros.get(j).getAvailableCapacity()!=arcosGeneral.get(j).getCapacidadDisponible()){
+//                FlightModel flightModel = flightRepository.findByFlightId(arcosGeneralRegistros.get(j).getId());
+//                //setear paquetes
+//
+//                for (int k=(int)(long)arcosGeneralRegistros.get(j).getAvailableCapacity();k>arcosGeneral.get(j).getCapacidadDisponible();k--){
+//                    //PackageModel packageModel = packageRepository.findByIdAndActive();
+//                    //flightModel.getCargo().add(packageModel);
+//                }
+//
+//                flightModel.setAvailableCapacity(arcosGeneral.get(j).getCapacidadDisponible().longValue());
 //                flightRepository.save(flightModel);
 //            }
 //        }
-        //Aeropuertos
+//        //Aeropuertos
+//        for(int j=0;j<aeropuertos.size();j++){
+//            for (int k=0;k<aeropuertos.get(j).getCapacidadDisponible().size();k++){
+//                if(aeropuertos.get(j).getCapacidadDisponible().get(k).getCapacidadDisponible()!=(int)(long) aeropuertosRegistros.get(j).getCapacity().get(k).getAvailableCapacity()){
+//                    //AirportsCapacityModel airportsCapacityModel = airportCapacityRepository.findBy();
+//
+//
+//                }
+//            }
+//        }
 
         //Rutas de paquetes
 //        for(int i=0;i<envios.size();i++) {
