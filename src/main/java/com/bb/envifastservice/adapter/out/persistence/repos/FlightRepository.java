@@ -11,7 +11,7 @@ import java.util.Optional;
 public interface FlightRepository extends JpaRepository<FlightModel, Long> {
     Optional<FlightModel> findByIdAndActive(Long id, int active);
     @Query("SELECT a from FlightModel a where a.active = :active and a.departureTime >= :inf and " +
-            "a.departureTime <= :sup ")
+            "a.departureTime <= :sup ORDER BY a.departureTime ASC")
     List<FlightModel> findAllByActiveRange(int active, LocalDateTime inf, LocalDateTime sup);
     @Query("SELECT a from FlightModel a where a.id = :idFlight")
     FlightModel findByFlightId(Long idFlight);

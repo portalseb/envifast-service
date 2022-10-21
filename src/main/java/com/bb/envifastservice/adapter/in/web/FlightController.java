@@ -1,5 +1,6 @@
 package com.bb.envifastservice.adapter.in.web;
 
+import com.bb.envifastservice.adapter.out.persistence.dtos.FlightMap;
 import com.bb.envifastservice.algo.ArcoAeropuerto;
 import com.bb.envifastservice.application.port.in.GenerateNextWeekFlightsService;
 import com.bb.envifastservice.application.port.in.ListAllFlightsService;
@@ -27,7 +28,7 @@ public class FlightController {
     }
 
     @GetMapping(value = "/{fecha}")
-    public List<ArcoAeropuerto> listAllVuelos(@RequestParam(name = "fecha") String fecha){
+    public List<FlightMap> listAllVuelos(@RequestParam(name = "fecha") String fecha){
         return listAllFlightsService.listAllFlights(fecha);
     }
 

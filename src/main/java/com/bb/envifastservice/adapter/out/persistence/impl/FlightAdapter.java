@@ -1,6 +1,7 @@
 package com.bb.envifastservice.adapter.out.persistence.impl;
 
 
+import com.bb.envifastservice.adapter.out.persistence.dtos.FlightMap;
 import com.bb.envifastservice.adapter.out.persistence.repos.AirportRepository;
 import com.bb.envifastservice.adapter.out.persistence.repos.FlightRepository;
 import com.bb.envifastservice.algo.*;
@@ -148,52 +149,59 @@ public class FlightAdapter implements ListFlightByIdPort, GenerateNextWeekFlight
 
     }
     @Override
-    public List<ArcoAeropuerto> listAllFlights(String fecha){
+    public List<FlightMap> listAllFlights(String fecha){
         var table= flightRepository.findAllByActiveRange(1,LocalDateTime.of(LocalDate.parse(fecha),LocalTime.of(0,0)),LocalDateTime.of(LocalDate.parse(fecha),LocalTime.of(23,59)));
-        List<ArcoAeropuerto> list = new ArrayList<>();
+        List<FlightMap> list = new ArrayList<>();
 
         for(FlightModel flight: table){
-            var arcoAeropuerto = new ArcoAeropuerto();
-            arcoAeropuerto.setId((int)(long)flight.getId());
-            arcoAeropuerto.setCapacidadMaxima((int)(long)flight.getMaxCapacity());
-            arcoAeropuerto.setCapacidadDisponible((int)(long)flight.getAvailableCapacity());
+//            var arcoAeropuerto = new ArcoAeropuerto();
+//            arcoAeropuerto.setId((int)(long)flight.getId());
+//            arcoAeropuerto.setCapacidadMaxima((int)(long)flight.getMaxCapacity());
+//            arcoAeropuerto.setCapacidadDisponible((int)(long)flight.getAvailableCapacity());
 
             var origen = airportRepository.findByCityShortNameAndActive(flight.getDepartureAirport().getAirportCode(),1);
             var destino = airportRepository.findByCityShortNameAndActive(flight.getArrivalAirport().getAirportCode(),1);
-            arcoAeropuerto.setAeropuerto1(new Aeropuerto());
-            arcoAeropuerto.getAeropuerto1().setId((int)(long)origen.getId());
-            arcoAeropuerto.getAeropuerto1().setCodigo(origen.getAirportCode());
-            arcoAeropuerto.getAeropuerto1().setPosX(origen.getXPos());
-            arcoAeropuerto.getAeropuerto1().setPosY(origen.getYPos());
-            arcoAeropuerto.getAeropuerto1().setCapacidad(origen.getMaxCapacity());
-            arcoAeropuerto.getAeropuerto1().setTimeZone(TimeZone.getTimeZone(origen.getCityName()).toString());
-            arcoAeropuerto.getAeropuerto1().setCiudad(new Ciudad());
-            arcoAeropuerto.getAeropuerto1().getCiudad().setNombre(origen.getCityName());
-            arcoAeropuerto.getAeropuerto1().getCiudad().setAbreviacion(origen.getCityShortName());
-            arcoAeropuerto.getAeropuerto1().getCiudad().setContinente(origen.getContinent());
-            arcoAeropuerto.getAeropuerto1().getCiudad().setPais(origen.getCountryName());
+//            arcoAeropuerto.setAeropuerto1(new Aeropuerto());
+//            arcoAeropuerto.getAeropuerto1().setId((int)(long)origen.getId());
+//            arcoAeropuerto.getAeropuerto1().setCodigo(origen.getAirportCode());
+//            arcoAeropuerto.getAeropuerto1().setPosX(origen.getXPos());
+//            arcoAeropuerto.getAeropuerto1().setPosY(origen.getYPos());
+//            arcoAeropuerto.getAeropuerto1().setCapacidad(origen.getMaxCapacity());
+//            arcoAeropuerto.getAeropuerto1().setTimeZone(TimeZone.getTimeZone(origen.getCityName()).toString());
+//            arcoAeropuerto.getAeropuerto1().setCiudad(new Ciudad());
+//            arcoAeropuerto.getAeropuerto1().getCiudad().setNombre(origen.getCityName());
+//            arcoAeropuerto.getAeropuerto1().getCiudad().setAbreviacion(origen.getCityShortName());
+//            arcoAeropuerto.getAeropuerto1().getCiudad().setContinente(origen.getContinent());
+//            arcoAeropuerto.getAeropuerto1().getCiudad().setPais(origen.getCountryName());
+//
+//
+//            arcoAeropuerto.setAeropuerto2(new Aeropuerto());
+//            arcoAeropuerto.getAeropuerto2().setId((int)(long)destino.getId());
+//            arcoAeropuerto.getAeropuerto2().setCodigo(destino.getAirportCode());
+//            arcoAeropuerto.getAeropuerto2().setPosX(destino.getXPos());
+//            arcoAeropuerto.getAeropuerto2().setPosY(destino.getYPos());
+//            arcoAeropuerto.getAeropuerto2().setCapacidad(destino.getMaxCapacity());
+//            arcoAeropuerto.getAeropuerto2().setTimeZone(TimeZone.getTimeZone(destino.getCityName()).toString());
+//            arcoAeropuerto.getAeropuerto2().setCiudad(new Ciudad());
+//            arcoAeropuerto.getAeropuerto2().getCiudad().setNombre(destino.getCityName());
+//            arcoAeropuerto.getAeropuerto2().getCiudad().setAbreviacion(destino.getCityShortName());
+//            arcoAeropuerto.getAeropuerto2().getCiudad().setContinente(destino.getContinent());
+//            arcoAeropuerto.getAeropuerto2().getCiudad().setPais(destino.getCountryName());
+//
+//            arcoAeropuerto.setDuracion((int) ChronoUnit.MINUTES.between(flight.getDepartureTime(),flight.getArrivalTime()));
+//            arcoAeropuerto.setDiaPartida(LocalDate.of(flight.getDepartureTime().getYear(),flight.getDepartureTime().getMonthValue(),flight.getDepartureTime().getDayOfMonth()));
+//            arcoAeropuerto.setDiaLLegada(LocalDate.of(flight.getArrivalTime().getYear(),flight.getArrivalTime().getMonthValue(),flight.getArrivalTime().getDayOfMonth()));
+//            arcoAeropuerto.setHoraPartida(LocalTime.of(flight.getDepartureTime().getHour(),flight.getDepartureTime().getMinute()));
+//            arcoAeropuerto.setHoraLlegada(LocalTime.of(flight.getArrivalTime().getHour(),flight.getArrivalTime().getMinute()));
 
-
-            arcoAeropuerto.setAeropuerto2(new Aeropuerto());
-            arcoAeropuerto.getAeropuerto2().setId((int)(long)destino.getId());
-            arcoAeropuerto.getAeropuerto2().setCodigo(destino.getAirportCode());
-            arcoAeropuerto.getAeropuerto2().setPosX(destino.getXPos());
-            arcoAeropuerto.getAeropuerto2().setPosY(destino.getYPos());
-            arcoAeropuerto.getAeropuerto2().setCapacidad(destino.getMaxCapacity());
-            arcoAeropuerto.getAeropuerto2().setTimeZone(TimeZone.getTimeZone(destino.getCityName()).toString());
-            arcoAeropuerto.getAeropuerto2().setCiudad(new Ciudad());
-            arcoAeropuerto.getAeropuerto2().getCiudad().setNombre(destino.getCityName());
-            arcoAeropuerto.getAeropuerto2().getCiudad().setAbreviacion(destino.getCityShortName());
-            arcoAeropuerto.getAeropuerto2().getCiudad().setContinente(destino.getContinent());
-            arcoAeropuerto.getAeropuerto2().getCiudad().setPais(destino.getCountryName());
-
-            arcoAeropuerto.setDuracion((int) ChronoUnit.MINUTES.between(flight.getDepartureTime(),flight.getArrivalTime()));
-            arcoAeropuerto.setDiaPartida(LocalDate.of(flight.getDepartureTime().getYear(),flight.getDepartureTime().getMonthValue(),flight.getDepartureTime().getDayOfMonth()));
-            arcoAeropuerto.setDiaLLegada(LocalDate.of(flight.getArrivalTime().getYear(),flight.getArrivalTime().getMonthValue(),flight.getArrivalTime().getDayOfMonth()));
-            arcoAeropuerto.setHoraPartida(LocalTime.of(flight.getDepartureTime().getHour(),flight.getDepartureTime().getMinute()));
-            arcoAeropuerto.setHoraLlegada(LocalTime.of(flight.getArrivalTime().getHour(),flight.getArrivalTime().getMinute()));
-
-            list.add(arcoAeropuerto);
+            FlightMap flightMap = new FlightMap();
+            flightMap.setId((int)(long)flight.getId());
+            flightMap.setDuracion((int) ChronoUnit.MINUTES.between(flight.getDepartureTime(),flight.getArrivalTime()));
+            flightMap.setIdAeropuertoOrigen((int)(long)origen.getId());
+            flightMap.setIdAeropuertoDestino((int)(long)destino.getId());
+            flightMap.setHoraSalida(LocalDateTime.of(LocalDate.of(flight.getDepartureTime().getYear(),flight.getDepartureTime().getMonthValue(),flight.getDepartureTime().getDayOfMonth()),LocalTime.of(flight.getDepartureTime().getHour(),flight.getDepartureTime().getMinute())));
+            flightMap.setHoraLLegada(LocalDateTime.of(LocalDate.of(flight.getArrivalTime().getYear(),flight.getArrivalTime().getMonthValue(),flight.getArrivalTime().getDayOfMonth()),LocalTime.of(flight.getArrivalTime().getHour(),flight.getArrivalTime().getMinute())));
+            list.add(flightMap);
         }
         System.out.println(table.size());
         System.out.println("Ya paso por todos");

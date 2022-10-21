@@ -1,5 +1,6 @@
 package com.bb.envifastservice.application.port;
 
+import com.bb.envifastservice.adapter.out.persistence.dtos.FlightMap;
 import com.bb.envifastservice.algo.ArcoAeropuerto;
 import com.bb.envifastservice.application.port.in.ListAllFlightsService;
 import com.bb.envifastservice.application.port.out.ListAllFlightsPort;
@@ -14,7 +15,7 @@ import java.util.List;
 public class ListAllFlightsUseCase implements ListAllFlightsService {
     private final ListAllFlightsPort listAllFlightsPort;
     @Override
-    public List<ArcoAeropuerto> listAllFlights(String fecha){
+    public List<FlightMap> listAllFlights(String fecha){
         var flightsListOpt = listAllFlightsPort.listAllFlights(fecha);
         return flightsListOpt;
     }
