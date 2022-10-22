@@ -25,14 +25,21 @@ public class Aco {
     }
     public void activarHormigas(AntSide ambiente) {
         int contProb1=0, contProb2=0;
-        while(true) {
+        //while(true){
+        for(int i=0;i<1;i++) {
             // Inicializar hormiga 1
             Ant hormiga1 = new Ant(ambiente);
+            //long start1 = System.currentTimeMillis();
             hormiga1.explorar();
+            //long end1 = System.currentTimeMillis();
+            //System.out.println(i + "Elapsed Time in milli seconds: "  + (end1 - start1));
 
             // Inicializar hormiga 2
             Ant hormiga2 = new Ant(ambiente);
+            //long start2 = System.currentTimeMillis();
             hormiga2.explorar();
+            //long end2 = System.currentTimeMillis();
+            //System.out.println(i + "Elapsed Time in milli seconds: " + (end2 - start2));
 
             // Actualizar rastro de feromonas
             if(hormiga1.isEncontroCamino() && hormiga2.isEncontroCamino())
@@ -63,6 +70,7 @@ public class Aco {
                         contProb2++;
                 if (contProb1 == hormiga1.getCaminoProbabilidades().size() || contProb2 == hormiga2.getCaminoProbabilidades().size()) {
                     System.out.println("Se llego al limite");
+                    System.out.println(i);
                     break;
                 }
             }

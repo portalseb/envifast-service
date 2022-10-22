@@ -21,7 +21,7 @@ public class AntSide {
     public ArrayList<Double> cantidadFeromonasCamino; //feromonas, no se cambia
     public ArrayList<Double> probabilidadDeSerEscogido; //recta de probabilidad, no se cambia
     public ArrayList<Integer> numeroVecesDeSerEscogigo; //no se esta usando
-    public static final double coeficienteEvaporacion = 0.1; //para actualizar feromonas, no se cambia
+    public static final double coeficienteEvaporacion = 0.9; //para actualizar feromonas, no se cambia
     public Aeropuerto nodoInicial; //cambiar tipo de dato
     public Aeropuerto nodoFinal; //cambiar tipo de dato
     public int tipoEnvio; //1: mismo continente, 2: diferentes contientes

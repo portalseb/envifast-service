@@ -165,6 +165,9 @@ public class OrderAdapter implements ListPackagesPort, InsertOrderPort, PlanOrde
 
         orderRepository.save(envioNuevo);
         envio.setId(envioNuevo.getId());
+        for(int i=0;i<envio.getPaquetes().size();i++) {
+            envio.getPaquetes().get(i).setId(envioNuevo.getPacks().get(i).getId());
+        }
 
     return envio;
     }
@@ -177,6 +180,7 @@ public class OrderAdapter implements ListPackagesPort, InsertOrderPort, PlanOrde
         ArrayList<Aeropuerto> aeropuertos= new ArrayList<>();
         ArrayList<ArcoAeropuerto> arcosGeneral = new ArrayList<>();
 
+        System.out.println("Ya inicializo");
         for(AirportsModel airport: aeropuertosRegistros){
             Aeropuerto aeropuerto = new Aeropuerto();
             aeropuerto.setId((int)(long)airport.getId());
@@ -204,15 +208,16 @@ public class OrderAdapter implements ListPackagesPort, InsertOrderPort, PlanOrde
                 fechaHora.setHora(airportsCapacityModel.getDateTime().getTime());
 
                 capacidadAeropuerto.setFechaHora(fechaHora);
+                capacidadAeropuerto.setDeposito(new ArrayList<>());
 
                 //Agregar el cargo (arreglo de paquetes)
-                for(PackageModel packageModel: airportsCapacityModel.getWarehouse()){
-                    Paquete paquete = new Paquete();
-                    paquete.setId(packageModel.getId());
-                    //Faltan mas campos
-
-                    capacidadAeropuerto.getDeposito().add(paquete);
-                }
+//                for(PackageModel packageModel: airportsCapacityModel.getWarehouse()){
+//                    Paquete paquete = new Paquete();
+//                    paquete.setId(packageModel.getId());
+//                    //Faltan mas campos
+//
+//                    capacidadAeropuerto.getDeposito().add(paquete);
+//                }
 
                 aeropuerto.getCapacidadDisponible().add(capacidadAeropuerto);
             }
@@ -243,14 +248,15 @@ public class OrderAdapter implements ListPackagesPort, InsertOrderPort, PlanOrde
             arcoAeropuerto.setHoraPartida(LocalTime.of(flight.getDepartureTime().getHour(),flight.getDepartureTime().getMinute()));
             arcoAeropuerto.setHoraLlegada(LocalTime.of(flight.getArrivalTime().getHour(),flight.getArrivalTime().getMinute()));
 
+            arcoAeropuerto.setCargo(new ArrayList<>());
             //Agregar el cargo (arreglo de paquetes)
-            for(PackageModel packageModel: flight.getCargo()){
-                Paquete paquete = new Paquete();
-                paquete.setId(packageModel.getId());
-                //Faltan mas campos
-
-                arcoAeropuerto.getCargo().add(paquete);
-            }
+//            for(PackageModel packageModel: flight.getCargo()){
+//                Paquete paquete = new Paquete();
+//                paquete.setId(packageModel.getId());
+//                //Faltan mas campos
+//
+//                arcoAeropuerto.getCargo().add(paquete);
+//            }
 
             arcosGeneral.add(arcoAeropuerto);
         }
@@ -264,7 +270,8 @@ public class OrderAdapter implements ListPackagesPort, InsertOrderPort, PlanOrde
             //Variables... modificar
             ArrayList<ArcoAeropuerto> arcos = ambiente.sacarArcosPosibles(arcosGeneral,envios.get(i));
             ambiente.setCaminos(arcos);
-
+            System.out.println("Cantidad de arcos");
+            System.out.println(arcos.size());
             int origen =0;
             int destino = 0;
             for(int j=0;j<aeropuertos.size();j++){
@@ -294,8 +301,10 @@ public class OrderAdapter implements ListPackagesPort, InsertOrderPort, PlanOrde
             ambiente.actualizarCapacidades(algoritmoHormigas.getSolucionCamino());
 
             //Actualizar rutas de paquetes
-            for(int j=0;j<=envios.get(i).getPaquetes().size();j++){
-                envios.get(i).getPaquetes().get(i).setRuta(algoritmoHormigas.getSolucionCamino());
+            for(int j=0;j<envios.get(i).getPaquetes().size();j++){
+                //System.out.println(i);
+                //System.out.println(j);
+                envios.get(i).getPaquetes().get(j).setRuta(algoritmoHormigas.getSolucionCamino());
             }
 
             //Actualizar arcosGeneral (arcos)
@@ -305,31 +314,44 @@ public class OrderAdapter implements ListPackagesPort, InsertOrderPort, PlanOrde
         }
 
         //Actualizar en BD:
-        //Arcos
-//        for(int j=0;j<arcosGeneral.size();j++){
-//            if((int)(long)arcosGeneralRegistros.get(j).getAvailableCapacity()!=arcosGeneral.get(j).getCapacidadDisponible()){
-//                FlightModel flightModel = flightRepository.findByFlightId(arcosGeneralRegistros.get(j).getId());
-//                //setear paquetes
-//
-//                for (int k=(int)(long)arcosGeneralRegistros.get(j).getAvailableCapacity();k>arcosGeneral.get(j).getCapacidadDisponible();k--){
-//                    //PackageModel packageModel = packageRepository.findByIdAndActive();
-//                    //flightModel.getCargo().add(packageModel);
-//                }
-//
-//                flightModel.setAvailableCapacity(arcosGeneral.get(j).getCapacidadDisponible().longValue());
-//                flightRepository.save(flightModel);
-//            }
-//        }
+//        //Arcos
+        for(int j=0;j<arcosGeneral.size();j++){
+            if((int)(long)arcosGeneralRegistros.get(j).getAvailableCapacity()!=arcosGeneral.get(j).getCapacidadDisponible()){
+                //System.out.println("Encontro un arco que actualizar");
+                FlightModel flightModel = flightRepository.findByFlightId(arcosGeneralRegistros.get(j).getId());
+                //setear paquetes
+                //System.out.println("Tamanho del cargo nuevo");
+                //System.out.println(arcosGeneral.get(j).getCargo().size());
+                //for (int k=0;k<arcosGeneral.get(j).getCargo().size();k++){
+                //    //Se debe pasar el id del paquete al servicio, en el cuerpo
+                //    PackageModel packageModel = packageRepository.findByIdOfPackage(arcosGeneral.get(j).getCargo().get(k).getId(),1);
+                //    flightModel.getCargo().add(packageModel);
+                //}
+                flightModel.setAvailableCapacity(arcosGeneral.get(j).getCapacidadDisponible().longValue());
+                flightRepository.save(flightModel);
+            }
+        }
 //        //Aeropuertos
-//        for(int j=0;j<aeropuertos.size();j++){
-//            for (int k=0;k<aeropuertos.get(j).getCapacidadDisponible().size();k++){
-//                if(aeropuertos.get(j).getCapacidadDisponible().get(k).getCapacidadDisponible()!=(int)(long) aeropuertosRegistros.get(j).getCapacity().get(k).getAvailableCapacity()){
-//                    //AirportsCapacityModel airportsCapacityModel = airportCapacityRepository.findBy();
-//
-//
-//                }
-//            }
-//        }
+        for(int j=0;j<aeropuertos.size();j++){
+            var aeropuertoModel = airportRepository.findByCityShortNameAndActive(aeropuertos.get(j).getCodigo(),1);
+            for (int k=0;k<aeropuertos.get(j).getCapacidadDisponible().size();k++){
+                if(aeropuertos.get(j).getCapacidadDisponible().get(k).getCapacidadDisponible()!=(int)(long) aeropuertosRegistros.get(j).getCapacity().get(k).getAvailableCapacity()){
+                    //System.out.println("Encontro un capacidadAeropuerto que actualizar");
+                    //var idCapacityModel = airportCapacityRepository.findByIdAirportActive()
+                    //AirportsCapacityModel airportsCapacityModel = airportCapacityRepository.findByIdCapacity(aeropuertosRegistros.get(j).getCapacity().get(k).getId(),1);
+                    //System.out.println("Tamanho del deposito nuevo");
+                    //System.out.println(aeropuertos.get(j).getCapacidadDisponible().get(k).getDeposito().size());
+                    //for(int p=0;p<aeropuertos.get(j).getCapacidadDisponible().get(k).getDeposito().size();p++){
+                    //    //Se debe pasar el id del paquete al servicio, en el cuerpo
+                    //    PackageModel packageModel = packageRepository.findByIdOfPackage(aeropuertos.get(j).getCapacidadDisponible().get(k).getDeposito().get(p).getId(),1);
+                    //    airportsCapacityModel.getWarehouse().add(packageModel);
+                    //}
+                    aeropuertoModel.getCapacity().get(k).setAvailableCapacity(aeropuertos.get(j).getCapacidadDisponible().get(k).getCapacidadDisponible());
+                    //airportCapacityRepository.save(airportsCapacityModel);
+                }
+            }
+            airportRepository.save(aeropuertoModel);
+        }
 
         //Rutas de paquetes
 //        for(int i=0;i<envios.size();i++) {

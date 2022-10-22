@@ -245,15 +245,6 @@ public class Ant {
                 //posiblesCaminosIndices.add(i);
             }
 
-
-//            if((origen.getId() == nodoAct.getId() && nodoAct.getId() == ambienteGlob.getNodoInicial().getId()) ||
-//                    (origen.getId() == nodoAct.getId() && destino.getId()!=nodoAnt.getId() )){
-//                caminosHormiga.getCaminos().add(camino);
-//                caminosHormiga.getCantidadFeromonasCamino().add(ambienteGlob.getCantidadFeromonasCamino().get(i));
-//                caminosHormiga.getVisibilidad().add(ambienteGlob.getVisibilidad().get(i));
-//                caminosHormiga.getCostos().add(ambienteGlob.getCostos().get(i));
-//                posiblesCaminosIndices.add(i);
-//            }
         }
 
         return caminosHormiga;

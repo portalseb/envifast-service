@@ -16,6 +16,9 @@ public interface PackageRepository  extends JpaRepository<PackageModel, String> 
     List<PackageModel> findAllByFieldsLikeAndActive(@Param("campos") String campos);
     PackageModel findByIdAndActive(Long id, int active);
 
+    @Query("SELECT p from PackageModel  p WHERE p.id =:id and p.active=:active")
+    PackageModel findByIdOfPackage(@Param("id") String id, @Param("active") int active);
+
     //PackageModel insertPackage(@Param("paquete") PackageModel paquete);
     @Query("SELECT p.route from PackageModel  p WHERE p.id =:id and p.active=:active")
     List<FlightModel> findFlightsInPackageRouteAndActive(@Param("id") String id, @Param("active") int active);
