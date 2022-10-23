@@ -12,10 +12,10 @@ import com.bb.envifastservice.models.*;
 import lombok.RequiredArgsConstructor;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.TimeZone;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @PersistenceAdapter
 @RequiredArgsConstructor
@@ -174,13 +174,17 @@ public class OrderAdapter implements ListPackagesPort, InsertOrderPort, PlanOrde
 
     @Override
     public int planOrdRoute(List<Envio> envios){
+        //Menor fecha de envios
+        var envioFechaMin = envios.stream().min(Comparator.comparing(Envio::getFechaEnvio)).orElseThrow(NoSuchElementException::new).getFechaEnvio();
         //Planear y guardar en BD las rutas para los envios
         var aeropuertosRegistros = airportRepository.findAllByActive(1);
-        var arcosGeneralRegistros = flightRepository.findAll();
+        var arcosGeneralRegistros = flightRepository.findAllAfterDate(1,envioFechaMin);
         ArrayList<Aeropuerto> aeropuertos= new ArrayList<>();
         ArrayList<ArcoAeropuerto> arcosGeneral = new ArrayList<>();
 
+
         System.out.println("Ya inicializo");
+        //
         for(AirportsModel airport: aeropuertosRegistros){
             Aeropuerto aeropuerto = new Aeropuerto();
             aeropuerto.setId((int)(long)airport.getId());
@@ -196,6 +200,7 @@ public class OrderAdapter implements ListPackagesPort, InsertOrderPort, PlanOrde
             ciudad.setContinente(airport.getContinent());
             ciudad.setPais(airport.getCountryName());
             aeropuerto.setCiudad(ciudad);
+            airport.getCapacity().removeIf(c->c.getDateTime().getDate().isBefore(envioFechaMin.toLocalDate()));
 
             for(AirportsCapacityModel airportsCapacityModel: airport.getCapacity()){
                 CapacidadAeropuerto capacidadAeropuerto = new CapacidadAeropuerto();
@@ -315,6 +320,7 @@ public class OrderAdapter implements ListPackagesPort, InsertOrderPort, PlanOrde
 
         //Actualizar en BD:
 //        //Arcos
+        var flights = new ArrayList<FlightModel>();
         for(int j=0;j<arcosGeneral.size();j++){
             if((int)(long)arcosGeneralRegistros.get(j).getAvailableCapacity()!=arcosGeneral.get(j).getCapacidadDisponible()){
                 //System.out.println("Encontro un arco que actualizar");
@@ -328,10 +334,12 @@ public class OrderAdapter implements ListPackagesPort, InsertOrderPort, PlanOrde
                 //    flightModel.getCargo().add(packageModel);
                 //}
                 flightModel.setAvailableCapacity(arcosGeneral.get(j).getCapacidadDisponible().longValue());
-                flightRepository.save(flightModel);
+                flights.add(flightModel);
             }
         }
+        flightRepository.saveAll(flights);
 //        //Aeropuertos
+        var airports =  new ArrayList<AirportsModel>();
         for(int j=0;j<aeropuertos.size();j++){
             var aeropuertoModel = airportRepository.findByCityShortNameAndActive(aeropuertos.get(j).getCodigo(),1);
             for (int k=0;k<aeropuertos.get(j).getCapacidadDisponible().size();k++){
@@ -348,11 +356,12 @@ public class OrderAdapter implements ListPackagesPort, InsertOrderPort, PlanOrde
                     //}
                     aeropuertoModel.getCapacity().get(k).setAvailableCapacity(aeropuertos.get(j).getCapacidadDisponible().get(k).getCapacidadDisponible());
                     //airportCapacityRepository.save(airportsCapacityModel);
+
                 }
             }
-            airportRepository.save(aeropuertoModel);
+            airports.add(aeropuertoModel);
         }
-
+        airportRepository.saveAll(airports);
         //Rutas de paquetes
 //        for(int i=0;i<envios.size();i++) {
 //            ArrayList<Paquete> paquetes = envios.get(i).getPaquetes();

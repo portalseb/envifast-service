@@ -74,6 +74,7 @@ public class AirportAdapter implements ListAllAirportsPort, ListAirportCoordPort
 
     @Override
     public void generateNextWeekDateTime(){
+        var dateTimeList = new ArrayList<DateTimeModel>();
         for(int i=0;i<7;i++){
                 for(int j=0;j<24;j++){
                     for(int k=0;k<60;k++){
@@ -85,21 +86,21 @@ public class AirportAdapter implements ListAllAirportsPort, ListAirportCoordPort
                         dateTimeModel.setDate(fechaHora.getDia());
                         dateTimeModel.setTime(fechaHora.getHora());
                         dateTimeModel.setActive(1);
-                        dateTimeRepository.save(dateTimeModel);
+                        dateTimeList.add(dateTimeModel);
                     }
                 }
         }
+        dateTimeRepository.saveAll(dateTimeList);
         var airportsModels = airportRepository.findAllByActive(1);
-        var dateTimeModels = dateTimeRepository.findAll();
+
 
         for(AirportsModel airportsModel: airportsModels){
-            var aeropuertoModel = airportRepository.findByCityShortNameAndActive(airportsModel.getAirportCode(),airportsModel.getActive());
 
-            List<AirportsCapacityModel> airportsCapacityModels=new ArrayList<>();
-            for(DateTimeModel dateTimeModel: dateTimeModels){
-                var fechaHoraModel = dateTimeRepository.findByIdOfDateTimeActive(dateTimeModel.getId(),dateTimeModel.getActive());
+
+            var airportsCapacityModels = new ArrayList<AirportsCapacityModel>();
+            for(DateTimeModel dateTimeModel: dateTimeList){
                 var airportsCapacityModel = new AirportsCapacityModel();
-                airportsCapacityModel.setDateTime(fechaHoraModel);
+                airportsCapacityModel.setDateTime(dateTimeModel);
 //                airportsCapacityModel.setAirport(airportsModel);
                 airportsCapacityModel.setAvailableCapacity(airportsModel.getMaxCapacity());
                 airportsCapacityModel.setActive(1);
@@ -107,9 +108,10 @@ public class AirportAdapter implements ListAllAirportsPort, ListAirportCoordPort
 //                airportCapacityRepository.save(airportsCapacityModel);
             }
 
-            aeropuertoModel.setCapacity(airportsCapacityModels);
-            airportRepository.save(aeropuertoModel);
+            airportsModel.setCapacity(airportsCapacityModels);
+
         }
+        airportRepository.saveAll(airportsModels);
 
     }
 

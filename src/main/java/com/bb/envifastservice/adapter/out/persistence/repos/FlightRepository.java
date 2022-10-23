@@ -14,6 +14,11 @@ public interface FlightRepository extends JpaRepository<FlightModel, Long> {
     @Query("SELECT a from FlightModel a where a.active = :active and a.departureTime >= :inf and " +
             "a.departureTime <= :sup ORDER BY a.departureTime ASC")
     List<FlightModel> findAllByActiveRange(@Param("active") int active,@Param("inf") LocalDateTime inf,@Param("sup") LocalDateTime sup);
+    @Query("SELECT a from FlightModel a where a.active = :active and a.departureTime >= :inf " +
+            "ORDER BY a.departureTime ASC")
+    List<FlightModel> findAllAfterDate(@Param("active") int active,@Param("inf") LocalDateTime inf);
+
     @Query("SELECT a from FlightModel a where a.id = :idFlight")
     FlightModel findByFlightId(@Param("idFlight") Long idFlight);
+
 }

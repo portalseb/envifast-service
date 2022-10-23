@@ -32,7 +32,7 @@ public class FlightController {
         return listAllFlightsService.listAllFlights(fecha,per);
     }
 
-    @GetMapping(value = "/generate")
+    @PostMapping(value = "/generate")
     public void generarVuelos(){
         generateNextWeekFlightsService.generateNextWeekFlights();
     }
