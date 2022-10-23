@@ -15,8 +15,8 @@ import java.util.List;
 public class ListAllFlightsUseCase implements ListAllFlightsService {
     private final ListAllFlightsPort listAllFlightsPort;
     @Override
-    public List<FlightMap> listAllFlights(String fecha){
-        var flightsListOpt = listAllFlightsPort.listAllFlights(fecha);
+    public List<FlightMap> listAllFlights(String fecha, Integer per){
+        var flightsListOpt = listAllFlightsPort.listAllFlights(fecha,per);
         return flightsListOpt;
     }
 

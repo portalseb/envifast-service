@@ -27,9 +27,9 @@ public class FlightController {
         return listFlightByIdService.listById(id);
     }
 
-    @GetMapping(value = "/{fecha}")
-    public List<FlightMap> listAllVuelos(@RequestParam(name = "fecha") String fecha){
-        return listAllFlightsService.listAllFlights(fecha);
+    @GetMapping(value = "/{fecha} {per}")
+    public List<FlightMap> listAllVuelos(@RequestParam(name = "fecha") String fecha, @RequestParam(name = "per") Integer per){
+        return listAllFlightsService.listAllFlights(fecha,per);
     }
 
     @GetMapping(value = "/generate")

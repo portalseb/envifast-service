@@ -151,8 +151,8 @@ public class FlightAdapter implements ListFlightByIdPort, GenerateNextWeekFlight
         flightRepository.saveAll(vuelos);
     }
     @Override
-    public List<FlightMap> listAllFlights(String fecha){
-        var table= flightRepository.findAllByActiveRange(1,LocalDateTime.of(LocalDate.parse(fecha),LocalTime.of(0,0)),LocalDateTime.of(LocalDate.parse(fecha),LocalTime.of(23,59)));
+    public List<FlightMap> listAllFlights(String fecha,Integer per){
+        var table= flightRepository.findAllByActiveRange(1,LocalDateTime.of(LocalDate.parse(fecha),LocalTime.of(6*(per-1),0)),LocalDateTime.of(LocalDate.parse(fecha),LocalTime.of(6*(per)-1,59)));
         List<FlightMap> list = new ArrayList<>();
 
         for(FlightModel flight: table){
