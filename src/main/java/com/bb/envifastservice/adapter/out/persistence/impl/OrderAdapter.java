@@ -11,6 +11,7 @@ import com.bb.envifastservice.hexagonal.PersistenceAdapter;
 import com.bb.envifastservice.models.*;
 import lombok.RequiredArgsConstructor;
 
+import javax.persistence.Convert;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -312,6 +313,7 @@ public class OrderAdapter implements ListPackagesPort, InsertOrderPort, PlanOrde
                 envios.get(i).getPaquetes().get(j).setRuta(algoritmoHormigas.getSolucionCamino());
             }
 
+
             //Actualizar arcosGeneral (arcos)
             //ambiente.getCaminos();
             //ambiente.getNodos();
@@ -319,6 +321,24 @@ public class OrderAdapter implements ListPackagesPort, InsertOrderPort, PlanOrde
         }
 
         //Actualizar en BD:
+           //Paquetes
+        var packages = new ArrayList<PackageModel>();
+        for (Envio envio:envios
+             ) {
+            for (Paquete paquete:envio.getPaquetes()
+                 ) {
+                var packageBD = packageRepository.findByIdOfPackage(paquete.getId(),1);
+                var flights = new ArrayList<FlightModel>();
+                for (ArcoAeropuerto vuelo: paquete.getRuta()
+                     ) {
+                    var flight = flightRepository.findByFlightId(vuelo.getId().longValue());
+                    flights.add(flight);
+                }
+                packageBD.setRoute(flights);
+                packages.add(packageBD);
+            }
+        }
+        packageRepository.saveAll(packages);
 //        //Arcos
         var flights = new ArrayList<FlightModel>();
         for(int j=0;j<arcosGeneral.size();j++){
@@ -328,6 +348,8 @@ public class OrderAdapter implements ListPackagesPort, InsertOrderPort, PlanOrde
                 //setear paquetes
                 //System.out.println("Tamanho del cargo nuevo");
                 //System.out.println(arcosGeneral.get(j).getCargo().size());
+                //for envio in envios
+                    //for paquete in envio.getPaquetes
                 //for (int k=0;k<arcosGeneral.get(j).getCargo().size();k++){
                 //    //Se debe pasar el id del paquete al servicio, en el cuerpo
                 //    PackageModel packageModel = packageRepository.findByIdOfPackage(arcosGeneral.get(j).getCargo().get(k).getId(),1);

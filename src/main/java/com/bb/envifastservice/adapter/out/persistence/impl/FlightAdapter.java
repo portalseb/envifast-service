@@ -51,11 +51,12 @@ public class FlightAdapter implements ListFlightByIdPort, GenerateNextWeekFlight
         aeropuertoLlegada.setId(Math.toIntExact(bdVuelo.getArrivalAirport().getId()));
         aeropuertoLlegada.setCapacidad(bdVuelo.getArrivalAirport().getMaxCapacity());
         aeropuertoLlegada.setCodigo(bdVuelo.getArrivalAirport().getAirportCode());
-        ciudad.setAbreviacion(bdVuelo.getArrivalAirport().getCityShortName());
-        ciudad.setContinente(bdVuelo.getArrivalAirport().getContinent());
-        ciudad.setNombre(bdVuelo.getArrivalAirport().getCityName());
-        ciudad.setPais(bdVuelo.getArrivalAirport().getCountryName());
-        aeropuertoLlegada.setCiudad(ciudad);
+        var ciudad2 = new Ciudad();
+        ciudad2.setAbreviacion(bdVuelo.getArrivalAirport().getCityShortName());
+        ciudad2.setContinente(bdVuelo.getArrivalAirport().getContinent());
+        ciudad2.setNombre(bdVuelo.getArrivalAirport().getCityName());
+        ciudad2.setPais(bdVuelo.getArrivalAirport().getCountryName());
+        aeropuertoLlegada.setCiudad(ciudad2);
         arco.setAeropuerto1(aeropuertoSalida);
         arco.setAeropuerto2(aeropuertoLlegada);
         arco.setHoraPartida(bdVuelo.getDepartureTime().toLocalTime());
