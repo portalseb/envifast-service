@@ -552,8 +552,6 @@ public class OrderAdapter implements ListPackagesPort, InsertOrderPort, PlanOrde
             envioNuevo.setDestino(aeropuertoDestino.getCityName());
             envioNuevo.setActive(1);
             List<PackageModel> paquetes = new ArrayList<PackageModel>();
-            System.out.println("Cantidad de paquetes");
-            System.out.println(envios.get(i).getPaquetes().size());
             for(int j=0;j<envios.get(i).getPaquetes().size();j++){
                 var paqueteNuevo = new PackageModel();
                 paqueteNuevo.setDateTime(envios.get(i).getFechaEnvio());
@@ -562,8 +560,6 @@ public class OrderAdapter implements ListPackagesPort, InsertOrderPort, PlanOrde
                 paqueteNuevo.setDestino(aeropuertoDestino.getCityName());
                 paqueteNuevo.setActive(1);
                 var flights = new ArrayList<FlightModel>();
-                System.out.println("Cantidad de caminos para ruta de paquete" + j);
-                System.out.println(envios.get(i).getPaquetes().get(j).getRuta().size());
                 for (ArcoAeropuerto vuelo: envios.get(i).getPaquetes().get(j).getRuta()
                 ) {
                     var flight = flightRepository.findByFlightId(vuelo.getId().longValue());
