@@ -1,5 +1,5 @@
 package com.bb.envifastservice.application.port.in;
 
 public interface GenerateNextWeekDateTimeService {
-    void generateNextWeekDateTime();
+    void generateNextWeekDateTime(String fecha, Integer dias);
 }

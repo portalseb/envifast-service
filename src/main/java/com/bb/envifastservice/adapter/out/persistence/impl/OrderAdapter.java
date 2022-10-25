@@ -146,8 +146,10 @@ public class OrderAdapter implements ListPackagesPort, InsertOrderPort, PlanOrde
 
         envioNuevo.setTiempoTotal(0.0);
         envioNuevo.setToken(envio.getToken());
-        envioNuevo.setOrigen(envio.getOrigen().getCiudad().getNombre());
-        envioNuevo.setDestino(envio.getDestino().getCiudad().getNombre());
+        var aeropuertoOrigen = airportRepository.findByIdActive(envio.getOrigen().getId().longValue(),1);
+        var aeropuertoDestino = airportRepository.findByIdActive(envio.getDestino().getId().longValue(),1);
+        envioNuevo.setOrigen(aeropuertoOrigen.getCityName());
+        envioNuevo.setDestino(aeropuertoDestino.getCityName());
         envioNuevo.setActive(1);
 
         List<PackageModel> paquetes = new ArrayList<PackageModel>();
@@ -155,9 +157,9 @@ public class OrderAdapter implements ListPackagesPort, InsertOrderPort, PlanOrde
         for(int i=0;i<envio.getPaquetes().size();i++){
             var paqueteNuevo = new PackageModel();
             paqueteNuevo.setDateTime(envio.getFechaEnvio());
-            paqueteNuevo.setCurrentAirportId(envio.getPaquetes().get(i).getOrigen().getId().longValue());
-            paqueteNuevo.setOrigen(envio.getPaquetes().get(i).getOrigen().getCiudad().getNombre());
-            paqueteNuevo.setDestino(envio.getPaquetes().get(i).getDestino().getCiudad().getNombre());
+            paqueteNuevo.setCurrentAirportId(envio.getOrigen().getId().longValue());
+            paqueteNuevo.setOrigen(aeropuertoOrigen.getCityName());
+            paqueteNuevo.setDestino(aeropuertoDestino.getCityName());
             paqueteNuevo.setActive(1);
             paquetes.add(paqueteNuevo);
         }

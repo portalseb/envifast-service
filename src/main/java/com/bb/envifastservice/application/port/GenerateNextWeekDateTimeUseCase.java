@@ -10,5 +10,5 @@ import lombok.RequiredArgsConstructor;
 public class GenerateNextWeekDateTimeUseCase implements GenerateNextWeekDateTimeService {
     private final GenerateNextWeekDateTimePort generateNextWeekDateTimePort;
     @Override
-    public void generateNextWeekDateTime(){generateNextWeekDateTimePort.generateNextWeekDateTime();}
+    public void generateNextWeekDateTime(String fecha, Integer dias){generateNextWeekDateTimePort.generateNextWeekDateTime(fecha,dias);}
 }

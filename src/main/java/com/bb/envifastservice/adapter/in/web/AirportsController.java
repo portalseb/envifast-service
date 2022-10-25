@@ -7,10 +7,7 @@ import com.bb.envifastservice.application.port.in.ListAirportCoordService;
 import com.bb.envifastservice.application.port.in.ListAllAirportsService;
 import com.bb.envifastservice.hexagonal.WebAdapter;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -35,8 +32,8 @@ public class AirportsController {
     }
 
     @GetMapping(value = "/dateTimes")
-    public void generarFechasHora(){
-        generateNextWeekDateTimeService.generateNextWeekDateTime();
+    public void generarFechasHora(@RequestParam(name = "fecha") String fecha, @RequestParam(name = "dias") Integer dias){
+        generateNextWeekDateTimeService.generateNextWeekDateTime(fecha, dias);
     }
 
 }

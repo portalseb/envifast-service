@@ -73,13 +73,13 @@ public class AirportAdapter implements ListAllAirportsPort, ListAirportCoordPort
     }
 
     @Override
-    public void generateNextWeekDateTime(){
+    public void generateNextWeekDateTime(String fecha, Integer dias){
         var dateTimeList = new ArrayList<DateTimeModel>();
-        for(int i=0;i<7;i++){
+        for(int i=0;i<dias;i++){
                 for(int j=0;j<24;j++){
                     for(int k=0;k<60;k++){
                         FechaHora fechaHora = new FechaHora();
-                        fechaHora.setDia(LocalDate.now().plusDays(i));
+                        fechaHora.setDia(LocalDate.parse(fecha).plusDays(i));
                         fechaHora.setHora(LocalTime.of(j,k));
 
                         DateTimeModel dateTimeModel = new DateTimeModel();

@@ -102,11 +102,11 @@ public class FlightAdapter implements ListFlightByIdPort, GenerateNextWeekFlight
     }
 
     @Override
-    public void generateNextWeekFlights() {
+    public void generateNextWeekFlights(String fecha,Integer dias) {
         File planes = new File("src/main/java/com/bb/envifastservice/c.inf226.22-2.planes_vuelo.v02.txt");
         Scanner myReader = null;
         var vuelos = new ArrayList<FlightModel>();
-        for (int i = 0; i<7;i++){
+        for (int i = 0; i<dias;i++){
             try {
                 myReader = new Scanner(planes);
             } catch (FileNotFoundException e) {
@@ -137,10 +137,10 @@ public class FlightAdapter implements ListFlightByIdPort, GenerateNextWeekFlight
                     vuelo.setMaxCapacity(350L);
                     vuelo.setAvailableCapacity(350L);
                 }
-                var sale = LocalDateTime.now().with(LocalTime.parse(data[2], formatter)).plusDays(i);
-                var llega =LocalDateTime.now().with(LocalTime.parse(data[3], formatter)).plusDays(i);
+                var sale = LocalDateTime.of(LocalDate.parse(fecha),LocalTime.parse(data[2], formatter)).plusDays(i);
+                var llega =LocalDateTime.of(LocalDate.parse(fecha),LocalTime.parse(data[3], formatter)).plusDays(i);
                 if(LocalTime.parse(data[3], formatter).compareTo(LocalTime.parse(data[2], formatter))<=0){
-                    llega = LocalDateTime.now().with(LocalTime.parse(data[3], formatter)).plusDays(i+1);
+                    llega = LocalDateTime.of(LocalDate.parse(fecha),LocalTime.parse(data[3], formatter)).plusDays(i+1);
                 }
                 vuelo.setArrivalTime(llega);
                 vuelo.setDepartureTime(sale);

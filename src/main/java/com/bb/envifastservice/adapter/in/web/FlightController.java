@@ -33,7 +33,7 @@ public class FlightController {
     }
 
     @PostMapping(value = "/generate")
-    public void generarVuelos(){
-        generateNextWeekFlightsService.generateNextWeekFlights();
+    public void generarVuelos(@RequestParam(name = "fecha") String fecha,  @RequestParam(name = "dias") Integer dias){
+        generateNextWeekFlightsService.generateNextWeekFlights(fecha, dias);
     }
 }
