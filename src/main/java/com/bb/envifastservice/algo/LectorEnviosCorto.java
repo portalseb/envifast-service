@@ -1,18 +1,34 @@
 package com.bb.envifastservice.algo;
 
 import java.io.*;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 
 public class LectorEnviosCorto {
+    private ArrayList<String> codigos;
+    private ArrayList<LocalDateTime> fechasEnvio;
     private ArrayList<Aeropuerto> origenes;
     private ArrayList<Aeropuerto> destinos;
     private ArrayList<Aeropuerto> aeropuertos;
     private ArrayList<Integer> cantPaquetes;
+    private LocalDate fechaDesde;
     public LectorEnviosCorto(ArrayList<Aeropuerto> aeropuertos) {
         this.origenes = new ArrayList<>();
         this.destinos = new ArrayList<>();
         this.aeropuertos = aeropuertos;
         this.cantPaquetes = new ArrayList<>();
+        this.codigos = new ArrayList<>();
+        this.fechasEnvio = new ArrayList<>();
+    }
+
+    public LocalDate getFechaDesde() {
+        return fechaDesde;
+    }
+
+    public void setFechaDesde(LocalDate fechaDesde) {
+        this.fechaDesde = fechaDesde;
     }
 
     public ArrayList<Aeropuerto> getOrigenes() {
@@ -47,6 +63,22 @@ public class LectorEnviosCorto {
         this.cantPaquetes = cantPaquetes;
     }
 
+    public ArrayList<String> getCodigos() {
+        return codigos;
+    }
+
+    public void setCodigos(ArrayList<String> codigos) {
+        this.codigos = codigos;
+    }
+
+    public ArrayList<LocalDateTime> getFechasEnvio() {
+        return fechasEnvio;
+    }
+
+    public void setFechasEnvio(ArrayList<LocalDateTime> fechasEnvio) {
+        this.fechasEnvio = fechasEnvio;
+    }
+
     public void Leer(String ruta)  throws FileNotFoundException {
         File archivo = new File (ruta);
         BufferedReader br = new BufferedReader(new FileReader(archivo));
@@ -59,20 +91,28 @@ public class LectorEnviosCorto {
                 if(data == null) break;
                 String[] parts = data.split("-");
                 if(parts.length >= 2){
-                    String nombreVuelo = "Vuelo_Rutina";
                     int j_aeropuerto1 = 0, j_aeropuerto2 = 0;
+
+                    //Codigo
+                    codigos.add(parts[0]);
+
+                    //Fecha
+                    //Integer fecha = Integer.parseInt(parts[1]);
+                    String[] horaMin = parts[1].split(":");
+                    fechasEnvio.add(LocalDateTime.of(this.fechaDesde, LocalTime.of(Integer.parseInt(horaMin[0]),Integer.parseInt(horaMin[1]))));
+
                     // Tenemos que encontrar el aeropuerto de origen y de destino para que funcione
                     for (int j = 0; j < this.aeropuertos.size(); j++) {
-                        if(parts[0].equals(this.aeropuertos.get(j).getCodigo())){
+                        if(parts[2].equals(this.aeropuertos.get(j).getCodigo())){
                             j_aeropuerto1 = j;
                         }
-                        if(parts[1].equals(this.aeropuertos.get(j).getCodigo())){
+                        if(parts[3].equals(this.aeropuertos.get(j).getCodigo())){
                             j_aeropuerto2 = j;
                         }
                     }
                     origenes.add(this.aeropuertos.get(j_aeropuerto1));
                     destinos.add(this.aeropuertos.get(j_aeropuerto2));
-                    cantPaquetes.add(Integer.parseInt(parts[2]));
+                    cantPaquetes.add(Integer.parseInt(parts[4]));
                 }
                 i++;
             }

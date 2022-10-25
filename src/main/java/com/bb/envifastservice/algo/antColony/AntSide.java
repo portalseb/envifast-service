@@ -398,7 +398,7 @@ public class AntSide {
                                         ||
                                         (diaSig.isEqual(arco.getDiaPartida()) && diaSig.isEqual(arco.getDiaLLegada()) && horaActualValor - 60 >= horaLlegada)
                         )
-                                && arco.getCapacidadDisponible() > envio.getPaquetes().size()
+                                && arco.getCapacidadDisponible() > envio.getCantidadPaquetes()
                 )
                     arcos.add(arco);
             }
@@ -427,7 +427,7 @@ public class AntSide {
                                      ||
                                         (fechaActual.isEqual(arco.getDiaPartida())  && diaSigSig.isEqual(arco.getDiaLLegada()) && horaActualValor<=horaPartida && horaActualValor-60>=horaLlegada)
                                   )
-                                  && arco.getCapacidadDisponible()>envio.getPaquetes().size()
+                                  && arco.getCapacidadDisponible()>envio.getCantidadPaquetes()
                 )
                     arcos.add(arco);
             }
