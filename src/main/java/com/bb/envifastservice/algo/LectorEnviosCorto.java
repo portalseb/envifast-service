@@ -86,6 +86,7 @@ public class LectorEnviosCorto {
             String data;
             int i = 0; // estableceremos como contador para no tomar en cuanta ciertas lineas
             int cont = 0; // contador para llenar el arreglo de aeropuertos
+            int filas=0, sigDia=0;
             while (true) {
                 data = br.readLine();
                 if(data == null) break;
@@ -93,13 +94,18 @@ public class LectorEnviosCorto {
                 if(parts.length >= 2){
                     int j_aeropuerto1 = 0, j_aeropuerto2 = 0;
 
+                    if(filas==20){
+                        sigDia++;
+                        filas=0;
+                    }
+
                     //Codigo
                     codigos.add(parts[0]);
 
                     //Fecha
                     //Integer fecha = Integer.parseInt(parts[1]);
                     String[] horaMin = parts[1].split(":");
-                    fechasEnvio.add(LocalDateTime.of(this.fechaDesde, LocalTime.of(Integer.parseInt(horaMin[0]),Integer.parseInt(horaMin[1]))));
+                    fechasEnvio.add(LocalDateTime.of(this.fechaDesde.plusDays(sigDia), LocalTime.of(Integer.parseInt(horaMin[0]),Integer.parseInt(horaMin[1]))));
 
                     // Tenemos que encontrar el aeropuerto de origen y de destino para que funcione
                     for (int j = 0; j < this.aeropuertos.size(); j++) {
@@ -113,6 +119,7 @@ public class LectorEnviosCorto {
                     origenes.add(this.aeropuertos.get(j_aeropuerto1));
                     destinos.add(this.aeropuertos.get(j_aeropuerto2));
                     cantPaquetes.add(Integer.parseInt(parts[4]));
+                    filas++;
                 }
                 i++;
             }

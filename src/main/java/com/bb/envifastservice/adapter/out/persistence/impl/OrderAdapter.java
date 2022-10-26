@@ -406,7 +406,7 @@ public class OrderAdapter implements ListPackagesPort, InsertOrderPort, PlanOrde
 
 
         var envioFechaMin = LocalDateTime.of(LocalDate.parse(fecha),LocalTime.of(0,0));
-        var envioFechaMax = LocalDateTime.of(LocalDate.parse(fecha),LocalTime.of(0,0)).plusDays(2);
+        var envioFechaMax = LocalDateTime.of(LocalDate.parse(fecha).plusDays(5),LocalTime.of(0,0)).plusDays(2);
         //Planear y guardar en BD las rutas para los envios
         var aeropuertosRegistros = airportRepository.findAllByActive(1);
         var arcosGeneralRegistros = flightRepository.findAllByActiveRange(1,envioFechaMin, envioFechaMax);
