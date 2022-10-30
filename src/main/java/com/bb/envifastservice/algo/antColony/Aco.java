@@ -25,12 +25,9 @@ public class Aco {
     }
     public void activarHormigas(AntSide ambiente) {
         int contProb1=0, contProb2=0;
-        int contIteraciones=0;
-        ambiente.setMaximoDeIteraciones(5000);
-        while(true){
-        //for(int i=0;i<1;i++) {
+        //while(true){
+        for(int i=0;i<1;i++) {
             // Inicializar hormiga 1
-            contIteraciones++;
             Ant hormiga1 = new Ant(ambiente);
             //long start1 = System.currentTimeMillis();
             hormiga1.explorar();
@@ -45,9 +42,9 @@ public class Aco {
             //System.out.println(i + "Elapsed Time in milli seconds: " + (end2 - start2));
 
             // Actualizar rastro de feromonas
-            ambiente.actualizarFeromonasEnElCamino(hormiga1, hormiga2);
             if(hormiga1.isEncontroCamino() && hormiga2.isEncontroCamino())
             {
+                ambiente.actualizarFeromonasEnElCamino(hormiga1, hormiga2);
                 if (solucionCosto > hormiga1.getCostoTotal() || solucionCosto > hormiga2.getCostoTotal()) {
                     if (hormiga1.getCostoTotal() < hormiga2.getCostoTotal()) {
                         solucionCamino = new ArrayList<ArcoAeropuerto>();
@@ -73,67 +70,10 @@ public class Aco {
                         contProb2++;
                 if (contProb1 == hormiga1.getCaminoProbabilidades().size() || contProb2 == hormiga2.getCaminoProbabilidades().size()) {
                     System.out.println("Se llego al limite");
-                    //System.out.println(i);
+                    System.out.println(i);
                     break;
                 }
             }
-
-            else{
-                if(hormiga1.isEncontroCamino())
-                {
-                    if (solucionCosto > hormiga1.getCostoTotal() ) {
-                        solucionCamino = new ArrayList<ArcoAeropuerto>();
-                        for (int j = 0; j < hormiga1.getCaminoIndices().size(); j++) {
-                            solucionCamino.add(ambiente.getCaminos().get(hormiga1.getCaminoIndices().get(j)));
-                        }
-                        solucionCosto = hormiga1.getCostoTotal();
-                    }
-                    contProb1 = 0;
-                    for (int p = 0; p < hormiga1.getCaminoProbabilidades().size(); p++)
-                        if (hormiga1.getCaminoProbabilidades().get(p) >= 0.9)
-                            contProb1++;
-                    if (contProb1 == hormiga1.getCaminoProbabilidades().size()) {
-                        System.out.println("Se llego al limite");
-                        //System.out.println(i);
-                        break;
-                    }
-                }
-                else{
-                    if(hormiga2.isEncontroCamino())
-                    {
-                        if (solucionCosto > hormiga2.getCostoTotal()) {
-                            solucionCamino = new ArrayList<ArcoAeropuerto>();
-                            for (int j = 0; j < hormiga2.getCaminoIndices().size(); j++) {
-                                solucionCamino.add(ambiente.getCaminos().get(hormiga2.getCaminoIndices().get(j)));
-                            }
-                            solucionCosto = hormiga2.getCostoTotal();
-                        }
-                        contProb2 = 0;
-                        for (int p = 0; p < hormiga2.getCaminoProbabilidades().size(); p++)
-                            if (hormiga2.getCaminoProbabilidades().get(p) >= 0.9)
-                                contProb2++;
-                        if (contProb2 == hormiga2.getCaminoProbabilidades().size()) {
-                            System.out.println("Se llego al limite");
-                            //System.out.println(i);
-                            break;
-                        }
-                    }
-                }
-
-            }
-
-            if(contIteraciones>1000){
-                if(solucionCamino.size()!=0) {
-                    System.out.println("Se llego al limite");
-                    break;
-                }
-                else{
-                    ambiente.setMaximoDeIteraciones(ambiente.getMaximoDeIteraciones()+5000);
-                    contIteraciones=0;
-                }
-            }
-
-
         }
     }
 
@@ -244,45 +184,45 @@ public class Aco {
             double horaActualValor = (double)horaActual.getHour()*60 + horaActual.getMinute();
 
             //Condicion para formar los arcos de envios entre mismo continente, es decir, 1 dia como maximo
-//            if(
-//                    !(
-//                            (
-//                            (fechaActual.isEqual(arco.getDiaPartida()) && fechaActual.isEqual(arco.getDiaLLegada()) && horaActualValor<=horaPartida)
-//                        ||
-//                            (fechaActual.isEqual(arco.getDiaPartida()) && diaSig.isEqual(arco.getDiaLLegada()) && horaActualValor<=horaPartida && horaActualValor-60>=horaLlegada)
-//                        ||
-//                        (diaSig.isEqual(arco.getDiaPartida())  && diaSig.isEqual(arco.getDiaLLegada()) && horaActualValor-60>=horaLlegada)
-//                            )
-//                            //&& arco.getCapacidadDisponible()>5 //cantidad de paquetes
-//
-//                    )
-//            )
-//            {
-//                itr.remove();
-//            }
+            if(
+                    !(
+                            (
+                            (fechaActual.isEqual(arco.getDiaPartida()) && fechaActual.isEqual(arco.getDiaLLegada()) && horaActualValor<=horaPartida)
+                        ||
+                            (fechaActual.isEqual(arco.getDiaPartida()) && diaSig.isEqual(arco.getDiaLLegada()) && horaActualValor<=horaPartida && horaActualValor-60>=horaLlegada)
+                        ||
+                        (diaSig.isEqual(arco.getDiaPartida())  && diaSig.isEqual(arco.getDiaLLegada()) && horaActualValor-60>=horaLlegada)
+                            )
+                            //&& arco.getCapacidadDisponible()>5 //cantidad de paquetes
+
+                    )
+            )
+            {
+                itr.remove();
+            }
 
 //            //Condicion para formar arcos de envios entre 2 continentes, es decir, 2 dias como maximo
-                        if(
-                                !(
-                                  (
-                                        (fechaActual.isEqual(arco.getDiaPartida()) && fechaActual.isEqual(arco.getDiaLLegada()) && horaActualValor<=horaPartida)
-                                    ||
-                                        (fechaActual.isEqual(arco.getDiaPartida()) && diaSig.isEqual(arco.getDiaLLegada()) && horaActualValor<=horaPartida)
-                                    ||
-                                        (diaSig.isEqual(arco.getDiaPartida())  && diaSig.isEqual(arco.getDiaLLegada()))
-                                     ||
-                                        (diaSig.isEqual(arco.getDiaPartida())  && diaSigSig.isEqual(arco.getDiaLLegada()) && horaActualValor-60>=horaLlegada)
-                                     ||
-                                        (diaSigSig.isEqual(arco.getDiaPartida())  && diaSigSig.isEqual(arco.getDiaLLegada()) && horaActualValor-60>=horaLlegada)
-                                     ||
-                                        (fechaActual.isEqual(arco.getDiaPartida())  && diaSigSig.isEqual(arco.getDiaLLegada()) && horaActualValor<=horaPartida && horaActualValor-60>=horaLlegada)
-                                  )
-                                  //&& arco.getCapacidadDisponible()>5 //cantidad de paquetes
-                                )
-                        )
-                        {
-                            itr.remove();
-                        }
+//                        if(
+//                                !(
+//                                  (
+//                                        (fechaActual.isEqual(arco.getDiaPartida()) && fechaActual.isEqual(arco.getDiaLLegada()) && horaActualValor<=horaPartida)
+//                                    ||
+//                                        (fechaActual.isEqual(arco.getDiaPartida()) && diaSig.isEqual(arco.getDiaLLegada()) && horaActualValor<=horaPartida)
+//                                    ||
+//                                        (diaSig.isEqual(arco.getDiaPartida())  && diaSig.isEqual(arco.getDiaLLegada()))
+//                                     ||
+//                                        (diaSig.isEqual(arco.getDiaPartida())  && diaSigSig.isEqual(arco.getDiaLLegada()) && horaActualValor-60>=horaLlegada)
+//                                     ||
+//                                        (diaSigSig.isEqual(arco.getDiaPartida())  && diaSigSig.isEqual(arco.getDiaLLegada()) && horaActualValor-60>=horaLlegada)
+//                                     ||
+//                                        (fechaActual.isEqual(arco.getDiaPartida())  && diaSigSig.isEqual(arco.getDiaLLegada()) && horaActualValor<=horaPartida && horaActualValor-60>=horaLlegada)
+//                                  )
+//                                  //&& arco.getCapacidadDisponible()>5 //cantidad de paquetes
+//                                )
+//                        )
+//                        {
+//                            itr.remove();
+//                        }
 
 
         }
@@ -357,9 +297,9 @@ public class Aco {
         //feromonas.addAll(Collections.singleton((double) 0.1));
 
 
-        for(int j=0;j<9;j++) {
+        for(int j=0;j<6;j++) {
             // Fijamos los aeropuertos de origen y destino (Ej: 0: Bogotá - 6: Lima
-            ambiente.setNodoInicialFinal(aeropuertos.get(j), aeropuertos.get(39));
+            ambiente.setNodoInicialFinal(aeropuertos.get(0), aeropuertos.get(j+1));
 
 
             //Aqui se eligen el subarreglo de arcosEnvio y feromonasEnvio:
@@ -388,11 +328,8 @@ public class Aco {
             System.out.println("Elapsed Time in milli seconds: " + (end1 - start1));
 
             //Se imprime la solucion
-            if(algoritmoHormigas.getSolucionCamino().size()!=0)
-                System.out.println("Envio "+ j +" - Camino: " + algoritmoHormigas.getSolucionCamino().toString() + algoritmoHormigas.getSolucionCosto());
-            else{
-                System.out.println("No se encontro nada xd");
-            }
+            System.out.println("Envio "+ j +" - Camino: " + algoritmoHormigas.getSolucionCamino().toString() + algoritmoHormigas.getSolucionCosto());
+
             //Actualizar capacidades
             ambiente.actualizarCapacidades(algoritmoHormigas.getSolucionCamino());
 

@@ -263,7 +263,7 @@ public class Ant {
         ArrayList<AntSide> caminosHormigaAnteriores=new ArrayList<AntSide>();
         ArcoAeropuerto camino = null;
         int sinCamino=0;
-        //int maximoDeIteraciones = 20000;
+        int maximoDeIteraciones = 10000;
         int conIteraciones = 0;
 
         while(!llegoAlFinal(nodoActual)) //While hasta que llegue al final (solucion)
@@ -271,7 +271,6 @@ public class Ant {
             // Hallar los caminos posibles desde el nodo donde esta la hormiga
             // (no puede volver y podriamos poner que no pase por nodos donde ya estuvo revisando el caminoNodos)
             //long start1 = System.currentTimeMillis();
-            if(conIteraciones==this.ambienteGlobal.getMaximoDeIteraciones()) {this.encontroCamino=false; return;}
             caminosHormiga = posiblesCaminos(this.ambienteGlobal, this.caminoNodos, this.caminoCostos, nodoAnt, nodoActual);
             conIteraciones++;
             //long end1 = System.currentTimeMillis();

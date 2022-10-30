@@ -7,5 +7,5 @@ import java.time.LocalDate;
 import java.util.List;
 
 public interface ListAllFlightsPort {
-    List<FlightMap> listAllFlights(String fecha,Integer per,Integer paraSim);
+    List<FlightMap> listAllFlights(String fecha,Integer per);
 }

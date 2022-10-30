@@ -29,11 +29,11 @@ public class FlightController {
 
     @GetMapping(value = "/{fecha} {per}")
     public List<FlightMap> listAllVuelos(@RequestParam(name = "fecha") String fecha, @RequestParam(name = "per") Integer per){
-        return listAllFlightsService.listAllFlights(fecha,per,1);
+        return listAllFlightsService.listAllFlights(fecha,per);
     }
 
     @PostMapping(value = "/generate")
     public void generarVuelos(@RequestParam(name = "fecha") String fecha,  @RequestParam(name = "dias") Integer dias){
-        generateNextWeekFlightsService.generateNextWeekFlights(fecha, dias,1);
+        generateNextWeekFlightsService.generateNextWeekFlights(fecha, dias);
     }
 }
