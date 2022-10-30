@@ -12,6 +12,8 @@ import com.bb.envifastservice.hexagonal.PersistenceAdapter;
 import com.bb.envifastservice.models.FlightModel;
 import com.bb.envifastservice.models.PackageModel;
 import lombok.RequiredArgsConstructor;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.io.FileNotFoundException;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -102,10 +104,19 @@ public class FlightAdapter implements ListFlightByIdPort, GenerateNextWeekFlight
     }
 
     @Override
-    public void generateNextWeekFlights(String fecha,Integer dias) {
+    @Transactional
+    public void generateNextWeekFlights(String fecha,Integer dias, Integer paraSim) {
         File planes = new File("src/main/java/com/bb/envifastservice/c.inf226.22-2.planes_vuelo.v02.txt");
         Scanner myReader = null;
         var vuelos = new ArrayList<FlightModel>();
+
+        if(paraSim>0){
+            //probar si se puede o si se debe borrar primero la tabla route
+            flightRepository.deleteByParaSim(paraSim,1);
+
+        }
+
+        //Pendiente: agregar que no se repita para el dia a dia...
         for (int i = 0; i<dias;i++){
             try {
                 myReader = new Scanner(planes);
@@ -120,6 +131,7 @@ public class FlightAdapter implements ListFlightByIdPort, GenerateNextWeekFlight
                 var depAirport=  airportRepository.findByCityShortNameAndActive(data[0],1);
                 var arrivalAirport=  airportRepository.findByCityShortNameAndActive(data[1],1);
                 vuelo.setActive(1);
+                vuelo.setForSim(paraSim);
                 vuelo.setArrivalAirport(arrivalAirport);
                 vuelo.setDepartureAirport(depAirport);
                 if(arrivalAirport.getContinent().equals("EUROPA") && depAirport.getContinent().equals("EUROPA")){
@@ -152,8 +164,8 @@ public class FlightAdapter implements ListFlightByIdPort, GenerateNextWeekFlight
         flightRepository.saveAll(vuelos);
     }
     @Override
-    public List<FlightMap> listAllFlights(String fecha,Integer per){
-        var table= flightRepository.findAllByActiveRange(1,LocalDateTime.of(LocalDate.parse(fecha),LocalTime.of(6*(per-1),0)),LocalDateTime.of(LocalDate.parse(fecha),LocalTime.of(6*(per)-1,59)));
+    public List<FlightMap> listAllFlights(String fecha,Integer per, Integer forSim){
+        var table= flightRepository.findAllByActiveRange(1,LocalDateTime.of(LocalDate.parse(fecha),LocalTime.of(6*(per-1),0)),LocalDateTime.of(LocalDate.parse(fecha),LocalTime.of(6*(per)-1,59)),forSim);
         List<FlightMap> list = new ArrayList<>();
 
         for(FlightModel flight: table){

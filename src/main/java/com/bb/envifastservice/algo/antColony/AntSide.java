@@ -30,6 +30,7 @@ public class AntSide {
     public ArrayList<Paquete> paquetesEnvio;
 
     public LocalDateTime fechaInicial;
+    public int maximoDeIteraciones;
 
     public AntSide(){
         caminos = new ArrayList<ArcoAeropuerto>();
@@ -304,25 +305,60 @@ public class AntSide {
         this.numeroVecesDeSerEscogigo = numeroVecesDeSerEscogigo;
     }
 
+    public int getMaximoDeIteraciones() {
+        return maximoDeIteraciones;
+    }
+
+    public void setMaximoDeIteraciones(int maximoDeIteraciones) {
+        this.maximoDeIteraciones = maximoDeIteraciones;
+    }
+
     public void actualizarFeromonasEnElCamino(Ant hormiga1, Ant hormiga2) {
         int i=0;
-        while (i < getCantidadFeromonasCamino().size()) {
-            if(hormiga1.getCaminoIndices().contains(i) && hormiga2.getCaminoIndices().contains(i))
-                this.cantidadFeromonasCamino.set(i,(1 - coeficienteEvaporacion) * getCantidadFeromonasCamino().get(i) +
-                        hormiga1.getCntQ()/hormiga1.getCostoTotal() +
-                        hormiga2.getCntQ()/hormiga2.getCostoTotal());
-            else if (hormiga1.getCaminoIndices().contains(i)) {
-                this.cantidadFeromonasCamino.set(i,(1 - coeficienteEvaporacion) * getCantidadFeromonasCamino().get(i) +
-                        hormiga1.getCntQ()/hormiga1.getCostoTotal());
+        if(hormiga1.isEncontroCamino() && hormiga2.isEncontroCamino()) {
+            while (i < getCantidadFeromonasCamino().size()) {
+                if (hormiga1.getCaminoIndices().contains(i) && hormiga2.getCaminoIndices().contains(i))
+                    this.cantidadFeromonasCamino.set(i, (1 - coeficienteEvaporacion) * getCantidadFeromonasCamino().get(i) +
+                            hormiga1.getCntQ() / hormiga1.getCostoTotal() +
+                            hormiga2.getCntQ() / hormiga2.getCostoTotal());
+                else if (hormiga1.getCaminoIndices().contains(i)) {
+                    this.cantidadFeromonasCamino.set(i, (1 - coeficienteEvaporacion) * getCantidadFeromonasCamino().get(i) +
+                            hormiga1.getCntQ() / hormiga1.getCostoTotal());
+                } else if (hormiga2.getCaminoIndices().contains(i)) {
+                    this.cantidadFeromonasCamino.set(i, (1 - coeficienteEvaporacion) * getCantidadFeromonasCamino().get(i) +
+                            hormiga2.getCntQ() / hormiga2.getCostoTotal());
+                } else {
+                    this.cantidadFeromonasCamino.set(i, (1 - coeficienteEvaporacion) * getCantidadFeromonasCamino().get(i));
+                }
+                i++;
             }
-            else if (hormiga2.getCaminoIndices().contains(i)) {
-                this.cantidadFeromonasCamino.set(i,(1 - coeficienteEvaporacion) * getCantidadFeromonasCamino().get(i) +
-                        hormiga2.getCntQ()/hormiga2.getCostoTotal());
+        }
+        else{
+            if(hormiga1.isEncontroCamino()){
+                while (i < getCantidadFeromonasCamino().size()) {
+                    if (hormiga1.getCaminoIndices().contains(i))
+                        this.cantidadFeromonasCamino.set(i, (1 - coeficienteEvaporacion) * getCantidadFeromonasCamino().get(i) +
+                                hormiga1.getCntQ() / hormiga1.getCostoTotal());
+                    else
+                        this.cantidadFeromonasCamino.set(i, (1 - coeficienteEvaporacion) * getCantidadFeromonasCamino().get(i));
+                    i++;
+                }
             }
             else{
-                this.cantidadFeromonasCamino.set(i,(1 - coeficienteEvaporacion) * getCantidadFeromonasCamino().get(i));
+                if(hormiga2.isEncontroCamino()){
+                    while (i < getCantidadFeromonasCamino().size()) {
+                        if (hormiga2.getCaminoIndices().contains(i)) {
+                            this.cantidadFeromonasCamino.set(i, (1 - coeficienteEvaporacion) * getCantidadFeromonasCamino().get(i) +
+                                    hormiga2.getCntQ() / hormiga2.getCostoTotal());
+                        } else {
+                            this.cantidadFeromonasCamino.set(i, (1 - coeficienteEvaporacion) * getCantidadFeromonasCamino().get(i));
+                        }
+                        i++;
+                    }
+                }
             }
-            i++;
+
+
         }
     }
 

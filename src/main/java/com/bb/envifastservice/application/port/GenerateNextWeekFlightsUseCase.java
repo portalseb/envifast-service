@@ -11,7 +11,7 @@ public class GenerateNextWeekFlightsUseCase implements GenerateNextWeekFlightsSe
     private final GenerateNextWeekFlightsPort nextWeekFlightsPort;
 
     @Override
-    public void generateNextWeekFlights(String fecha, Integer dias) {
-        nextWeekFlightsPort.generateNextWeekFlights(fecha,dias);
+    public void generateNextWeekFlights(String fecha, Integer dias, Integer paraSim) {
+        nextWeekFlightsPort.generateNextWeekFlights(fecha,dias,paraSim);
     }
 }
