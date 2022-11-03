@@ -13,4 +13,5 @@ public class FlightMap {
     LocalDateTime horaSalida;
     LocalDateTime horaLLegada;
     int duracion;
+    int cantPaquetes;
 }
