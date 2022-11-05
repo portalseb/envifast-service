@@ -77,7 +77,7 @@ public class UserAdapter implements InsertUserPort, SearchUserLoginPort {
             if(usuariosBD.get(0).getRoles()!= null) {
                 for(RoleModel role: usuariosBD.get(0).getRoles()) {
                     var rol = new Rol();
-                    rol.setId((int)(long) role.getId());
+                    rol.setId(role.getId());
                     rol.setNombreRol(role.getName());
                     roles.add(rol);
                 }
