@@ -18,15 +18,9 @@ import java.util.Optional;
 @RequiredArgsConstructor
 @RequestMapping(value = "/packages")
 public class PackageController {
-    private final ListPackagesService listPackagesService;
+
     private final ShowPackageRouteService showPackageRouteService;
-    @GetMapping(value = "")
-    public List<Envio> listPaquetes(Optional<String> input){
-        if (input.isPresent()){
-        return listPackagesService.listByFields(input.get());}
-        else{
-        return listPackagesService.listByFields("");}
-    }
+
     @GetMapping(value = "/route/{id}")
     public List<ArcoAeropuerto> getPackageRoute(@RequestParam(name = "id") String id){
         return showPackageRouteService.showRoute(id);
