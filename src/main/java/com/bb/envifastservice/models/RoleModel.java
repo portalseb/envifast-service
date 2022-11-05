@@ -3,6 +3,8 @@ package com.bb.envifastservice.models;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @Entity
@@ -14,6 +16,10 @@ public class RoleModel {
     private Long id;
     @Column(name = "_name")
     private String name;
+
+    @ManyToMany(mappedBy = "user_role")
+    private List<UserModel> users = new ArrayList<>();
+
     @Column(name = "_active")
     private int active;
 }

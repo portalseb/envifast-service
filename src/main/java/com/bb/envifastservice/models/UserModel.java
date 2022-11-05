@@ -3,7 +3,9 @@ package com.bb.envifastservice.models;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 @Data
 @Entity
@@ -15,12 +17,31 @@ public class UserModel {
         private Long id;
         @Column(name = "_name")
         private String name;
+        @Column(name = "_p_last_name")
+        private String pLastName;
+        @Column(name = "_m_last_name")
+        private String mLastName;
+        @Column(name = "_email")
+        private String email;
+        @Column(name = "_phone_number")
+        private String phoneNumber;
         @Column(name = "_username")
         private String username;
         @Column(name = "_password")
         private String password;
+        @ManyToMany
+        @JoinTable(
+                name = "user_role",
+                joinColumns = @JoinColumn(name = "user_id"),
+                inverseJoinColumns = @JoinColumn(name = "role_id")
+        )
+        private List<RoleModel> roles= new ArrayList<>();
         //@ManyToMany(fetch = FetchType.EAGER)
-        //private Collection<RoleModel> = new ArrayList<>();
+
+        @ManyToOne(fetch = FetchType.EAGER)
+        @JoinColumn(name = "idAirport", insertable = true, updatable = true)
+        private AirportsModel airport;
+
         @Column(name = "_active")
         private int active;
 }
