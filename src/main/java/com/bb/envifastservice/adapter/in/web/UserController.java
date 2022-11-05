@@ -1,4 +1,5 @@
 package com.bb.envifastservice.adapter.in.web;
+import com.bb.envifastservice.adapter.out.persistence.repos.UserRepository;
 import com.bb.envifastservice.algo.Usuario;
 import com.bb.envifastservice.application.port.in.InsertUserService;
 import com.bb.envifastservice.application.port.in.SearchUserLoginService;
@@ -18,7 +19,10 @@ public class UserController {
     private final SearchUserLoginService searchUserLoginService;
 
     @PostMapping(value = "/insert")
-    public Usuario insertarUsuario(@RequestBody Usuario usuario){return insertUserService.insertUser(usuario);}
+    public Usuario insertarUsuario(@RequestBody Usuario usuario){
+
+        return insertUserService.insertUser(usuario);
+    }
 
     @GetMapping(value = "/{username} {password}")
     public Usuario buscarUsuarioLogin(@RequestParam(name = "username") String username, @RequestParam(name = "password") String password) {

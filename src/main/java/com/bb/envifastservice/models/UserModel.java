@@ -9,7 +9,8 @@ import java.util.List;
 
 @Data
 @Entity
-@Table(name= "SysUser")
+@Table(name= "SysUser",
+        indexes = {@Index(name = "emailIndex", columnList = "email", unique = true)})
 public class UserModel {
         @Id
         @GeneratedValue(strategy = GenerationType.AUTO)
@@ -21,7 +22,7 @@ public class UserModel {
         private String pLastName;
         @Column(name = "_m_last_name")
         private String mLastName;
-        @Column(name = "_email")
+        @Column(name = "email")
         private String email;
         @Column(name = "_phone_number")
         private String phoneNumber;

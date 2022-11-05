@@ -7,6 +7,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
+
 //TODO: FILTRO PARA FECHA Y CANTIDADES!!!
 public interface OrderRepository extends JpaRepository<OrderModel, Long> {
 
@@ -14,6 +16,7 @@ public interface OrderRepository extends JpaRepository<OrderModel, Long> {
             "or lower(o.emisorNombres) like lower(concat('%', :campos, '%')) or lower(o.destinatarioApellidoM) like lower(concat('%', :campos, '%')) or lower(o.destinatarioApellidoP) like lower(concat('%', :campos, '%')) or lower(o.destinatarioNombres) like lower(concat('%', :campos, '%')) " )
     List<OrderModel> findAllByFieldsLikeAndActive(@Param("campos") String campos);
 
-
+    @Query("Select o from OrderModel o WHERE o.emisorDocumentoNumero like %:DocNo% or o.destinatarioDocumentoNumero like %:DocNo% and o.token = :token and o.active=1")
+    Optional<OrderModel> queryOrdersWithDocNoandToken(@Param("DocNo")String docNo, @Param("token")String token);
     //OrderModel insertOrder(@Param("envio") OrderModel envio);
 }
