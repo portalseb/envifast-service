@@ -1,10 +1,7 @@
 package com.bb.envifastservice.adapter.in.web;
 
 import com.bb.envifastservice.algo.Envio;
-import com.bb.envifastservice.application.port.in.GenerateSimulationOrderService;
-import com.bb.envifastservice.application.port.in.InsertOrderService;
-import com.bb.envifastservice.application.port.in.ListPackagesService;
-import com.bb.envifastservice.application.port.in.PlanOrderRouteService;
+import com.bb.envifastservice.application.port.in.*;
 import com.bb.envifastservice.hexagonal.WebAdapter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -20,7 +17,7 @@ import java.util.Optional;
 @RequestMapping(value = "/orders")
 public class OrderController {
     private final InsertOrderService insertOrderService;
-
+    private final GetOrderForUserService getOrderForUserService;
     private final PlanOrderRouteService planOrderRouteService;
     private final ListPackagesService listPackagesService;
     private final GenerateSimulationOrderService generateSimulationOrderService;
@@ -41,5 +38,9 @@ public class OrderController {
             return listPackagesService.listByFields(input.get());}
         else{
             return listPackagesService.listByFields("");}
+    }
+    @GetMapping(value = "/user")
+    public Envio getEnvioUser(@RequestParam(name="token")String token,@RequestParam(name="docNo")String docNo){
+        return getOrderForUserService.getOrderForUser(token,docNo);
     }
 }
