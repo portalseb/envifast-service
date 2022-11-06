@@ -14,6 +14,7 @@ public class Usuario {
     private String contrasenha;
     private Aeropuerto aeropuerto;
     private ArrayList<Rol> roles;
+    private int activo;
 
     public Usuario() {
         this.roles = new ArrayList<>();
@@ -97,5 +98,13 @@ public class Usuario {
 
     public void setRoles(ArrayList<Rol> roles) {
         this.roles = roles;
+    }
+
+    public int getActivo() {
+        return activo;
+    }
+
+    public void setActivo(int activo) {
+        this.activo = activo;
     }
 }

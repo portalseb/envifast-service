@@ -3,9 +3,7 @@ import com.bb.envifastservice.adapter.out.persistence.repos.AirportRepository;
 import com.bb.envifastservice.adapter.out.persistence.repos.RoleRepository;
 import com.bb.envifastservice.adapter.out.persistence.repos.UserRepository;
 import com.bb.envifastservice.algo.*;
-import com.bb.envifastservice.application.port.out.FindUserByInputPort;
-import com.bb.envifastservice.application.port.out.InsertUserPort;
-import com.bb.envifastservice.application.port.out.SearchUserLoginPort;
+import com.bb.envifastservice.application.port.out.*;
 import com.bb.envifastservice.hexagonal.PersistenceAdapter;
 import com.bb.envifastservice.models.AirportsModel;
 import com.bb.envifastservice.models.RoleModel;
@@ -17,7 +15,7 @@ import java.util.List;
 
 @PersistenceAdapter
 @RequiredArgsConstructor
-public class UserAdapter implements InsertUserPort, SearchUserLoginPort, FindUserByInputPort {
+public class UserAdapter implements InsertUserPort, SearchUserLoginPort, FindUserByInputPort, UpdateUserPort, DeleteUserPort {
     private final UserRepository userRepository;
     private final AirportRepository airportRepository;
     private final RoleRepository roleRepository;
@@ -28,7 +26,7 @@ public class UserAdapter implements InsertUserPort, SearchUserLoginPort, FindUse
         usuarioNuevo.setName(usuario.getNombreUsuario());
         usuarioNuevo.setPLastName(usuario.getApellidoP());
         usuarioNuevo.setMLastName(usuario.getApellidoM());
-        usuarioNuevo.setEmail(usuario.getCorreo());
+        usuarioNuevo.setEmail(usuario.getCorreo()); //no se si se podra ahora q es un index, deberia comprobarse que no se repita
         usuarioNuevo.setPhoneNumber(usuario.getTelefonoNumero());
         usuarioNuevo.setUsername(usuario.getNombreUsuario());
         usuarioNuevo.setPassword(usuario.getContrasenha());
@@ -52,6 +50,43 @@ public class UserAdapter implements InsertUserPort, SearchUserLoginPort, FindUse
         return usuario;
     }
 
+    @Override
+    public Usuario updateUser(Usuario usuario){
+        var usuarioBD = userRepository.findByIdActive(usuario.getId().longValue(),usuario.getActivo());
+
+        usuarioBD.setName(usuario.getNombres());
+        usuarioBD.setPLastName(usuario.getApellidoP());
+        usuarioBD.setMLastName(usuario.getApellidoM());
+        usuarioBD.setEmail(usuario.getCorreo()); //no se si se podra ahora q es un index, deberia comprobarse que no se repita
+        usuarioBD.setPhoneNumber(usuario.getTelefonoNumero());
+        usuarioBD.setUsername(usuario.getNombreUsuario());
+        usuarioBD.setPassword(usuario.getContrasenha());
+        usuarioBD.setActive(usuario.getActivo());
+
+        if(usuario.getAeropuerto()!=null) {
+            var airport = airportRepository.findByIdActive(usuario.getAeropuerto().getId().longValue(), 1);
+            usuarioBD.setAirport(airport);
+        }
+        var roles = new ArrayList<RoleModel>();
+        for (Rol rol: usuario.getRoles()
+        ) {
+            var role = roleRepository.findByIdActive(rol.getId().longValue(),1);
+            if(role != null)
+                roles.add(role);
+        }
+        usuarioBD.setRoles(roles);
+        userRepository.save(usuarioBD);
+        return usuario;
+    }
+
+    @Override
+    public int deleteUser(Integer id){
+        var usuarioBD = userRepository.findByIdActive(id.longValue(),1);
+        if(usuarioBD==null) return 0;
+        usuarioBD.setActive(0);
+        userRepository.save(usuarioBD);
+        return 1;
+    }
 
     @Override
     public Usuario searchUserLogin(String username, String password){
@@ -114,6 +149,7 @@ public class UserAdapter implements InsertUserPort, SearchUserLoginPort, FindUse
         usuario.setCorreo(user.getEmail());
         usuario.setTelefonoNumero(user.getPhoneNumber());
         usuario.setNombreUsuario(user.getUsername());
+        usuario.setActivo(user.getActive());
         aeropuerto.setId(Math.toIntExact(user.getAirport().getId()));
         aeropuerto.setCodigo(user.getAirport().getAirportCode());
         aeropuerto.setCapacidad(user.getAirport().getMaxCapacity());
