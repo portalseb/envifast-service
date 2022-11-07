@@ -18,6 +18,7 @@ import com.bb.envifastservice.models.AirportsCapacityModel;
 import com.bb.envifastservice.models.AirportsModel;
 import com.bb.envifastservice.models.DateTimeModel;
 import lombok.RequiredArgsConstructor;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -73,15 +74,19 @@ public class AirportAdapter implements ListAllAirportsPort, ListAirportCoordPort
     }
 
     @Override
-    public void generateNextWeekDateTime(String fecha, Integer dias){
+    @Transactional
+    public void generateNextWeekDateTime(String fecha, Integer dias, Integer forSim){
         var dateTimeList = new ArrayList<DateTimeModel>();
-        for(int i=0;i<dias;i++){
-                for(int j=0;j<24;j++){
-                    for(int k=0;k<60;k++){
-                        FechaHora fechaHora = new FechaHora();
-                        fechaHora.setDia(LocalDate.parse(fecha).plusDays(i));
-                        fechaHora.setHora(LocalTime.of(j,k));
 
+        for(int i=0;i<dias;i++){
+            for(int j=0;j<24;j++){
+                for(int k=0;k<60;k++){
+                    FechaHora fechaHora = new FechaHora();
+                    fechaHora.setDia(LocalDate.parse(fecha).plusDays(i));
+                    fechaHora.setHora(LocalTime.of(j,k));
+                    var dateTimeModelsInBD = dateTimeRepository.findByFechaHoraActive(fechaHora.getDia(), fechaHora.getHora(), 1);
+                    //Comprobar que no se repita
+                    if(dateTimeModelsInBD.size() == 0) {
                         DateTimeModel dateTimeModel = new DateTimeModel();
                         dateTimeModel.setDate(fechaHora.getDia());
                         dateTimeModel.setTime(fechaHora.getHora());
@@ -89,30 +94,33 @@ public class AirportAdapter implements ListAllAirportsPort, ListAirportCoordPort
                         dateTimeList.add(dateTimeModel);
                     }
                 }
+            }
         }
         dateTimeRepository.saveAll(dateTimeList);
         var airportsModels = airportRepository.findAllByActive(1);
+        var dateTimesModels = dateTimeRepository.findDateTimesActiveRange(LocalDate.parse(fecha),LocalDate.parse(fecha).plusDays(dias),1);
 
+        if(forSim>0) {
+            airportCapacityRepository.deleteByForSim(forSim,1);
+        }
 
+        //Pendiente: agregar que no se repita para el dia a dia...
         for(AirportsModel airportsModel: airportsModels){
 
-
             var airportsCapacityModels = new ArrayList<AirportsCapacityModel>();
-            for(DateTimeModel dateTimeModel: dateTimeList){
+            for(DateTimeModel dateTimeModel: dateTimesModels){
                 var airportsCapacityModel = new AirportsCapacityModel();
                 airportsCapacityModel.setDateTime(dateTimeModel);
 //                airportsCapacityModel.setAirport(airportsModel);
                 airportsCapacityModel.setAvailableCapacity(airportsModel.getMaxCapacity());
                 airportsCapacityModel.setActive(1);
+                airportsCapacityModel.setForSim(forSim);
                 airportsCapacityModels.add(airportsCapacityModel);
 //                airportCapacityRepository.save(airportsCapacityModel);
             }
-
             airportsModel.setCapacity(airportsCapacityModels);
-
         }
         airportRepository.saveAll(airportsModels);
-
     }
 
 

@@ -12,6 +12,8 @@ import com.bb.envifastservice.hexagonal.PersistenceAdapter;
 import com.bb.envifastservice.models.FlightModel;
 import com.bb.envifastservice.models.PackageModel;
 import lombok.RequiredArgsConstructor;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.io.FileNotFoundException;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -102,10 +104,19 @@ public class FlightAdapter implements ListFlightByIdPort, GenerateNextWeekFlight
     }
 
     @Override
-    public void generateNextWeekFlights(String fecha,Integer dias) {
+    @Transactional
+    public void generateNextWeekFlights(String fecha,Integer dias, Integer paraSim) {
         File planes = new File("src/main/java/com/bb/envifastservice/c.inf226.22-2.planes_vuelo.v02.txt");
         Scanner myReader = null;
         var vuelos = new ArrayList<FlightModel>();
+
+        if(paraSim>0){
+            //probar si se puede o si se debe borrar primero la tabla route
+            flightRepository.deleteByParaSim(paraSim,1);
+
+        }
+
+        //Pendiente: agregar que no se repita para el dia a dia...
         for (int i = 0; i<dias;i++){
             try {
                 myReader = new Scanner(planes);
@@ -120,6 +131,7 @@ public class FlightAdapter implements ListFlightByIdPort, GenerateNextWeekFlight
                 var depAirport=  airportRepository.findByCityShortNameAndActive(data[0],1);
                 var arrivalAirport=  airportRepository.findByCityShortNameAndActive(data[1],1);
                 vuelo.setActive(1);
+                vuelo.setForSim(paraSim);
                 vuelo.setArrivalAirport(arrivalAirport);
                 vuelo.setDepartureAirport(depAirport);
                 if(arrivalAirport.getContinent().equals("EUROPA") && depAirport.getContinent().equals("EUROPA")){
@@ -151,52 +163,15 @@ public class FlightAdapter implements ListFlightByIdPort, GenerateNextWeekFlight
         }
         flightRepository.saveAll(vuelos);
     }
+
     @Override
-    public List<FlightMap> listAllFlights(String fecha,Integer per){
-        var table= flightRepository.findAllByActiveRange(1,LocalDateTime.of(LocalDate.parse(fecha),LocalTime.of(6*(per-1),0)),LocalDateTime.of(LocalDate.parse(fecha),LocalTime.of(6*(per)-1,59)));
+    public List<FlightMap> listAllFlights(String fecha,Integer per, Integer paraSim){
+        var table= flightRepository.findAllByActiveRange(1,LocalDateTime.of(LocalDate.parse(fecha),LocalTime.of(6*(per-1),0)),LocalDateTime.of(LocalDate.parse(fecha),LocalTime.of(6*(per)-1,59)),paraSim);
         List<FlightMap> list = new ArrayList<>();
 
         for(FlightModel flight: table){
-//            var arcoAeropuerto = new ArcoAeropuerto();
-//            arcoAeropuerto.setId((int)(long)flight.getId());
-//            arcoAeropuerto.setCapacidadMaxima((int)(long)flight.getMaxCapacity());
-//            arcoAeropuerto.setCapacidadDisponible((int)(long)flight.getAvailableCapacity());
-
             var origen = airportRepository.findByCityShortNameAndActive(flight.getDepartureAirport().getAirportCode(),1);
             var destino = airportRepository.findByCityShortNameAndActive(flight.getArrivalAirport().getAirportCode(),1);
-//            arcoAeropuerto.setAeropuerto1(new Aeropuerto());
-//            arcoAeropuerto.getAeropuerto1().setId((int)(long)origen.getId());
-//            arcoAeropuerto.getAeropuerto1().setCodigo(origen.getAirportCode());
-//            arcoAeropuerto.getAeropuerto1().setPosX(origen.getXPos());
-//            arcoAeropuerto.getAeropuerto1().setPosY(origen.getYPos());
-//            arcoAeropuerto.getAeropuerto1().setCapacidad(origen.getMaxCapacity());
-//            arcoAeropuerto.getAeropuerto1().setTimeZone(TimeZone.getTimeZone(origen.getCityName()).toString());
-//            arcoAeropuerto.getAeropuerto1().setCiudad(new Ciudad());
-//            arcoAeropuerto.getAeropuerto1().getCiudad().setNombre(origen.getCityName());
-//            arcoAeropuerto.getAeropuerto1().getCiudad().setAbreviacion(origen.getCityShortName());
-//            arcoAeropuerto.getAeropuerto1().getCiudad().setContinente(origen.getContinent());
-//            arcoAeropuerto.getAeropuerto1().getCiudad().setPais(origen.getCountryName());
-//
-//
-//            arcoAeropuerto.setAeropuerto2(new Aeropuerto());
-//            arcoAeropuerto.getAeropuerto2().setId((int)(long)destino.getId());
-//            arcoAeropuerto.getAeropuerto2().setCodigo(destino.getAirportCode());
-//            arcoAeropuerto.getAeropuerto2().setPosX(destino.getXPos());
-//            arcoAeropuerto.getAeropuerto2().setPosY(destino.getYPos());
-//            arcoAeropuerto.getAeropuerto2().setCapacidad(destino.getMaxCapacity());
-//            arcoAeropuerto.getAeropuerto2().setTimeZone(TimeZone.getTimeZone(destino.getCityName()).toString());
-//            arcoAeropuerto.getAeropuerto2().setCiudad(new Ciudad());
-//            arcoAeropuerto.getAeropuerto2().getCiudad().setNombre(destino.getCityName());
-//            arcoAeropuerto.getAeropuerto2().getCiudad().setAbreviacion(destino.getCityShortName());
-//            arcoAeropuerto.getAeropuerto2().getCiudad().setContinente(destino.getContinent());
-//            arcoAeropuerto.getAeropuerto2().getCiudad().setPais(destino.getCountryName());
-//
-//            arcoAeropuerto.setDuracion((int) ChronoUnit.MINUTES.between(flight.getDepartureTime(),flight.getArrivalTime()));
-//            arcoAeropuerto.setDiaPartida(LocalDate.of(flight.getDepartureTime().getYear(),flight.getDepartureTime().getMonthValue(),flight.getDepartureTime().getDayOfMonth()));
-//            arcoAeropuerto.setDiaLLegada(LocalDate.of(flight.getArrivalTime().getYear(),flight.getArrivalTime().getMonthValue(),flight.getArrivalTime().getDayOfMonth()));
-//            arcoAeropuerto.setHoraPartida(LocalTime.of(flight.getDepartureTime().getHour(),flight.getDepartureTime().getMinute()));
-//            arcoAeropuerto.setHoraLlegada(LocalTime.of(flight.getArrivalTime().getHour(),flight.getArrivalTime().getMinute()));
-
             FlightMap flightMap = new FlightMap();
             flightMap.setId((int)(long)flight.getId());
             flightMap.setDuracion((int) ChronoUnit.MINUTES.between(flight.getDepartureTime(),flight.getArrivalTime()));
@@ -204,7 +179,8 @@ public class FlightAdapter implements ListFlightByIdPort, GenerateNextWeekFlight
             flightMap.setIdAeropuertoDestino((int)(long)destino.getId());
             flightMap.setHoraSalida(LocalDateTime.of(LocalDate.of(flight.getDepartureTime().getYear(),flight.getDepartureTime().getMonthValue(),flight.getDepartureTime().getDayOfMonth()),LocalTime.of(flight.getDepartureTime().getHour(),flight.getDepartureTime().getMinute())));
             flightMap.setHoraLLegada(LocalDateTime.of(LocalDate.of(flight.getArrivalTime().getYear(),flight.getArrivalTime().getMonthValue(),flight.getArrivalTime().getDayOfMonth()),LocalTime.of(flight.getArrivalTime().getHour(),flight.getArrivalTime().getMinute())));
-            flightMap.setCantPaquetes((int)(flight.getMaxCapacity()-flight.getAvailableCapacity()));
+            flightMap.setCantPaquetes((int)(long)(flight.getMaxCapacity()-flight.getAvailableCapacity()));
+            flightMap.setCantMax((int)(long)(flight.getMaxCapacity()));
             list.add(flightMap);
         }
         System.out.println(table.size());

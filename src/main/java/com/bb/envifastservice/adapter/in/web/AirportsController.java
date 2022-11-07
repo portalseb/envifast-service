@@ -32,8 +32,8 @@ public class AirportsController {
     }
 
     @GetMapping(value = "/dateTimes")
-    public void generarFechasHora(@RequestParam(name = "fecha") String fecha, @RequestParam(name = "dias") Integer dias){
-        generateNextWeekDateTimeService.generateNextWeekDateTime(fecha, dias);
+    public void generarFechasHora(@RequestParam(name = "fecha") String fecha, @RequestParam(name = "dias") Integer dias,  @RequestParam(name = "paraSim") Integer paraSim){
+        generateNextWeekDateTimeService.generateNextWeekDateTime(fecha, dias,paraSim);
     }
 
 }

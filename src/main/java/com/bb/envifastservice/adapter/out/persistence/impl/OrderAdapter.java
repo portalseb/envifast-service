@@ -191,7 +191,7 @@ public class OrderAdapter implements ListPackagesPort, InsertOrderPort, PlanOrde
         var envioFechaMax = envios.stream().max(Comparator.comparing(Envio::getFechaEnvio)).orElseThrow(NoSuchElementException::new).getFechaEnvio().plusDays(2);
         //Planear y guardar en BD las rutas para los envios
         var aeropuertosRegistros = airportRepository.findAllByActive(1);
-        var arcosGeneralRegistros = flightRepository.findAllByActiveRange(1,envioFechaMin, envioFechaMax);
+        var arcosGeneralRegistros = flightRepository.findAllByActiveRange(1,envioFechaMin, envioFechaMax,0);
         ArrayList<Aeropuerto> aeropuertos= new ArrayList<>();
         ArrayList<ArcoAeropuerto> arcosGeneral = new ArrayList<>();
 
@@ -416,7 +416,7 @@ public class OrderAdapter implements ListPackagesPort, InsertOrderPort, PlanOrde
         var envioFechaMax = LocalDateTime.of(LocalDate.parse(fecha).plusDays(5),LocalTime.of(0,0)).plusDays(2);
         //Planear y guardar en BD las rutas para los envios
         var aeropuertosRegistros = airportRepository.findAllByActive(1);
-        var arcosGeneralRegistros = flightRepository.findAllByActiveRange(1,envioFechaMin, envioFechaMax);
+        var arcosGeneralRegistros = flightRepository.findAllByActiveRange(1,envioFechaMin, envioFechaMax,1);
         ArrayList<Aeropuerto> aeropuertos= new ArrayList<>();
         ArrayList<ArcoAeropuerto> arcosGeneral = new ArrayList<>();
 

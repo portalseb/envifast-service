@@ -39,5 +39,6 @@ public class FlightModel {
     private int isFlying;
     @Column(name = "_active")
     private int active;
-
+    @Column(name = "_for_sim")
+    private int forSim;
 }

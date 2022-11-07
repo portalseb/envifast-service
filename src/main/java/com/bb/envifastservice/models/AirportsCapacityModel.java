@@ -23,12 +23,14 @@ public class AirportsCapacityModel {
 
     private int availableCapacity;
 
-    @ManyToMany
-    @JoinTable(
-            name = "capacity_packages",
-            joinColumns = @JoinColumn(name = "airports_capacity_id"),
-            inverseJoinColumns = @JoinColumn(name = "package_id")
-    )
-    private List<PackageModel> warehouse = new ArrayList<>();
+//    @ManyToMany
+//    @JoinTable(
+//            name = "capacity_packages",
+//            joinColumns = @JoinColumn(name = "airports_capacity_id"),
+//            inverseJoinColumns = @JoinColumn(name = "package_id")
+//    )
+//    private List<PackageModel> warehouse = new ArrayList<>();
     private int active;
+    @Column(name = "_for_sim")
+    private int forSim;
 }

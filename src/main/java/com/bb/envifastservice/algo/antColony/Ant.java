@@ -186,67 +186,67 @@ public class Ant {
         for(int i=0;i<ambienteGlob.getCaminos().size();i++) {
             if (nodoAct.getId() == ambienteGlob.getCaminos().get(i).getAeropuerto1().getId()){
                 camino = ambienteGlob.getCaminos().get(i);
-            origen = new Aeropuerto(camino.getAeropuerto1());
-            destino = new Aeropuerto(camino.getAeropuerto2());
-            horaSalidaSiguienteVuelo = (double) camino.getHoraPartida().getHour() * 60 + camino.getHoraPartida().getMinute();
-            diaSalidaSiguienteVuelo = (double) camino.getDiaPartida().getYear() * 10000 + camino.getDiaPartida().getMonth().getValue() * 100 + camino.getDiaPartida().getDayOfMonth();
-            dateSalidaSiguienteVuelo = camino.getDiaPartida();
+                origen = new Aeropuerto(camino.getAeropuerto1());
+                destino = new Aeropuerto(camino.getAeropuerto2());
+                horaSalidaSiguienteVuelo = (double) camino.getHoraPartida().getHour() * 60 + camino.getHoraPartida().getMinute();
+                diaSalidaSiguienteVuelo = (double) camino.getDiaPartida().getYear() * 10000 + camino.getDiaPartida().getMonth().getValue() * 100 + camino.getDiaPartida().getDayOfMonth();
+                dateSalidaSiguienteVuelo = camino.getDiaPartida();
 
-            k = destino.getCapacidadIndex(camino.getHoraLlegada().getHour(), camino.getHoraLlegada().getMinute(), camino.getDiaLLegada().getDayOfMonth(), camino.getDiaLLegada().getMonthValue(), camino.getDiaLLegada().getYear());
-            if (k == -1) {
-                System.out.println("Indice de capacidad no encontrado");
-                continue;
-            }
-            capacidadAeropuertoDestino = destino.getCapacidadDisponible().get(k).getCapacidadDisponible();
-            capacidadVuelo = camino.getCapacidadDisponible();
-
-            if (
-                    (origen.getId() == nodoAct.getId() && nodoAct.getId() == ambienteGlob.getNodoInicial().getId() &&
-                            this.costoTotal + (double) camino.obtenerDuracionVuelo().toMinutes() <= ambienteGlob.getPlazoMaximoEntrega() &&
-                            //¿Aqui tambien se pondria lo del transbordo, desde la hora actual hasta cuando salga el vuelo?
-                            (
-
-                                    (horaLLegadaUltimoVuelo <= horaSalidaSiguienteVuelo && this.costoTotal + (DAYS.between(dateLlegadaUltimoVuelo, dateSalidaSiguienteVuelo)) * 1440 + (horaSalidaSiguienteVuelo - horaLLegadaUltimoVuelo) + (double) camino.obtenerDuracionVuelo().toMinutes() + 60 <= ambienteGlob.getPlazoMaximoEntrega()
-                                            && diaLlegadaUltimoVuelo <= diaSalidaSiguienteVuelo
-                                    )
-
-                                            ||
-                                            (horaLLegadaUltimoVuelo > horaSalidaSiguienteVuelo && this.costoTotal + (DAYS.between(dateLlegadaUltimoVuelo, dateSalidaSiguienteVuelo) - 1) * 1440 + (horaSalidaSiguienteVuelo + 24 * 60 - horaLLegadaUltimoVuelo) + (double) camino.obtenerDuracionVuelo().toMinutes() + 60 <= ambienteGlob.getPlazoMaximoEntrega()
-                                                    && diaLlegadaUltimoVuelo < diaSalidaSiguienteVuelo
-                                            )
-                            )
-                            && !this.caminoNodos.contains(camino.getAeropuerto2())
-                            && capacidadVuelo >= this.ambienteGlobal.getPaquetesEnvio().size()
-                            && capacidadAeropuertoDestino >= this.ambienteGlobal.getPaquetesEnvio().size()
-
-                    ) ||
-                            (origen.getId() == nodoAct.getId() && destino.getId() != nodoAnt.getId() &&
-                                    (
-                                            (horaLLegadaUltimoVuelo <= horaSalidaSiguienteVuelo && this.costoTotal + (DAYS.between(dateLlegadaUltimoVuelo, dateSalidaSiguienteVuelo)) * 1440 + (horaSalidaSiguienteVuelo - horaLLegadaUltimoVuelo) + (double) camino.obtenerDuracionVuelo().toMinutes() + 60 <= ambienteGlob.getPlazoMaximoEntrega()
-                                                    && diaLlegadaUltimoVuelo <= diaSalidaSiguienteVuelo
-                                            )
-                                                    ||
-                                                    (horaLLegadaUltimoVuelo > horaSalidaSiguienteVuelo && this.costoTotal + (DAYS.between(dateLlegadaUltimoVuelo, dateSalidaSiguienteVuelo) - 1) * 1440 + (horaSalidaSiguienteVuelo + 24 * 60 - horaLLegadaUltimoVuelo) + (double) camino.obtenerDuracionVuelo().toMinutes() + 60 <= ambienteGlob.getPlazoMaximoEntrega()
-                                                            && diaLlegadaUltimoVuelo < diaSalidaSiguienteVuelo
-                                                    )
-                                    )
-                                    && !this.caminoNodos.contains(camino.getAeropuerto2())
-                                    && capacidadVuelo >= this.ambienteGlobal.getPaquetesEnvio().size()
-                                    && capacidadAeropuertoDestino >= this.ambienteGlobal.getPaquetesEnvio().size()
-                            )
-            ) {
-                caminosHormiga.getCaminos().add(camino);
-                caminosHormiga.getCantidadFeromonasCamino().add(ambienteGlob.getCantidadFeromonasCamino().get(i));
-                if (horaLLegadaUltimoVuelo <= horaSalidaSiguienteVuelo) {
-                    caminosHormiga.getCostos().add((DAYS.between(dateLlegadaUltimoVuelo, dateSalidaSiguienteVuelo)) * 1440 + (horaSalidaSiguienteVuelo - horaLLegadaUltimoVuelo) + (double) camino.obtenerDuracionVuelo().toMinutes() + 60);
-                } else {
-                    caminosHormiga.getCostos().add((DAYS.between(dateLlegadaUltimoVuelo, dateSalidaSiguienteVuelo) - 1) * 1440 + (horaSalidaSiguienteVuelo + 24 * 60 - horaLLegadaUltimoVuelo) + (double) camino.obtenerDuracionVuelo().toMinutes() + 60);
+                k = destino.getCapacidadIndex(camino.getHoraLlegada().getHour(), camino.getHoraLlegada().getMinute(), camino.getDiaLLegada().getDayOfMonth(), camino.getDiaLLegada().getMonthValue(), camino.getDiaLLegada().getYear());
+                if (k == -1) {
+                    System.out.println("Indice de capacidad no encontrado");
+                    continue;
                 }
-                caminosHormiga.getVisibilidad().add(1.00 / caminosHormiga.getCostos().get(caminosHormiga.getCostos().size() - 1));
-                caminosHormiga.getPosiblesCaminosIndices().add(i);
-                //posiblesCaminosIndices.add(i);
+                capacidadAeropuertoDestino = destino.getCapacidadDisponible().get(k).getCapacidadDisponible();
+                capacidadVuelo = camino.getCapacidadDisponible();
+
+                if (
+                        (origen.getId() == nodoAct.getId() && nodoAct.getId() == ambienteGlob.getNodoInicial().getId() &&
+                                this.costoTotal + (double) camino.obtenerDuracionVuelo().toMinutes() <= ambienteGlob.getPlazoMaximoEntrega() &&
+                                //¿Aqui tambien se pondria lo del transbordo, desde la hora actual hasta cuando salga el vuelo?
+                                (
+
+                                        (horaLLegadaUltimoVuelo <= horaSalidaSiguienteVuelo && this.costoTotal + (DAYS.between(dateLlegadaUltimoVuelo, dateSalidaSiguienteVuelo)) * 1440 + (horaSalidaSiguienteVuelo - horaLLegadaUltimoVuelo) + (double) camino.obtenerDuracionVuelo().toMinutes() + 60 <= ambienteGlob.getPlazoMaximoEntrega()
+                                                && diaLlegadaUltimoVuelo <= diaSalidaSiguienteVuelo
+                                        )
+
+                                                ||
+                                                (horaLLegadaUltimoVuelo > horaSalidaSiguienteVuelo && this.costoTotal + (DAYS.between(dateLlegadaUltimoVuelo, dateSalidaSiguienteVuelo) - 1) * 1440 + (horaSalidaSiguienteVuelo + 24 * 60 - horaLLegadaUltimoVuelo) + (double) camino.obtenerDuracionVuelo().toMinutes() + 60 <= ambienteGlob.getPlazoMaximoEntrega()
+                                                        && diaLlegadaUltimoVuelo < diaSalidaSiguienteVuelo
+                                                )
+                                )
+                                && !this.caminoNodos.contains(camino.getAeropuerto2())
+                                && capacidadVuelo >= this.ambienteGlobal.getPaquetesEnvio().size()
+                                && capacidadAeropuertoDestino >= this.ambienteGlobal.getPaquetesEnvio().size()
+
+                        ) ||
+                                (origen.getId() == nodoAct.getId() && destino.getId() != nodoAnt.getId() &&
+                                        (
+                                                (horaLLegadaUltimoVuelo <= horaSalidaSiguienteVuelo && this.costoTotal + (DAYS.between(dateLlegadaUltimoVuelo, dateSalidaSiguienteVuelo)) * 1440 + (horaSalidaSiguienteVuelo - horaLLegadaUltimoVuelo) + (double) camino.obtenerDuracionVuelo().toMinutes() + 60 <= ambienteGlob.getPlazoMaximoEntrega()
+                                                        && diaLlegadaUltimoVuelo <= diaSalidaSiguienteVuelo
+                                                )
+                                                        ||
+                                                        (horaLLegadaUltimoVuelo > horaSalidaSiguienteVuelo && this.costoTotal + (DAYS.between(dateLlegadaUltimoVuelo, dateSalidaSiguienteVuelo) - 1) * 1440 + (horaSalidaSiguienteVuelo + 24 * 60 - horaLLegadaUltimoVuelo) + (double) camino.obtenerDuracionVuelo().toMinutes() + 60 <= ambienteGlob.getPlazoMaximoEntrega()
+                                                                && diaLlegadaUltimoVuelo < diaSalidaSiguienteVuelo
+                                                        )
+                                        )
+                                        && !this.caminoNodos.contains(camino.getAeropuerto2())
+                                        && capacidadVuelo >= this.ambienteGlobal.getPaquetesEnvio().size()
+                                        && capacidadAeropuertoDestino >= this.ambienteGlobal.getPaquetesEnvio().size()
+                                )
+                ) {
+                    caminosHormiga.getCaminos().add(camino);
+                    caminosHormiga.getCantidadFeromonasCamino().add(ambienteGlob.getCantidadFeromonasCamino().get(i));
+                    if (horaLLegadaUltimoVuelo <= horaSalidaSiguienteVuelo) {
+                        caminosHormiga.getCostos().add((DAYS.between(dateLlegadaUltimoVuelo, dateSalidaSiguienteVuelo)) * 1440 + (horaSalidaSiguienteVuelo - horaLLegadaUltimoVuelo) + (double) camino.obtenerDuracionVuelo().toMinutes() + 60);
+                    } else {
+                        caminosHormiga.getCostos().add((DAYS.between(dateLlegadaUltimoVuelo, dateSalidaSiguienteVuelo) - 1) * 1440 + (horaSalidaSiguienteVuelo + 24 * 60 - horaLLegadaUltimoVuelo) + (double) camino.obtenerDuracionVuelo().toMinutes() + 60);
+                    }
+                    caminosHormiga.getVisibilidad().add(1.00 / caminosHormiga.getCostos().get(caminosHormiga.getCostos().size() - 1));
+                    caminosHormiga.getPosiblesCaminosIndices().add(i);
+                    //posiblesCaminosIndices.add(i);
+                }
             }
-        }
         }
 
         return caminosHormiga;
@@ -263,7 +263,7 @@ public class Ant {
         ArrayList<AntSide> caminosHormigaAnteriores=new ArrayList<AntSide>();
         ArcoAeropuerto camino = null;
         int sinCamino=0;
-        int maximoDeIteraciones = 10000;
+        //int maximoDeIteraciones = 20000;
         int conIteraciones = 0;
 
         while(!llegoAlFinal(nodoActual)) //While hasta que llegue al final (solucion)
@@ -271,6 +271,7 @@ public class Ant {
             // Hallar los caminos posibles desde el nodo donde esta la hormiga
             // (no puede volver y podriamos poner que no pase por nodos donde ya estuvo revisando el caminoNodos)
             //long start1 = System.currentTimeMillis();
+            if(conIteraciones==this.ambienteGlobal.getMaximoDeIteraciones()) {this.encontroCamino=false; return;}
             caminosHormiga = posiblesCaminos(this.ambienteGlobal, this.caminoNodos, this.caminoCostos, nodoAnt, nodoActual);
             conIteraciones++;
             //long end1 = System.currentTimeMillis();
