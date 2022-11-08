@@ -170,7 +170,7 @@ public class OrderAdapter implements ListPackagesPort, InsertOrderPort, PlanOrde
 
         orderRepository.save(envioNuevo);
         envio.setId(envioNuevo.getId());
-        for(int i=0;i<envio.getPaquetes().size();i++) {
+        for(int i=0;i<envio.getCantidadPaquetes();i++) {
             envio.getPaquetes().get(i).setId(envioNuevo.getPacks().get(i).getId());
         }
 
