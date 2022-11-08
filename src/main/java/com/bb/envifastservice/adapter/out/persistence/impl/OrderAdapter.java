@@ -156,7 +156,7 @@ public class OrderAdapter implements ListPackagesPort, InsertOrderPort, PlanOrde
 
         List<PackageModel> paquetes = new ArrayList<PackageModel>();
 
-        for(int i=0;i<envio.getPaquetes().size();i++){
+        for(int i=0;i<envio.getCantidadPaquetes();i++){
             var paqueteNuevo = new PackageModel();
             paqueteNuevo.setDateTime(envio.getFechaEnvio());
             paqueteNuevo.setCurrentAirportId(envio.getOrigen().getId().longValue());
