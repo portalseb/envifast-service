@@ -14,5 +14,4 @@ public class FlightMap {
     LocalDateTime horaLLegada;
     int duracion;
     int cantPaquetes;
-    int cantMax;
 }

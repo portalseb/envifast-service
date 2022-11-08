@@ -4,6 +4,7 @@ import com.bb.envifastservice.adapter.out.persistence.dtos.FlightMap;
 import com.bb.envifastservice.algo.ArcoAeropuerto;
 import com.bb.envifastservice.application.port.in.GenerateNextWeekFlightsService;
 import com.bb.envifastservice.application.port.in.ListAllFlightsService;
+import com.bb.envifastservice.application.port.in.ListDayFlightsService;
 import com.bb.envifastservice.application.port.in.ListFlightByIdService;
 import com.bb.envifastservice.application.port.out.ListFlightByIdPort;
 import com.bb.envifastservice.hexagonal.WebAdapter;
@@ -22,14 +23,20 @@ public class FlightController {
     private final ListFlightByIdService listFlightByIdService;
     private final GenerateNextWeekFlightsService generateNextWeekFlightsService;
     private final ListAllFlightsService listAllFlightsService;
+    private final ListDayFlightsService listDayFlightsService;
     @GetMapping(value = "/{id}")
     public ArcoAeropuerto findVuelo(@RequestParam(name = "id") Long id){
         return listFlightByIdService.listById(id);
     }
 
-    @GetMapping(value = "/{fecha} {per}")
+    @GetMapping(value = "/periodFlights/{fecha} {per} {paraSim}")
     public List<FlightMap> listAllVuelos(@RequestParam(name = "fecha") String fecha, @RequestParam(name = "per") Integer per, @RequestParam(name = "paraSim") Integer paraSim){
         return listAllFlightsService.listAllFlights(fecha,per,paraSim);
+    }
+
+    @GetMapping(value = "/dayFlightsFive/{fecha} {paraSim}")
+    public List<FlightMap> listDayVuelosFive(@RequestParam(name = "fecha") String fecha, @RequestParam(name = "paraSim") Integer paraSim){
+        return listDayFlightsService.listDayFlights(fecha,paraSim);
     }
 
     @PostMapping(value = "/generate")
