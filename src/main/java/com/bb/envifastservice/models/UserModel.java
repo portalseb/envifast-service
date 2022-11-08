@@ -30,8 +30,14 @@ public class UserModel {
         private String username;
         @Column(name = "_password")
         private String password;
-        @ManyToMany(mappedBy = "role_users")
-        private List<RoleModel> roles= new ArrayList<>();
+
+        @ManyToMany
+        @JoinTable(
+                name = "user_roles",
+                joinColumns = @JoinColumn(name = "sysuser_id"),
+                inverseJoinColumns = @JoinColumn(name = "sysrole_id")
+        )
+        private List<RoleModel> user_roles= new ArrayList<>();
         //@ManyToMany(fetch = FetchType.EAGER)
 
         @ManyToOne(fetch = FetchType.EAGER)

@@ -37,12 +37,13 @@ public class RoleAdapter implements GetAllRolesPort, InsertRolePort, UpdateRoleP
         rolNuevo.setActive(1);
         roleRepository.save(rolNuevo);
         rol.setId(rolNuevo.getId());
+        rol.setActivo(1);
         return rol;
     }
 
     @Override
     public Rol updateRole(Rol rol) {
-        var rolBD = roleRepository.findByIdActive(rol.getId(),rol.getActivo());
+        var rolBD = roleRepository.findByIdRole(rol.getId());
         rolBD.setName(rol.getNombreRol());
         rolBD.setActive(rol.getActivo());
         roleRepository.save(rolBD);

@@ -44,15 +44,16 @@ public class UserAdapter implements InsertUserPort, SearchUserLoginPort, FindUse
             if(role != null)
                 roles.add(role);
         }
-        usuarioNuevo.setRoles(roles);
+        usuarioNuevo.setUser_roles(roles);
         userRepository.save(usuarioNuevo);
         usuario.setId((int)(long)usuarioNuevo.getId());
+        usuario.setActivo(1);
         return usuario;
     }
 
     @Override
     public Usuario updateUser(Usuario usuario){
-        var usuarioBD = userRepository.findByIdActive(usuario.getId().longValue(),usuario.getActivo());
+        var usuarioBD = userRepository.findByIdUser(usuario.getId().longValue());
 
         usuarioBD.setName(usuario.getNombres());
         usuarioBD.setPLastName(usuario.getApellidoP());
@@ -74,7 +75,7 @@ public class UserAdapter implements InsertUserPort, SearchUserLoginPort, FindUse
             if(role != null)
                 roles.add(role);
         }
-        usuarioBD.setRoles(roles);
+        usuarioBD.setUser_roles(roles);
         userRepository.save(usuarioBD);
         return usuario;
     }
@@ -101,18 +102,25 @@ public class UserAdapter implements InsertUserPort, SearchUserLoginPort, FindUse
             usuarioEncontrado.setTelefonoNumero(usuariosBD.get(0).getPhoneNumber());
             usuarioEncontrado.setNombreUsuario(usuariosBD.get(0).getUsername());
             usuarioEncontrado.setContrasenha(usuariosBD.get(0).getPassword());
+            usuarioEncontrado.setActivo(usuariosBD.get(0).getActive());
             var aeropuerto = new Aeropuerto();
             if(usuariosBD.get(0).getAirport()!= null){
                 aeropuerto.setId((int)(long)usuariosBD.get(0).getAirport().getId());
-                //Faltan mas campos
+                aeropuerto.setCodigo(usuariosBD.get(0).getAirport().getAirportCode());
+                aeropuerto.setCiudad(new Ciudad());
+                aeropuerto.getCiudad().setNombre(usuariosBD.get(0).getAirport().getCityName());
+                aeropuerto.getCiudad().setContinente(usuariosBD.get(0).getAirport().getContinent());
+                aeropuerto.getCiudad().setAbreviacion(usuariosBD.get(0).getAirport().getCityShortName());
+                aeropuerto.getCiudad().setPais(usuariosBD.get(0).getAirport().getCountryName());
             }
             usuarioEncontrado.setAeropuerto(aeropuerto);
             var roles = new ArrayList<Rol>();
-            if(usuariosBD.get(0).getRoles()!= null) {
-                for(RoleModel role: usuariosBD.get(0).getRoles()) {
+            if(usuariosBD.get(0).getUser_roles()!= null) {
+                for(RoleModel role: usuariosBD.get(0).getUser_roles()) {
                     var rol = new Rol();
                     rol.setId(role.getId());
                     rol.setNombreRol(role.getName());
+                    rol.setActivo(role.getActive());
                     roles.add(rol);
                 }
             }
@@ -160,10 +168,11 @@ public class UserAdapter implements InsertUserPort, SearchUserLoginPort, FindUse
         ciudad.setPais(user.getAirport().getCountryName());
         aeropuerto.setCiudad(ciudad);
         usuario.setAeropuerto(aeropuerto);
-        for (RoleModel role: user.getRoles()) {
+        for (RoleModel role: user.getUser_roles()) {
             var rol = new Rol();
             rol.setId(role.getId());
             rol.setNombreRol(role.getName());
+            rol.setActivo(role.getActive());
             roles.add(rol);
         }
     }

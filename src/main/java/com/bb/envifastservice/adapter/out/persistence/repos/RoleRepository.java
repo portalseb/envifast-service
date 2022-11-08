@@ -6,5 +6,7 @@ import org.springframework.data.repository.query.Param;
 public interface RoleRepository extends JpaRepository<RoleModel,Long> {
     @Query("SELECT a from RoleModel a where a.id = :id and a.active = :active")
     RoleModel findByIdActive(Long id, int active);
+    @Query("SELECT a from RoleModel a where a.id = :id")
+    RoleModel findByIdRole(Long id);
 
 }

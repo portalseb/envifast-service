@@ -17,12 +17,7 @@ public class RoleModel {
     @Column(name = "_name")
     private String name;
 
-    @ManyToMany
-    @JoinTable(
-            name = "role_users",
-            joinColumns = @JoinColumn(name = "sysrole_id"),
-            inverseJoinColumns = @JoinColumn(name = "sysuser_id")
-    )
+    @ManyToMany(mappedBy = "user_roles")
     private List<UserModel> role_users = new ArrayList<>();
 
     @Column(name = "_active")

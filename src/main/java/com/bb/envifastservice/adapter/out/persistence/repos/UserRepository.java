@@ -17,4 +17,6 @@ public interface UserRepository extends JpaRepository<UserModel, Long>{
     List<UserModel> queryUsersByParams(@Param("campos") String input);
     @Query("SELECT a from UserModel a where a.id = :idUser and a.active = :active")
     UserModel findByIdActive(@Param("idUser") Long idUser, int active);
+    @Query("SELECT a from UserModel a where a.id = :idUser")
+    UserModel findByIdUser(@Param("idUser") Long idUser);
 }
