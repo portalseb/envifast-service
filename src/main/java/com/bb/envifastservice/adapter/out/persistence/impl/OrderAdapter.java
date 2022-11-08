@@ -17,13 +17,14 @@ import java.util.*;
 
 @PersistenceAdapter
 @RequiredArgsConstructor
-public class OrderAdapter implements ListPackagesPort, InsertOrderPort, PlanOrderRoutePort, GenerateSimulationOrderPort, GetOrderForUserPort {
+public class OrderAdapter implements ListPackagesPort, InsertOrderPort, PlanOrderRoutePort, GenerateSimulationOrderPort, GetOrderForUserPort, IniciarSim5DiasPort {
     private final PackageRepository packageRepository;
     private final AirportRepository airportRepository;
     private final OrderRepository orderRepository;
 
     private final FlightRepository flightRepository;
     private final FlightAdapter flightAdapter;
+    private final AirportAdapter airportAdapter;
 
     private final AirportCapacityRepository airportCapacityRepository;
     @Override
@@ -630,5 +631,14 @@ public class OrderAdapter implements ListPackagesPort, InsertOrderPort, PlanOrde
             return new Envio();
         }
 
+    }
+
+    @Override
+    public int iniciarSim5Dias(String fecha, Integer dias, Integer paraSim) throws FileNotFoundException {
+        flightAdapter.generateNextWeekFlights(fecha, dias, paraSim);
+        airportAdapter.generateNextWeekDateTime(fecha, dias, paraSim);
+        generateSimulationOrder(fecha);
+
+        return 1;
     }
 }
