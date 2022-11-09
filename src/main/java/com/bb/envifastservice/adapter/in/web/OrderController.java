@@ -49,6 +49,6 @@ public class OrderController {
     }
     @PostMapping(value = "/iniciar")
     public int iniciarSimCincoDias(@RequestParam(name = "fecha") String fecha, @RequestParam(name = "dias") Integer dias, @RequestParam(name = "paraSim") Integer paraSim) throws FileNotFoundException {
-        return iniciarSimCincoDias(fecha, dias, paraSim);
+        return iniciarSim5DiasService.iniciarSim5Dias(fecha, dias, paraSim);
     }
 }
