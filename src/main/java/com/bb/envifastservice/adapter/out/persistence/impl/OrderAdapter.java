@@ -134,7 +134,7 @@ public class OrderAdapter implements ListPackagesPort, InsertOrderPort, PlanOrde
     @Override
     public Envio insertOrd(Envio envio){
         var envioNuevo =new OrderModel();
-        envioNuevo.setCodigo(envio.getCodigo());
+        //envioNuevo.setCodigo(envio.getCodigo());
         envioNuevo.setEmisorNombres(envio.getEmisorNombres());
         envioNuevo.setEmisorApellidoP(envio.getEmisorApellidoP());
         envioNuevo.setEmisorApellidoM(envio.getEmisorApellidoM());
@@ -164,7 +164,7 @@ public class OrderAdapter implements ListPackagesPort, InsertOrderPort, PlanOrde
 
         List<PackageModel> paquetes = new ArrayList<PackageModel>();
 
-        for(int i=0;i<envio.getPaquetes().size();i++){
+        for(int i=0;i<envio.getCantidadPaquetes();i++){
             var paqueteNuevo = new PackageModel();
             paqueteNuevo.setDateTime(envio.getFechaEnvio());
             paqueteNuevo.setCurrentAirportId(envio.getOrigen().getId().longValue());
@@ -178,11 +178,28 @@ public class OrderAdapter implements ListPackagesPort, InsertOrderPort, PlanOrde
 
         orderRepository.save(envioNuevo);
         envio.setId(envioNuevo.getId());
-        for(int i=0;i<envio.getPaquetes().size();i++) {
-            envio.getPaquetes().get(i).setId(envioNuevo.getPacks().get(i).getId());
+        envio.setPaquetes(new ArrayList<Paquete>());
+        for(int i=0;i<envio.getCantidadPaquetes();i++) {
+            Paquete paqueteNuevo = new Paquete();
+            paqueteNuevo.setId(envioNuevo.getPacks().get(i).getId());
+            envio.getPaquetes().add(paqueteNuevo);
         }
 
-    return envio;
+        //Generacion de codigo
+        int id = (int)(long)envioNuevo.getId();
+        int count = 0;
+        int paddingSize,num=id;
+        while(num!=0){
+            num = num/10;
+            count++;
+        }
+        paddingSize = 9-count;
+        if(paddingSize>=0) {
+            envioNuevo.setCodigo(aeropuertoOrigen.getAirportCode() + String.format("%0" + 9 + "d", id));
+            orderRepository.save(envioNuevo);
+            envio.setCodigo(envioNuevo.getCodigo());
+        }
+        return envio;
     }
 
     @Override
@@ -318,7 +335,7 @@ public class OrderAdapter implements ListPackagesPort, InsertOrderPort, PlanOrde
 
             //Actualizar capacidades
             ambiente.actualizarCapacidades(algoritmoHormigas.getSolucionCamino());
-
+            envios.get(i).setTiempoTotal(algoritmoHormigas.getSolucionCosto());
             //Actualizar rutas de paquetes
             for(int j=0;j<envios.get(i).getPaquetes().size();j++){
                 //System.out.println(i);
@@ -541,7 +558,7 @@ public class OrderAdapter implements ListPackagesPort, InsertOrderPort, PlanOrde
 
             //Actualizar capacidades
             ambiente.actualizarCapacidades(algoritmoHormigas.getSolucionCamino());
-
+            envio.setTiempoTotal(algoritmoHormigas.getSolucionCosto());
             //Actualizar rutas de paquetes
             for(int k=0;k<envio.getPaquetes().size();k++){
                 envio.getPaquetes().get(k).setRuta(algoritmoHormigas.getSolucionCamino());
@@ -557,7 +574,7 @@ public class OrderAdapter implements ListPackagesPort, InsertOrderPort, PlanOrde
             envioNuevo.setCodigo(envios.get(i).getCodigo());
             envioNuevo.setCantidad(envios.get(i).getCantidadPaquetes());
             envioNuevo.setFechaEnvio(envios.get(i).getFechaEnvio());
-            envioNuevo.setTiempoTotal(0.0);
+            envioNuevo.setTiempoTotal(envios.get(i).getTiempoTotal());
             var aeropuertoOrigen = airportRepository.findByIdActive(envios.get(i).getOrigen().getId().longValue(),1);
             var aeropuertoDestino = airportRepository.findByIdActive(envios.get(i).getDestino().getId().longValue(),1);
             envioNuevo.setOrigen(aeropuertoOrigen.getCityName());

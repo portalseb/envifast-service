@@ -32,17 +32,11 @@ public class Aco {
             // Inicializar hormiga 1
             contIteraciones++;
             Ant hormiga1 = new Ant(ambiente);
-            //long start1 = System.currentTimeMillis();
             hormiga1.explorar();
-            //long end1 = System.currentTimeMillis();
-            //System.out.println(i + "Elapsed Time in milli seconds: "  + (end1 - start1));
 
             // Inicializar hormiga 2
             Ant hormiga2 = new Ant(ambiente);
-            //long start2 = System.currentTimeMillis();
             hormiga2.explorar();
-            //long end2 = System.currentTimeMillis();
-            //System.out.println(i + "Elapsed Time in milli seconds: " + (end2 - start2));
 
             // Actualizar rastro de feromonas
             ambiente.actualizarFeromonasEnElCamino(hormiga1, hormiga2);
