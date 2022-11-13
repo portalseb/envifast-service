@@ -37,6 +37,7 @@ public class OrderAdapter implements ListPackagesPort, InsertOrderPort, PlanOrde
              ) {
             var envio = new Envio();
             paquetes = new ArrayList<Paquete>();
+            vuelos = new ArrayList<ArcoAeropuerto>();
             convertToEnvio(paquetes, order, envio, vuelos);
             envios.add(envio);
         }
