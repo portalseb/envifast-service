@@ -24,6 +24,7 @@ public class OrderController {
     private final GenerateNextWeekFlightsService generateNextWeekFlightsService;
     private final GenerateNextWeekDateTimeService generateNextWeekDateTimeService;
     private final IniciarSim5DiasService iniciarSim5DiasService;
+    private final GenerateOrderForSimService generateOrderForSimService;
     @PostMapping(value = "/insert")
     public Envio insertarEnvio(@RequestBody Envio envio){
         return insertOrderService.insertOrder(envio);
@@ -50,5 +51,9 @@ public class OrderController {
     @PostMapping(value = "/iniciar")
     public int iniciarSimCincoDias(@RequestParam(name = "fecha") String fecha, @RequestParam(name = "dias") Integer dias, @RequestParam(name = "paraSim") Integer paraSim) throws FileNotFoundException {
         return iniciarSim5DiasService.iniciarSim5Dias(fecha, dias, paraSim);
+    }
+    @PostMapping(value = "/cargarEnviosSim")
+    public int cargarEnviosSim(@RequestParam(name = "fecha") String fecha,@RequestParam(name = "timeInf")  String timeInf, @RequestParam(name = "timeSup") String timeSup, @RequestParam(name = "paraSim") Integer forSim) throws FileNotFoundException {
+        return generateOrderForSimService.generateSimulationOrders(fecha,timeInf,timeSup,forSim);
     }
 }
