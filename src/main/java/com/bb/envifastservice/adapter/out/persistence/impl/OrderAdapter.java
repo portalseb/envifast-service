@@ -36,9 +36,8 @@ public class OrderAdapter implements ListPackagesPort, InsertOrderPort, PlanOrde
         for (OrderModel order: registros
              ) {
             var envio = new Envio();
+            paquetes = new ArrayList<Paquete>();
             convertToEnvio(paquetes, order, envio, vuelos);
-
-
             envios.add(envio);
         }
 
