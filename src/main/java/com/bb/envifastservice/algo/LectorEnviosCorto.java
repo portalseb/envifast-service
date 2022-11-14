@@ -190,26 +190,50 @@ public class LectorEnviosCorto {
                         Integer fechaIni = Integer.parseInt(parts[1]);
                         String[] horaIni = parts[2].split(":");
                         LocalDateTime fechaHoraIni = LocalDateTime.of(LocalDate.of(fechaIni / 10000, (fechaIni % 10000) / 100, (fechaIni % 10000) % 100), LocalTime.of(Integer.parseInt(horaIni[0]), Integer.parseInt(horaIni[1])));
-                        if ((LocalDateTime.of(LocalDate.parse(fecha), LocalTime.parse(timeInf)).isBefore(fechaHoraIni) && LocalDateTime.of(LocalDate.parse(fecha), LocalTime.parse(timeSup)).isAfter(fechaHoraIni))
-                                || LocalDateTime.of(LocalDate.parse(fecha), LocalTime.parse(timeInf)).isEqual(fechaHoraIni)) {
-                            int j_aeropuerto1 = 0, j_aeropuerto2 = 0;
-                            String origen = parts[0].substring(0, 4);
-                            String[] destPaq = parts[3].split(":");
-                            for (int j = 0; j < this.aeropuertos.size(); j++) {
-                                if (origen.equals(this.aeropuertos.get(j).getCodigo())) j_aeropuerto1 = j;
-                                if (destPaq[0].equals(this.aeropuertos.get(j).getCodigo())) j_aeropuerto2 = j;
+                        if(LocalTime.parse(timeSup).isAfter(LocalTime.parse(timeInf))) {
+                            if ((LocalDateTime.of(LocalDate.parse(fecha), LocalTime.parse(timeInf)).isBefore(fechaHoraIni) && LocalDateTime.of(LocalDate.parse(fecha), LocalTime.parse(timeSup)).isAfter(fechaHoraIni))
+                                    || LocalDateTime.of(LocalDate.parse(fecha), LocalTime.parse(timeInf)).isEqual(fechaHoraIni)) {
+                                int j_aeropuerto1 = 0, j_aeropuerto2 = 0;
+                                String origen = parts[0].substring(0, 4);
+                                String[] destPaq = parts[3].split(":");
+                                for (int j = 0; j < this.aeropuertos.size(); j++) {
+                                    if (origen.equals(this.aeropuertos.get(j).getCodigo())) j_aeropuerto1 = j;
+                                    if (destPaq[0].equals(this.aeropuertos.get(j).getCodigo())) j_aeropuerto2 = j;
+                                }
+                                if (!(this.aeropuertos.get(j_aeropuerto1).getCiudad().getContinente().equals("EUROPA")
+                                        && this.aeropuertos.get(j_aeropuerto2).getCiudad().getContinente().equals("AMERICA DEL SUR"))) {
+                                    codigos.add(parts[0]);
+                                    fechasEnvio.add(fechaHoraIni);
+                                    origenes.add(this.aeropuertos.get(j_aeropuerto1));
+                                    destinos.add(this.aeropuertos.get(j_aeropuerto2));
+                                    cantPaquetes.add(Integer.parseInt(destPaq[1]));
+                                }
                             }
-                            if(!(this.aeropuertos.get(j_aeropuerto1).getCiudad().getContinente().equals("EUROPA")
-                                    && this.aeropuertos.get(j_aeropuerto2).getCiudad().getContinente().equals("AMERICA DEL SUR"))) {
-                                codigos.add(parts[0]);
-                                fechasEnvio.add(fechaHoraIni);
-                                origenes.add(this.aeropuertos.get(j_aeropuerto1));
-                                destinos.add(this.aeropuertos.get(j_aeropuerto2));
-                                cantPaquetes.add(Integer.parseInt(destPaq[1]));
-                            }
+                            if (fechaHoraIni.toLocalDate().isAfter(LocalDate.parse(fecha)))
+                                break;
                         }
-                        if (fechaHoraIni.toLocalDate().isAfter(LocalDate.parse(fecha)))
-                            break;
+                        else{
+                            if ((LocalDateTime.of(LocalDate.parse(fecha), LocalTime.parse(timeInf)).isBefore(fechaHoraIni) && LocalDateTime.of(LocalDate.parse(fecha).plusDays(1), LocalTime.parse(timeSup)).isAfter(fechaHoraIni))
+                                    || LocalDateTime.of(LocalDate.parse(fecha), LocalTime.parse(timeInf)).isEqual(fechaHoraIni)) {
+                                int j_aeropuerto1 = 0, j_aeropuerto2 = 0;
+                                String origen = parts[0].substring(0, 4);
+                                String[] destPaq = parts[3].split(":");
+                                for (int j = 0; j < this.aeropuertos.size(); j++) {
+                                    if (origen.equals(this.aeropuertos.get(j).getCodigo())) j_aeropuerto1 = j;
+                                    if (destPaq[0].equals(this.aeropuertos.get(j).getCodigo())) j_aeropuerto2 = j;
+                                }
+                                if (!(this.aeropuertos.get(j_aeropuerto1).getCiudad().getContinente().equals("EUROPA")
+                                        && this.aeropuertos.get(j_aeropuerto2).getCiudad().getContinente().equals("AMERICA DEL SUR"))) {
+                                    codigos.add(parts[0]);
+                                    fechasEnvio.add(fechaHoraIni);
+                                    origenes.add(this.aeropuertos.get(j_aeropuerto1));
+                                    destinos.add(this.aeropuertos.get(j_aeropuerto2));
+                                    cantPaquetes.add(Integer.parseInt(destPaq[1]));
+                                }
+                            }
+                            if (fechaHoraIni.toLocalDate().isAfter(LocalDate.parse(fecha).plusDays(1)))
+                                break;
+                        }
                     }
                 }
             } catch (IOException ioe) {
