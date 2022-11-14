@@ -43,4 +43,6 @@ public class OrderModel {
     private String origen;
     private String destino;
     private int active;
+    private int planned;
+    private int forSim;
 }

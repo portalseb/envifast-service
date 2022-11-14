@@ -20,4 +20,7 @@ public interface AirportCapacityRepository extends JpaRepository<AirportsCapacit
     @Query("DELETE from AirportsCapacityModel a where a.forSim = :paraSim and a.active = :active")
     void deleteByForSim(@Param("paraSim")int paraSim, @Param("active") int active);
 
+    @Query("SELECT p.capacity from AirportsModel  p WHERE p.id =:id")
+    List<AirportsCapacityModel> findByAirportCode(@Param("id") Long id);
+
 }

@@ -2,6 +2,7 @@ package com.bb.envifastservice.adapter.out.persistence.repos;
 
 import com.bb.envifastservice.algo.Envio;
 import com.bb.envifastservice.models.OrderModel;
+import com.bb.envifastservice.models.PackageModel;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -19,4 +20,6 @@ public interface OrderRepository extends JpaRepository<OrderModel, Long> {
     @Query("Select o from OrderModel o WHERE o.emisorDocumentoNumero like %:DocNo% or o.destinatarioDocumentoNumero like %:DocNo% and o.token = :token and o.active=1")
     Optional<OrderModel> queryOrdersWithDocNoandToken(@Param("DocNo")String docNo, @Param("token")String token);
     //OrderModel insertOrder(@Param("envio") OrderModel envio);
+    @Query("SELECT p from OrderModel  p WHERE p.id =:id and p.active=:active")
+    OrderModel findByIdOfOrder(@Param("id") Long id, @Param("active") int active);
 }

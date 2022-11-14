@@ -470,6 +470,31 @@ public class AntSide {
         }
         return  arcos;
     }
+    public ArrayList<ArcoAeropuerto> sacarArcosPosiblesEUSA(ArrayList<ArcoAeropuerto> arcos){
+        ArrayList<ArcoAeropuerto> subArcos = new ArrayList<>();
+        for(int i=0;i<arcos.size();i++){
+            if(
+                    (arcos.get(i).getAeropuerto1().getCiudad().getContinente().equals("AMERICA DEL SUR") && arcos.get(i).getAeropuerto2().getCiudad().getContinente().equals("AMERICA DEL SUR"))
+                || (arcos.get(i).getAeropuerto1().getCiudad().getContinente().equals("EUROPA") && arcos.get(i).getAeropuerto2().getCiudad().getContinente().equals("AMERICA DEL SUR"))
+
+            )
+                subArcos.add(arcos.get(i));
+        }
+        int flag;
+        for(int i=0;i<arcos.size();i++) {
+            flag=0;
+            if(arcos.get(i).getAeropuerto1().getCiudad().getContinente().equals("EUROPA") && arcos.get(i).getAeropuerto2().getCiudad().getContinente().equals("EUROPA")){
+                for(int j=0;j<subArcos.size();j++){
+                    if(arcos.get(i).getAeropuerto2().getId()==subArcos.get(j).getAeropuerto1().getId() && subArcos.get(j).getAeropuerto1().getCiudad().getContinente().equals("EUROPA") && subArcos.get(j).getAeropuerto2().getCiudad().getContinente().equals("AMERICA DEL SUR")){
+                        flag = 1;break;}
+                }
+            }
+            if(flag==1){
+                subArcos.add(arcos.get(i));
+            }
+        }
+        return subArcos;
+    }
 
 
 }

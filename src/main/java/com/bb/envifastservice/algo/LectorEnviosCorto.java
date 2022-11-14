@@ -137,8 +137,47 @@ public class LectorEnviosCorto {
     }
 
     public void LeerActualizado(String ruta, String fecha, String timeInf, String timeSup)  throws FileNotFoundException {
-        String[] codes  = {"SKBO","SEQM", "SVMI","SBBR","SPIM","SLLP","SCEL","SABE","SGAS", "SUAA"};
-        for(int i=0;i<10;i++) {
+        String[] codes  = {"SKBO",
+                "SEQM",
+                "SVMI",
+                "SBBR",
+                "SPIM",
+                "SLLP",
+                "SCEL",
+                "SABE",
+                "SGAS",
+                "SUAA",
+                "LATI",
+                "EDDI",
+                "LOWW",
+                "EBCI",
+                "UMMS",
+                "LBSF",
+                "LKPR",
+                "LDZA",
+                "EKCH",
+                "LZIB",
+                "LJLJ",
+                "LEMD",
+                "EETN",
+                "EFHK",
+                "LFPG",
+                "LGAV",
+                "EHAM",
+                "LHBP",
+                "EIDW",
+                "BIKF",
+                "LIRA",
+                "EVRA",
+                "ELLX",
+                "LMML",
+                "ENGM",
+                "EPMO",
+                "LPPT",
+                "EGLL",
+                "ESKN",
+                "LSZB"};
+        for(int i=0;i<40;i++) {
             File archivo = new File(ruta + "pack_enviado_"+ codes[i] +".txt");
             BufferedReader br = new BufferedReader(new FileReader(archivo));
             try {
@@ -160,13 +199,16 @@ public class LectorEnviosCorto {
                                 if (origen.equals(this.aeropuertos.get(j).getCodigo())) j_aeropuerto1 = j;
                                 if (destPaq[0].equals(this.aeropuertos.get(j).getCodigo())) j_aeropuerto2 = j;
                             }
-                            codigos.add(parts[0]);
-                            fechasEnvio.add(fechaHoraIni);
-                            origenes.add(this.aeropuertos.get(j_aeropuerto1));
-                            destinos.add(this.aeropuertos.get(j_aeropuerto2));
-                            cantPaquetes.add(Integer.parseInt(destPaq[1]));
+                            if(!(this.aeropuertos.get(j_aeropuerto1).getCiudad().getContinente().equals("EUROPA")
+                                    && this.aeropuertos.get(j_aeropuerto2).getCiudad().getContinente().equals("AMERICA DEL SUR"))) {
+                                codigos.add(parts[0]);
+                                fechasEnvio.add(fechaHoraIni);
+                                origenes.add(this.aeropuertos.get(j_aeropuerto1));
+                                destinos.add(this.aeropuertos.get(j_aeropuerto2));
+                                cantPaquetes.add(Integer.parseInt(destPaq[1]));
+                            }
                         }
-                        if (LocalDateTime.of(LocalDate.parse(fecha), LocalTime.parse(timeSup)).isBefore(fechaHoraIni) || LocalDateTime.of(LocalDate.parse(fecha), LocalTime.parse(timeSup)).isEqual(fechaHoraIni))
+                        if (fechaHoraIni.toLocalDate().isAfter(LocalDate.parse(fecha)))
                             break;
                     }
                 }
