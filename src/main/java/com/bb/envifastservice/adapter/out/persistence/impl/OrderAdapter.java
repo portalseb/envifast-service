@@ -29,7 +29,7 @@ public class OrderAdapter implements ListPackagesPort, InsertOrderPort, PlanOrde
     private final AirportCapacityRepository airportCapacityRepository;
     @Override
     public List<Envio> listByFields(String input) {
-        var registros = orderRepository.findAllByFieldsLikeAndActive(input);
+        var registros = orderRepository.findAllByFieldsLikeAndActive(input,0);
         var paquetes = new ArrayList<Paquete>();
         var envios = new ArrayList<Envio>();
         var vuelos = new ArrayList<ArcoAeropuerto>();

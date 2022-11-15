@@ -14,8 +14,8 @@ import java.util.Optional;
 public interface OrderRepository extends JpaRepository<OrderModel, Long> {
 
     @Query("SELECT o from OrderModel  o WHERE o.codigo like %:campos% or lower(o.destino) like lower(concat('%', :campos, '%')) or lower(o.origen) like lower(concat('%', :campos, '%')) or lower(o.emisorApellidoM) like lower(concat('%', :campos, '%'))or lower(o.emisorApellidoP) like lower(concat('%', :campos, '%'))" +
-            "or lower(o.emisorNombres) like lower(concat('%', :campos, '%')) or lower(o.destinatarioApellidoM) like lower(concat('%', :campos, '%')) or lower(o.destinatarioApellidoP) like lower(concat('%', :campos, '%')) or lower(o.destinatarioNombres) like lower(concat('%', :campos, '%')) " )
-    List<OrderModel> findAllByFieldsLikeAndActive(@Param("campos") String campos);
+            "or lower(o.emisorNombres) like lower(concat('%', :campos, '%')) or lower(o.destinatarioApellidoM) like lower(concat('%', :campos, '%')) or lower(o.destinatarioApellidoP) like lower(concat('%', :campos, '%')) or lower(o.destinatarioNombres) like lower(concat('%', :campos, '%')) and o.forSim = :forSim" )
+    List<OrderModel> findAllByFieldsLikeAndActive(@Param("campos") String campos, @Param("forSim")Integer forSim);
 
     @Query("Select o from OrderModel o WHERE o.emisorDocumentoNumero like %:DocNo% or o.destinatarioDocumentoNumero like %:DocNo% and o.token = :token and o.active=1")
     Optional<OrderModel> queryOrdersWithDocNoandToken(@Param("DocNo")String docNo, @Param("token")String token);
