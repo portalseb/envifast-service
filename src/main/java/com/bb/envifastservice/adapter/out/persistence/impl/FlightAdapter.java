@@ -116,7 +116,8 @@ public class FlightAdapter implements ListFlightByIdPort, GenerateNextWeekFlight
             flightRepository.deleteByParaSim(paraSim,1);
 
         }
-
+        var airportsBD = airportRepository.findAllByActive(1);
+        int origen=0,destino=0;
         //Pendiente: agregar que no se repita para el dia a dia...
         for (int i = 0; i<dias;i++){
             try {
@@ -129,23 +130,29 @@ public class FlightAdapter implements ListFlightByIdPort, GenerateNextWeekFlight
                 final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
                 var nextLine = myReader.nextLine();
                 var data=  nextLine.split("-");
-                var depAirport=  airportRepository.findByCityShortNameAndActive(data[0],1);
-                var arrivalAirport=  airportRepository.findByCityShortNameAndActive(data[1],1);
+                for(int k=0;k<airportsBD.size();k++){
+                    if(airportsBD.get(k).getAirportCode().equals(data[0]))
+                        origen = k;
+                    if(airportsBD.get(k).getAirportCode().equals(data[1]))
+                        destino = k;
+                }
+                //var depAirport=  airportRepository.findByCityShortNameAndActive(data[0],1);
+                //var arrivalAirport=  airportRepository.findByCityShortNameAndActive(data[1],1);
                 vuelo.setActive(1);
                 vuelo.setForSim(paraSim);
-                vuelo.setArrivalAirport(arrivalAirport);
-                vuelo.setDepartureAirport(depAirport);
-                if(arrivalAirport.getContinent().equals("EUROPA") && depAirport.getContinent().equals("EUROPA")){
+                vuelo.setArrivalAirport(airportsBD.get(destino));
+                vuelo.setDepartureAirport(airportsBD.get(origen));
+                if(airportsBD.get(destino).getContinent().equals("EUROPA") && airportsBD.get(origen).getContinent().equals("EUROPA")){
                     vuelo.setMaxCapacity(250L);
                     vuelo.setAvailableCapacity(250L);
                 }
 
-                if(arrivalAirport.getContinent().equals("AMERICA DEL SUR") && depAirport.getContinent().equals("AMERICA DEL SUR"))
+                if(airportsBD.get(destino).getContinent().equals("AMERICA DEL SUR") && airportsBD.get(origen).getContinent().equals("AMERICA DEL SUR"))
                 {
                     vuelo.setMaxCapacity(300L);
                     vuelo.setAvailableCapacity(300L);
                 }
-                if(!arrivalAirport.getContinent().equals(depAirport.getContinent()))
+                if(!airportsBD.get(destino).getContinent().equals(airportsBD.get(origen).getContinent()))
                 {
                     vuelo.setMaxCapacity(350L);
                     vuelo.setAvailableCapacity(350L);
