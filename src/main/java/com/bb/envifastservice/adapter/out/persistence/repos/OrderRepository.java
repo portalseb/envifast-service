@@ -22,4 +22,7 @@ public interface OrderRepository extends JpaRepository<OrderModel, Long> {
     //OrderModel insertOrder(@Param("envio") OrderModel envio);
     @Query("SELECT p from OrderModel  p WHERE p.id =:id and p.active=:active")
     OrderModel findByIdOfOrder(@Param("id") Long id, @Param("active") int active);
+
+    @Query("SELECT o from OrderModel  o WHERE o.active =:active and o.planned =:planned and o.forSim =:forSim" )
+    List<OrderModel> findAllByPlanified(@Param("planned") int planned, @Param("forSim")int forSim, @Param("active") int active);
 }

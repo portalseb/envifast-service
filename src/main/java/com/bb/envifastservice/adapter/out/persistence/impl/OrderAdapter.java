@@ -8,6 +8,7 @@ import com.bb.envifastservice.application.port.out.*;
 import com.bb.envifastservice.hexagonal.PersistenceAdapter;
 import com.bb.envifastservice.models.*;
 import lombok.RequiredArgsConstructor;
+import org.springframework.boot.autoconfigure.couchbase.CouchbaseProperties;
 
 import java.io.FileNotFoundException;
 import java.time.LocalDate;
@@ -208,6 +209,32 @@ public class OrderAdapter implements ListPackagesPort, InsertOrderPort, PlanOrde
     @Override
     public int planOrdRoute(List<Envio> envios){
         //Menor fecha de envios
+        var enviosBD = orderRepository.findAllByPlanified(0,0,1);
+        envios = new ArrayList<>();
+        for(OrderModel order: enviosBD) {
+            Envio envio = new Envio();
+            envio.setId(order.getId());
+            envio.setCantidadPaquetes(order.getCantidad());
+            envio.setFechaEnvio(order.getFechaEnvio());
+            envio.setPaquetes(new ArrayList<>());
+            for(PackageModel pack: order.getPacks()){
+                    Paquete paquete = new Paquete();
+                    paquete.setId(pack.getId());
+                    envio.getPaquetes().add(paquete);
+            }
+            envio.setOrigen(new Aeropuerto());
+            envio.setDestino(new Aeropuerto());
+            var origenBD = airportRepository.findByCityNameAndActive(order.getOrigen(),1);
+            var destinoBD = airportRepository.findByCityNameAndActive(order.getDestino(),1);
+            envio.getOrigen().setId((int)(long)origenBD.getId());
+            envio.getOrigen().setCiudad(new Ciudad());
+            envio.getOrigen().getCiudad().setContinente(origenBD.getContinent());
+            envio.getDestino().setId((int)(long)destinoBD.getId());
+            envio.getDestino().setCiudad(new Ciudad());
+            envio.getDestino().getCiudad().setContinente(destinoBD.getContinent());
+            envios.add(envio);
+        }
+        if (envios.size()==0) {System.out.println("No hay envios por planificar");return 1;}
         var envioFechaMin = envios.stream().min(Comparator.comparing(Envio::getFechaEnvio)).orElseThrow(NoSuchElementException::new).getFechaEnvio();
         var envioFechaMax = envios.stream().max(Comparator.comparing(Envio::getFechaEnvio)).orElseThrow(NoSuchElementException::new).getFechaEnvio().plusDays(2);
         //Planear y guardar en BD las rutas para los envios
@@ -315,16 +342,21 @@ public class OrderAdapter implements ListPackagesPort, InsertOrderPort, PlanOrde
             algoritmoHormigas.activarHormigas(ambiente);
             long end1 = System.currentTimeMillis();
             System.out.println("Elapsed Time in milli seconds: " + (end1 - start1));
+            if(algoritmoHormigas.getSolucionCamino().size()!=0) {
+                //Se imprime la solucion
+                System.out.println("Envio " + i + " - Camino: " + algoritmoHormigas.getSolucionCamino().toString() + algoritmoHormigas.getSolucionCosto());
 
-            //Se imprime la solucion
-            System.out.println("Envio "+ i +" - Camino: " + algoritmoHormigas.getSolucionCamino().toString() + algoritmoHormigas.getSolucionCosto());
-
-            //Actualizar capacidades
-            ambiente.actualizarCapacidades(algoritmoHormigas.getSolucionCamino());
-            envios.get(i).setTiempoTotal(algoritmoHormigas.getSolucionCosto());
-            //Actualizar rutas de paquetes
-            for(int j=0;j<envios.get(i).getPaquetes().size();j++){
-                envios.get(i).getPaquetes().get(j).setRuta(algoritmoHormigas.getSolucionCamino());
+                //Actualizar capacidades
+                ambiente.actualizarCapacidades(algoritmoHormigas.getSolucionCamino());
+                envios.get(i).setTiempoTotal(algoritmoHormigas.getSolucionCosto());
+                //Actualizar rutas de paquetes
+                for (int j = 0; j < envios.get(i).getPaquetes().size(); j++) {
+                    envios.get(i).getPaquetes().get(j).setRuta(algoritmoHormigas.getSolucionCamino());
+                }
+            }
+            else{
+                System.out.println("Envio " + i + " - no se hallo solucion");
+                envios.get(i).setTiempoTotal(0.0);
             }
         }
 
@@ -341,16 +373,18 @@ public class OrderAdapter implements ListPackagesPort, InsertOrderPort, PlanOrde
                  ) {
                 var packageBD = packageRepository.findByIdOfPackage(paquete.getId(),1);
                 var flights = new ArrayList<FlightModel>();
-                for (ArcoAeropuerto vuelo: paquete.getRuta()
-                     ) {
-                    var flight = flightRepository.findByFlightId(vuelo.getId().longValue());
-                    flights.add(flight);
+                if(paquete.getRuta()!=null) {
+                    for (ArcoAeropuerto vuelo : paquete.getRuta()
+                    ) {
+                        var flight = flightRepository.findByFlightId(vuelo.getId().longValue());
+                        flights.add(flight);
+                    }
                 }
-                if(flights.size()==0) plan=0;
+                if(flights.size()==0){plan=0; orderBD.setPlanned(0);}
                 packageBD.setRoute(flights);
                 packages.add(packageBD);
             }
-            orderBD.setPlanned(plan);
+            if(plan==1) orderBD.setPlanned(1);
             orders.add(orderBD);
         }
         orderRepository.saveAll(orders);
@@ -622,8 +656,39 @@ public class OrderAdapter implements ListPackagesPort, InsertOrderPort, PlanOrde
 
     @Override
     public int generateSimulationOrders(String fecha, String timeInf, String timeSup, Integer forSim) throws FileNotFoundException {
-
-        var envioFechaMin = LocalDateTime.of(LocalDate.parse(fecha),LocalTime.parse(timeInf)); //Se va a cambiar cuando necesite reprogramar envios de fechas/horas anteriores
+        var envios = new ArrayList<Envio>();
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        /*Aqui leeriamos los envios con forSim=1 que aun no se han planificado*/
+        var enviosBD = orderRepository.findAllByPlanified(0,1,1);
+        for(OrderModel order: enviosBD) {
+            Envio envio = new Envio();
+            envio.setId(order.getId());
+            envio.setCantidadPaquetes(order.getCantidad());
+            envio.setFechaEnvio(order.getFechaEnvio());
+            envio.setPaquetes(new ArrayList<>());
+            for(PackageModel pack: order.getPacks()){
+                Paquete paquete = new Paquete();
+                paquete.setId(pack.getId());
+                envio.getPaquetes().add(paquete);
+            }
+            envio.setOrigen(new Aeropuerto());
+            envio.setDestino(new Aeropuerto());
+            var origenBD = airportRepository.findByCityNameAndActive(order.getOrigen(),1);
+            var destinoBD = airportRepository.findByCityNameAndActive(order.getDestino(),1);
+            envio.getOrigen().setId((int)(long)origenBD.getId());
+            envio.getOrigen().setCiudad(new Ciudad());
+            envio.getOrigen().getCiudad().setContinente(origenBD.getContinent());
+            envio.getDestino().setId((int)(long)destinoBD.getId());
+            envio.getDestino().setCiudad(new Ciudad());
+            envio.getDestino().getCiudad().setContinente(destinoBD.getContinent());
+            envios.add(envio);
+        }
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        var envioFechaMinim = LocalDateTime.of(LocalDate.parse(fecha),LocalTime.parse(timeInf)); //Se va a cambiar cuando necesite reprogramar envios de fechas/horas anteriores
+        if(envios.size()!=0) {
+            envioFechaMinim = envios.stream().min(Comparator.comparing(Envio::getFechaEnvio)).orElseThrow(NoSuchElementException::new).getFechaEnvio(); //LocalDateTime.of(LocalDate.parse(fecha),LocalTime.parse(timeInf)); //Se va a cambiar cuando necesite reprogramar envios de fechas/horas anteriores
+        }
+        var envioFechaMin = envioFechaMinim;
         var envioFechaMax = LocalDateTime.of(LocalDate.parse(fecha),LocalTime.parse(timeSup)).plusDays(2);
         //Planear y guardar en BD las rutas para los envios
         var aeropuertosRegistros = airportRepository.findAllByActive(1);
@@ -696,7 +761,6 @@ public class OrderAdapter implements ListPackagesPort, InsertOrderPort, PlanOrde
         }
 
 
-        var envios = new ArrayList<Envio>();
 
         LectorEnviosCorto lectorEnviosCorto = new LectorEnviosCorto(aeropuertos);
         lectorEnviosCorto.setFechaDesde(LocalDate.parse(fecha));
@@ -751,14 +815,19 @@ public class OrderAdapter implements ListPackagesPort, InsertOrderPort, PlanOrde
             System.out.println("Elapsed Time in milli seconds: " + (end1 - start1));
 
             //Se imprime la solucion
-            System.out.println("Envio "+ j +" - Camino: " + algoritmoHormigas.getSolucionCamino().toString() + algoritmoHormigas.getSolucionCosto());
-
-            //Actualizar capacidades
-            ambiente.actualizarCapacidades(algoritmoHormigas.getSolucionCamino());
-            envio.setTiempoTotal(algoritmoHormigas.getSolucionCosto());
-            //Actualizar rutas de paquetes
-            for(int k=0;k<envio.getPaquetes().size();k++){
-                envio.getPaquetes().get(k).setRuta(algoritmoHormigas.getSolucionCamino());
+            if(algoritmoHormigas.getSolucionCamino().size()!=0) {
+                System.out.println("Envio " + j + " - Camino: " + algoritmoHormigas.getSolucionCamino().toString() + algoritmoHormigas.getSolucionCosto());
+                //Actualizar capacidades
+                ambiente.actualizarCapacidades(algoritmoHormigas.getSolucionCamino());
+                envio.setTiempoTotal(algoritmoHormigas.getSolucionCosto());
+                //Actualizar rutas de paquetes
+                for (int k = 0; k < envio.getPaquetes().size(); k++) {
+                    envio.getPaquetes().get(k).setRuta(algoritmoHormigas.getSolucionCamino());
+                }
+            }
+            else{
+                System.out.println("Envio " + j + " - no se hallo solucion");
+                envio.setTiempoTotal(0.0);
             }
             envios.add(envio);
         }
@@ -788,17 +857,19 @@ public class OrderAdapter implements ListPackagesPort, InsertOrderPort, PlanOrde
                 paqueteNuevo.setDestino(aeropuertoDestino.getCityName());
                 paqueteNuevo.setActive(1);
                 var flights = new ArrayList<FlightModel>();
-                for (ArcoAeropuerto vuelo: envios.get(i).getPaquetes().get(j).getRuta()
-                ) {
-                    var flight = flightRepository.findByFlightId(vuelo.getId().longValue());
-                    flights.add(flight);
+                if(envios.get(i).getPaquetes().get(j).getRuta()!=null) {
+                    for (ArcoAeropuerto vuelo : envios.get(i).getPaquetes().get(j).getRuta()
+                    ) {
+                        var flight = flightRepository.findByFlightId(vuelo.getId().longValue());
+                        flights.add(flight);
+                    }
                 }
-                if(flights.size()==0) plan=0;
+                if(flights.size()==0){plan=0; envioNuevo.setPlanned(0);}
                 paqueteNuevo.setRoute(flights);
                 paquetes.add(paqueteNuevo);
             }
             envioNuevo.setPacks(paquetes);
-            envioNuevo.setPlanned(plan);
+            if(plan==1)envioNuevo.setPlanned(1);
             enviosNuevos.add(envioNuevo);
         }
         orderRepository.saveAll(enviosNuevos);

@@ -127,7 +127,10 @@ public class Aco {
                 }
             }
 
-
+            if(ambiente.getMaximoDeIteraciones()>=100000 && solucionCamino.size()!=0){
+                System.out.println("Se llego al limite - No se hallo solucion");
+                break;
+            }
         }
     }
 
