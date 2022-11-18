@@ -210,7 +210,7 @@ public class FlightAdapter implements ListFlightByIdPort, GenerateNextWeekFlight
             flightMap.setIdAeropuertoDestino((int)(long)destino.getId());
             flightMap.setHoraSalida(LocalDateTime.of(LocalDate.of(flight.getDepartureTime().getYear(),flight.getDepartureTime().getMonthValue(),flight.getDepartureTime().getDayOfMonth()),LocalTime.of(flight.getDepartureTime().getHour(),flight.getDepartureTime().getMinute())));
             flightMap.setHoraLLegada(LocalDateTime.of(LocalDate.of(flight.getArrivalTime().getYear(),flight.getArrivalTime().getMonthValue(),flight.getArrivalTime().getDayOfMonth()),LocalTime.of(flight.getArrivalTime().getHour(),flight.getArrivalTime().getMinute())));
-            flightMap.setCantPaquetes((int)(long)(flight.getMaxCapacity()-flight.getAvailableCapacity()));
+            flightMap.setCantPaquetes(flight.getCargo().size());
             //flightMap.setCantMax((int)(long)(flight.getMaxCapacity()));
             list.add(flightMap);
         }
