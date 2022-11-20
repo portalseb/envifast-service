@@ -21,6 +21,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -84,12 +85,13 @@ public class AirportAdapter implements ListAllAirportsPort, ListAirportCoordPort
                     FechaHora fechaHora = new FechaHora();
                     fechaHora.setDia(LocalDate.parse(fecha).plusDays(i));
                     fechaHora.setHora(LocalTime.of(j,k));
-                    var dateTimeModelsInBD = dateTimeRepository.findByFechaHoraActive(fechaHora.getDia(), fechaHora.getHora(), 1);
+                    var dateTimeModelsInBD = dateTimeRepository.findByFechaHoraActive(LocalDateTime.of(fechaHora.getDia(), fechaHora.getHora()), 1);
                     //Comprobar que no se repita
                     if(dateTimeModelsInBD.size() == 0) {
                         DateTimeModel dateTimeModel = new DateTimeModel();
-                        dateTimeModel.setDate(fechaHora.getDia());
-                        dateTimeModel.setTime(fechaHora.getHora());
+                        //dateTimeModel.setDate(fechaHora.getDia());
+                        //dateTimeModel.setTime(fechaHora.getHora());
+                        dateTimeModel.setDateTime(LocalDateTime.of(fechaHora.getDia(),fechaHora.getHora()));
                         dateTimeModel.setActive(1);
                         dateTimeList.add(dateTimeModel);
                     }
@@ -98,7 +100,7 @@ public class AirportAdapter implements ListAllAirportsPort, ListAirportCoordPort
         }
         dateTimeRepository.saveAll(dateTimeList);
         var airportsModels = airportRepository.findAllByActive(1);
-        var dateTimesModels = dateTimeRepository.findDateTimesActiveRange(LocalDate.parse(fecha),LocalDate.parse(fecha).plusDays(dias),1);
+        var dateTimesModels = dateTimeRepository.findDateTimesActiveRange(LocalDateTime.of(LocalDate.parse(fecha),LocalTime.of(0,0,0)),LocalDateTime.of(LocalDate.parse(fecha).plusDays(dias),LocalTime.of(23,59,0)),1);
 
         if(forSim>0) {
             airportCapacityRepository.deleteByForSim(forSim,1);

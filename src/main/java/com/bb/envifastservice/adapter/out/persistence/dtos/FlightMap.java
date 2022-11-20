@@ -10,8 +10,7 @@ public class FlightMap {
     Integer id;
     Integer idAeropuertoOrigen;
     Integer idAeropuertoDestino;
-    LocalDateTime horaSalida;
-    LocalDateTime horaLLegada;
+    LocalTime horaSalida;
+    LocalTime horaLLegada;
     int duracion;
-    int cantPaquetes;
 }

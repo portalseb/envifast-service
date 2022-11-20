@@ -5,10 +5,7 @@ import com.bb.envifastservice.adapter.out.persistence.dtos.FlightMap;
 import com.bb.envifastservice.adapter.out.persistence.repos.AirportRepository;
 import com.bb.envifastservice.adapter.out.persistence.repos.FlightRepository;
 import com.bb.envifastservice.algo.*;
-import com.bb.envifastservice.application.port.out.GenerateNextWeekFlightsPort;
-import com.bb.envifastservice.application.port.out.ListAllFlightsPort;
-import com.bb.envifastservice.application.port.out.ListDayFlightsPort;
-import com.bb.envifastservice.application.port.out.ListFlightByIdPort;
+import com.bb.envifastservice.application.port.out.*;
 import com.bb.envifastservice.hexagonal.PersistenceAdapter;
 import com.bb.envifastservice.models.FlightModel;
 import com.bb.envifastservice.models.PackageModel;
@@ -27,7 +24,7 @@ import java.util.*;
 
 @PersistenceAdapter
 @RequiredArgsConstructor
-public class FlightAdapter implements ListFlightByIdPort, GenerateNextWeekFlightsPort, ListAllFlightsPort, ListDayFlightsPort {
+public class FlightAdapter implements ListFlightByIdPort, GenerateNextWeekFlightsPort, ListAllFlightsPort, ListDayFlightsPort, RestoreFlightsPort, FindFlightPackagesPort {
     private final FlightRepository flightRepository;
     private final AirportRepository airportRepository;
     @Override
@@ -185,9 +182,9 @@ public class FlightAdapter implements ListFlightByIdPort, GenerateNextWeekFlight
             flightMap.setDuracion((int) ChronoUnit.MINUTES.between(flight.getDepartureTime(),flight.getArrivalTime()));
             flightMap.setIdAeropuertoOrigen((int)(long)origen.getId());
             flightMap.setIdAeropuertoDestino((int)(long)destino.getId());
-            flightMap.setHoraSalida(LocalDateTime.of(LocalDate.of(flight.getDepartureTime().getYear(),flight.getDepartureTime().getMonthValue(),flight.getDepartureTime().getDayOfMonth()),LocalTime.of(flight.getDepartureTime().getHour(),flight.getDepartureTime().getMinute())));
-            flightMap.setHoraLLegada(LocalDateTime.of(LocalDate.of(flight.getArrivalTime().getYear(),flight.getArrivalTime().getMonthValue(),flight.getArrivalTime().getDayOfMonth()),LocalTime.of(flight.getArrivalTime().getHour(),flight.getArrivalTime().getMinute())));
-            flightMap.setCantPaquetes((int)(long)(flight.getMaxCapacity()-flight.getAvailableCapacity()));
+            flightMap.setHoraSalida(LocalTime.of(flight.getDepartureTime().getHour(),flight.getDepartureTime().getMinute()));
+            flightMap.setHoraLLegada(LocalTime.of(flight.getArrivalTime().getHour(),flight.getArrivalTime().getMinute()));
+            //flightMap.setCantPaquetes((int)(long)(flight.getMaxCapacity()-flight.getAvailableCapacity()));
             //flightMap.setCantMax((int)(long)(flight.getMaxCapacity()));
             list.add(flightMap);
         }
@@ -208,14 +205,27 @@ public class FlightAdapter implements ListFlightByIdPort, GenerateNextWeekFlight
             flightMap.setDuracion((int) ChronoUnit.MINUTES.between(flight.getDepartureTime(),flight.getArrivalTime()));
             flightMap.setIdAeropuertoOrigen((int)(long)origen.getId());
             flightMap.setIdAeropuertoDestino((int)(long)destino.getId());
-            flightMap.setHoraSalida(LocalDateTime.of(LocalDate.of(flight.getDepartureTime().getYear(),flight.getDepartureTime().getMonthValue(),flight.getDepartureTime().getDayOfMonth()),LocalTime.of(flight.getDepartureTime().getHour(),flight.getDepartureTime().getMinute())));
-            flightMap.setHoraLLegada(LocalDateTime.of(LocalDate.of(flight.getArrivalTime().getYear(),flight.getArrivalTime().getMonthValue(),flight.getArrivalTime().getDayOfMonth()),LocalTime.of(flight.getArrivalTime().getHour(),flight.getArrivalTime().getMinute())));
-            flightMap.setCantPaquetes((int)(long)(flight.getMaxCapacity()-flight.getAvailableCapacity()));
+            flightMap.setHoraSalida(LocalTime.of(flight.getDepartureTime().getHour(),flight.getDepartureTime().getMinute()));
+            flightMap.setHoraLLegada(LocalTime.of(flight.getArrivalTime().getHour(),flight.getArrivalTime().getMinute()));
+            //flightMap.setCantPaquetes((int)(long)(flight.getMaxCapacity()-flight.getAvailableCapacity()));
             //flightMap.setCantMax((int)(long)(flight.getMaxCapacity()));
             list.add(flightMap);
         }
         System.out.println(table.size());
         System.out.println("Ya paso por todos");
         return list;
+    }
+    @Override
+    public void restoreFlights(String fecha, Integer dias, Integer paraSim) {
+        LocalDateTime fechaIni = LocalDateTime.of(LocalDate.parse(fecha),LocalTime.of(0,0,0));
+        LocalDateTime fechaFin = LocalDateTime.of(LocalDate.parse(fecha).plusDays(dias),LocalTime.of(23,59,0));
+        flightRepository.restoreFlights(fechaIni,fechaFin,paraSim,1);
+    }
+    @Override
+    public int findFlightPackages(String fechaIni, String horaIni, Integer origenId, Integer destinoId, Integer paraSim) {
+        //var flightBD = flightRepository.findFlightByDateTimeDepartureArrival(LocalDateTime.of(LocalDate.parse(fechaIni),LocalTime.parse(horaIni)),origenId.longValue(),destinoId.longValue(),paraSim,1);
+        //if(flightBD!=null)
+        //    return (int)(long)(flightBD.getMaxCapacity()-flightBD.getAvailableCapacity());
+        return -1;
     }
 }

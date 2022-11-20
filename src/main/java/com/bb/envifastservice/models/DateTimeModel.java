@@ -5,6 +5,7 @@ import lombok.Data;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,6 +20,7 @@ public class DateTimeModel {
     private Long id;
     private LocalDate date;
     private LocalTime time;
+    private LocalDateTime dateTime;
     private int active;
 
 }

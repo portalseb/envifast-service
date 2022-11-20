@@ -1,10 +1,13 @@
 package com.bb.envifastservice.adapter.out.persistence.repos;
 
+import com.bb.envifastservice.models.AirportsModel;
 import com.bb.envifastservice.models.FlightModel;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.jpa.repository.query.Procedure;
 import org.springframework.data.repository.query.Param;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -25,5 +28,9 @@ public interface FlightRepository extends JpaRepository<FlightModel, Long> {
 
     @Query("SELECT a from FlightModel a where a.id = :idFlight")
     FlightModel findByFlightId(@Param("idFlight") Long idFlight);
+    @Query(value = "CALL restore_flight_for_sim(:fechaIni, :fechaFin, :forSim, :active);", nativeQuery = true)
+    void restoreFlights(@Param("fechaIni")LocalDateTime fechaIni,@Param("fechaFin") LocalDateTime fechaFin,@Param("forSim") Integer forSim,@Param("active") Integer active);
 
+    //@Query("SELECT a from FlightModel a where a.departureTime = :fechaIni and a.departureAirport.id = :origen and a.arrivalAirport.id =: destino and a.forSim = :forSim and a.active = :active")
+    //FlightModel findFlightByDateTimeDepartureArrival(@Param("fechaIni")LocalDateTime fechaIni, @Param("origen")Long origen, @Param("destino")Long destino, @Param("forSim") Integer forSim, @Param("active") int active);
 }

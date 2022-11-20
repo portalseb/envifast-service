@@ -261,7 +261,7 @@ public class OrderAdapter implements ListPackagesPort, InsertOrderPort, PlanOrde
             ciudad.setContinente(airport.getContinent());
             ciudad.setPais(airport.getCountryName());
             aeropuerto.setCiudad(ciudad);
-            airport.getCapacity().removeIf(c->c.getDateTime().getDate().isBefore(envioFechaMin.toLocalDate()));
+            airport.getCapacity().removeIf(c->c.getDateTime().getDateTime().isBefore(envioFechaMin));
             airport.getCapacity().removeIf(c->c.getForSim()==1);
 
             for(AirportsCapacityModel airportsCapacityModel: airport.getCapacity()){
@@ -271,8 +271,8 @@ public class OrderAdapter implements ListPackagesPort, InsertOrderPort, PlanOrde
 
                 FechaHora fechaHora = new FechaHora();
                 fechaHora.setId((int)(long)airportsCapacityModel.getDateTime().getId());
-                fechaHora.setDia(airportsCapacityModel.getDateTime().getDate());
-                fechaHora.setHora(airportsCapacityModel.getDateTime().getTime());
+                fechaHora.setDia(airportsCapacityModel.getDateTime().getDateTime().toLocalDate());
+                fechaHora.setHora(airportsCapacityModel.getDateTime().getDateTime().toLocalTime());
 
                 capacidadAeropuerto.setFechaHora(fechaHora);
                 capacidadAeropuerto.setDeposito(new ArrayList<>());
@@ -712,7 +712,7 @@ public class OrderAdapter implements ListPackagesPort, InsertOrderPort, PlanOrde
             ciudad.setContinente(airport.getContinent());
             ciudad.setPais(airport.getCountryName());
             aeropuerto.setCiudad(ciudad);
-            airport.getCapacity().removeIf(c->c.getDateTime().getDate().isBefore(envioFechaMin.toLocalDate())); //Esto se cambiara para que tenga un limite mayor tambien
+            airport.getCapacity().removeIf(c->c.getDateTime().getDateTime().isBefore(envioFechaMin)); //Esto se cambiara para que tenga un limite mayor tambien
             airport.getCapacity().removeIf(c->c.getForSim()==0);
             for(AirportsCapacityModel airportsCapacityModel: airport.getCapacity()){
                 CapacidadAeropuerto capacidadAeropuerto = new CapacidadAeropuerto();
@@ -721,8 +721,8 @@ public class OrderAdapter implements ListPackagesPort, InsertOrderPort, PlanOrde
 
                 FechaHora fechaHora = new FechaHora();
                 fechaHora.setId((int)(long)airportsCapacityModel.getDateTime().getId());
-                fechaHora.setDia(airportsCapacityModel.getDateTime().getDate());
-                fechaHora.setHora(airportsCapacityModel.getDateTime().getTime());
+                fechaHora.setDia(airportsCapacityModel.getDateTime().getDateTime().toLocalDate());
+                fechaHora.setHora(airportsCapacityModel.getDateTime().getDateTime().toLocalTime());
 
                 capacidadAeropuerto.setFechaHora(fechaHora);
                 capacidadAeropuerto.setDeposito(new ArrayList<>());

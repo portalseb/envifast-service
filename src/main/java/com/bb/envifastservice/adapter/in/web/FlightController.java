@@ -2,10 +2,7 @@ package com.bb.envifastservice.adapter.in.web;
 
 import com.bb.envifastservice.adapter.out.persistence.dtos.FlightMap;
 import com.bb.envifastservice.algo.ArcoAeropuerto;
-import com.bb.envifastservice.application.port.in.GenerateNextWeekFlightsService;
-import com.bb.envifastservice.application.port.in.ListAllFlightsService;
-import com.bb.envifastservice.application.port.in.ListDayFlightsService;
-import com.bb.envifastservice.application.port.in.ListFlightByIdService;
+import com.bb.envifastservice.application.port.in.*;
 import com.bb.envifastservice.application.port.out.ListFlightByIdPort;
 import com.bb.envifastservice.hexagonal.WebAdapter;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +21,8 @@ public class FlightController {
     private final GenerateNextWeekFlightsService generateNextWeekFlightsService;
     private final ListAllFlightsService listAllFlightsService;
     private final ListDayFlightsService listDayFlightsService;
+    private final RestoreFlightsService restoreFlightsService;
+    private final FindFlightPackagesService findFlightPackagesService;
     @GetMapping(value = "/{id}")
     public ArcoAeropuerto findVuelo(@RequestParam(name = "id") Long id){
         return listFlightByIdService.listById(id);
@@ -42,5 +41,13 @@ public class FlightController {
     @PostMapping(value = "/generate")
     public void generarVuelos(@RequestParam(name = "fecha") String fecha,  @RequestParam(name = "dias") Integer dias, @RequestParam(name = "paraSim") Integer paraSim){
         generateNextWeekFlightsService.generateNextWeekFlights(fecha, dias,paraSim);
+    }
+    @PutMapping(value = "/restore")
+    public void restaurarVuelos(@RequestParam(name = "fecha") String fecha,  @RequestParam(name = "dias") Integer dias, @RequestParam(name = "paraSim") Integer paraSim){
+        restoreFlightsService.restoreFlights(fecha,dias,paraSim);
+    }
+    @GetMapping(value = "/cantPaquetes")
+    public int paquetesDeVuelo(@RequestParam(name = "fechaIni")String fechaIni,@RequestParam(name = "horaIni") String horaIni,@RequestParam(name = "origenId") Integer origenId,@RequestParam(name = "destinoId") Integer destinoId,@RequestParam(name = "paraSim") Integer paraSim){
+        return findFlightPackagesService.findFlightPackages(fechaIni, horaIni, origenId, destinoId, paraSim);
     }
 }
