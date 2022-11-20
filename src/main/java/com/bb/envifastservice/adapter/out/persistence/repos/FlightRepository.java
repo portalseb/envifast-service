@@ -33,4 +33,6 @@ public interface FlightRepository extends JpaRepository<FlightModel, Long> {
 
     //@Query("SELECT a from FlightModel a where a.departureTime = :fechaIni and a.departureAirport.id = :origen and a.arrivalAirport.id =: destino and a.forSim = :forSim and a.active = :active")
     //FlightModel findFlightByDateTimeDepartureArrival(@Param("fechaIni")LocalDateTime fechaIni, @Param("origen")Long origen, @Param("destino")Long destino, @Param("forSim") Integer forSim, @Param("active") int active);
+    FlightModel findByDepartureTimeAndDepartureAirportAndArrivalAirportAndForSimAndActive(LocalDateTime depatureTime, AirportsModel departureAirport, AirportsModel arrivalAirport, int forSim, int active);
+
 }

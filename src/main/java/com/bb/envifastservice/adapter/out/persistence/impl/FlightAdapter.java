@@ -222,9 +222,11 @@ public class FlightAdapter implements ListFlightByIdPort, GenerateNextWeekFlight
     }
     @Override
     public int findFlightPackages(String fechaIni, String horaIni, Integer origenId, Integer destinoId, Integer paraSim) {
-        //var flightBD = flightRepository.findFlightByDateTimeDepartureArrival(LocalDateTime.of(LocalDate.parse(fechaIni),LocalTime.parse(horaIni)),origenId.longValue(),destinoId.longValue(),paraSim,1);
-        //if(flightBD!=null)
-        //    return (int)(long)(flightBD.getMaxCapacity()-flightBD.getAvailableCapacity());
+        var origenBD = airportRepository.findByIdActive(origenId.longValue(),1);
+        var destinoBD = airportRepository.findByIdActive(destinoId.longValue(),1);
+        var flightBD = flightRepository.findByDepartureTimeAndDepartureAirportAndArrivalAirportAndForSimAndActive(LocalDateTime.of(LocalDate.parse(fechaIni),LocalTime.parse(horaIni)),origenBD,destinoBD,paraSim,1);
+        if(flightBD!=null)
+            return (int) (flightBD.getMaxCapacity()-flightBD.getAvailableCapacity());
         return -1;
     }
 }
