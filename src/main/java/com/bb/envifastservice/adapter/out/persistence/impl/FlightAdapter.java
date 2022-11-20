@@ -107,7 +107,6 @@ public class FlightAdapter implements ListFlightByIdPort, GenerateNextWeekFlight
         File planes = new File("src/main/java/com/bb/envifastservice/c.inf226.22-2.planes_vuelo.v02.txt");
         Scanner myReader = null;
         var vuelos = new ArrayList<FlightModel>();
-
         if(paraSim>0){
             //probar si se puede o si se debe borrar primero la tabla route
             flightRepository.deleteByParaSim(paraSim,1);
