@@ -235,8 +235,10 @@ public class OrderAdapter implements ListPackagesPort, InsertOrderPort, PlanOrde
             envios.add(envio);
         }
         if (envios.size()==0) {System.out.println("No hay envios por planificar");return 1;}
-        var envioFechaMin = envios.stream().min(Comparator.comparing(Envio::getFechaEnvio)).orElseThrow(NoSuchElementException::new).getFechaEnvio();
-        var envioFechaMax = envios.stream().max(Comparator.comparing(Envio::getFechaEnvio)).orElseThrow(NoSuchElementException::new).getFechaEnvio().plusDays(2);
+        var envioFechMin = envios.stream().min(Comparator.comparing(Envio::getFechaEnvio)).orElseThrow(NoSuchElementException::new).getFechaEnvio();
+        var envioFechMax = envios.stream().max(Comparator.comparing(Envio::getFechaEnvio)).orElseThrow(NoSuchElementException::new).getFechaEnvio().plusDays(2);
+        var envioFechaMin = LocalDateTime.of(envioFechMin.toLocalDate(),LocalTime.of(envioFechMin.getHour(),envioFechMin.getMinute(),0));
+        var envioFechaMax = LocalDateTime.of(envioFechMax.toLocalDate(),LocalTime.of(envioFechMax.getHour(),envioFechMax.getMinute(),0));
         //Planear y guardar en BD las rutas para los envios
         var aeropuertosRegistros = airportRepository.findAllByActive(1);
         var arcosGeneralRegistros = flightRepository.findAllByActiveRange(1,envioFechaMin, envioFechaMax,0);
@@ -262,8 +264,8 @@ public class OrderAdapter implements ListPackagesPort, InsertOrderPort, PlanOrde
             ciudad.setPais(airport.getCountryName());
             aeropuerto.setCiudad(ciudad);
             airport.getCapacity().removeIf(c->c.getDateTime().getDateTime().isBefore(envioFechaMin));
+            airport.getCapacity().removeIf(c->c.getDateTime().getDateTime().isAfter(envioFechaMax));
             airport.getCapacity().removeIf(c->c.getForSim()==1);
-
             for(AirportsCapacityModel airportsCapacityModel: airport.getCapacity()){
                 CapacidadAeropuerto capacidadAeropuerto = new CapacidadAeropuerto();
                 capacidadAeropuerto.setId((int)(long)airportsCapacityModel.getId());
@@ -688,8 +690,9 @@ public class OrderAdapter implements ListPackagesPort, InsertOrderPort, PlanOrde
         if(envios.size()!=0) {
             envioFechaMinim = envios.stream().min(Comparator.comparing(Envio::getFechaEnvio)).orElseThrow(NoSuchElementException::new).getFechaEnvio(); //LocalDateTime.of(LocalDate.parse(fecha),LocalTime.parse(timeInf)); //Se va a cambiar cuando necesite reprogramar envios de fechas/horas anteriores
         }
-        var envioFechaMin = envioFechaMinim;
-        var envioFechaMax = LocalDateTime.of(LocalDate.parse(fecha),LocalTime.parse(timeSup)).plusDays(2);
+        var envioFechaMin = LocalDateTime.of(envioFechaMinim.toLocalDate(),LocalTime.of(envioFechaMinim.getHour(),envioFechaMinim.getMinute(),0));
+        var envioFechMax = LocalDateTime.of(LocalDate.parse(fecha),LocalTime.parse(timeSup)).plusDays(2);
+        var envioFechaMax = LocalDateTime.of(envioFechMax.toLocalDate(),LocalTime.of(envioFechMax.getHour(),envioFechMax.getMinute(),0));
         //Planear y guardar en BD las rutas para los envios
         var aeropuertosRegistros = airportRepository.findAllByActive(1);
         var arcosGeneralRegistros = flightRepository.findAllByActiveRange(1,envioFechaMin, envioFechaMax,forSim);
@@ -712,7 +715,8 @@ public class OrderAdapter implements ListPackagesPort, InsertOrderPort, PlanOrde
             ciudad.setContinente(airport.getContinent());
             ciudad.setPais(airport.getCountryName());
             aeropuerto.setCiudad(ciudad);
-            airport.getCapacity().removeIf(c->c.getDateTime().getDateTime().isBefore(envioFechaMin)); //Esto se cambiara para que tenga un limite mayor tambien
+            airport.getCapacity().removeIf(c->c.getDateTime().getDateTime().isBefore(envioFechaMin));
+            airport.getCapacity().removeIf(c->c.getDateTime().getDateTime().isAfter(envioFechaMax));
             airport.getCapacity().removeIf(c->c.getForSim()==0);
             for(AirportsCapacityModel airportsCapacityModel: airport.getCapacity()){
                 CapacidadAeropuerto capacidadAeropuerto = new CapacidadAeropuerto();
