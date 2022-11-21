@@ -397,6 +397,7 @@ public class AntSide {
             //Se llena la capacidad de aeropuerto destino desde la hora de llegada hasta 1 hora despues
             horaAnt = LocalDateTime.of(camino.getDiaLLegada().getYear(),camino.getDiaLLegada().getMonthValue(),camino.getDiaLLegada().getDayOfMonth(),camino.getHoraLlegada().getHour(),camino.getHoraLlegada().getMinute());
 
+            //System.out.println("a esta hora llega el ultimo avion "+horaAnt);
 
             for(int k=0;k<60;k++){
                 int hora=horaAnt.getHour();
@@ -405,6 +406,7 @@ public class AntSide {
                 int mes = horaAnt.getMonthValue();
                 int anio = horaAnt.getYear();
                 int ind = nodos.get(nodos.indexOf(destino)).getCapacidadIndex(hora, minuto, dia, mes, anio);
+                if(ind==-1) {System.out.println("No se encontro el indice para" + hora +":"+ minuto +" " + dia + "-"+mes +"-" +anio); return;}
                 for(int j=0;j<paquetesEnvio.size();j++) {
                     nodos.get(nodos.indexOf(destino)).getCapacidadDisponible().get(ind).agregarPaquete(paquetesEnvio.get(j));
                 }

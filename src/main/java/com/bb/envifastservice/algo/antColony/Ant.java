@@ -194,7 +194,7 @@ public class Ant {
 
                 k = destino.getCapacidadIndex(camino.getHoraLlegada().getHour(), camino.getHoraLlegada().getMinute(), camino.getDiaLLegada().getDayOfMonth(), camino.getDiaLLegada().getMonthValue(), camino.getDiaLLegada().getYear());
                 if (k == -1) {
-                    System.out.println("Indice de capacidad no encontrado");
+                    //System.out.println("Indice de capacidad no encontrado para: " + camino.getHoraLlegada().getHour() + ":"+ camino.getHoraLlegada().getMinute() + " / " + camino.getDiaLLegada().getDayOfMonth() + "-" +  camino.getDiaLLegada().getMonthValue() + "-" + camino.getDiaLLegada().getYear());
                     continue;
                 }
                 capacidadAeropuertoDestino = destino.getCapacidadDisponible().get(k).getCapacidadDisponible();
