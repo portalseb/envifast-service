@@ -107,11 +107,11 @@ public class FlightAdapter implements ListFlightByIdPort, GenerateNextWeekFlight
         File planes = new File("src/main/java/com/bb/envifastservice/c.inf226.22-2.planes_vuelo.v02.txt");
         Scanner myReader = null;
         var vuelos = new ArrayList<FlightModel>();
-        if(paraSim>0){
-            //probar si se puede o si se debe borrar primero la tabla route
-            flightRepository.deleteByParaSim(paraSim,1);
+        //if(paraSim>0){
+        //    //probar si se puede o si se debe borrar primero la tabla route
+        //    flightRepository.deleteByParaSim(paraSim,1);
 
-        }
+        //}
         var airportsBD = airportRepository.findAllByActive(1);
         int origen=0,destino=0;
         //Pendiente: agregar que no se repita para el dia a dia...
@@ -160,6 +160,8 @@ public class FlightAdapter implements ListFlightByIdPort, GenerateNextWeekFlight
                 }
                 vuelo.setArrivalTime(llega);
                 vuelo.setDepartureTime(sale);
+                vuelo.setDeparted(false);
+                vuelo.setArrived(false);
                 vuelos.add(vuelo);
             }
 

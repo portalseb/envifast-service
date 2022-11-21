@@ -102,9 +102,9 @@ public class AirportAdapter implements ListAllAirportsPort, ListAirportCoordPort
         var airportsModels = airportRepository.findAllByActive(1);
         var dateTimesModels = dateTimeRepository.findDateTimesActiveRange(LocalDateTime.of(LocalDate.parse(fecha),LocalTime.of(0,0,0)),LocalDateTime.of(LocalDate.parse(fecha).plusDays(dias),LocalTime.of(23,59,0)),1);
 
-        if(forSim>0) {
-            airportCapacityRepository.deleteByForSim(forSim,1);
-        }
+        //if(forSim>0) {
+        //    airportCapacityRepository.deleteByForSim(forSim,1);
+        //}
 
         //Pendiente: agregar que no se repita para el dia a dia...
         for(AirportsModel airportsModel: airportsModels){
