@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
@@ -53,7 +54,7 @@ public class OrderController {
         return iniciarSim5DiasService.iniciarSim5Dias(fecha, dias, paraSim);
     }
     @PostMapping(value = "/cargarEnviosSim")
-    public int cargarEnviosSim(@RequestParam(name = "fecha") String fecha,@RequestParam(name = "timeInf")  String timeInf, @RequestParam(name = "timeSup") String timeSup, @RequestParam(name = "paraSim") Integer forSim) throws FileNotFoundException {
+    public int cargarEnviosSim(@RequestParam(name = "fecha") String fecha,@RequestParam(name = "timeInf")  String timeInf, @RequestParam(name = "timeSup") String timeSup, @RequestParam(name = "paraSim") Integer forSim) throws IOException {
         return generateOrderForSimService.generateSimulationOrders(fecha,timeInf,timeSup,forSim);
     }
 }

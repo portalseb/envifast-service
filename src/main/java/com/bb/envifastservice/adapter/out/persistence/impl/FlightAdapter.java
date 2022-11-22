@@ -106,12 +106,14 @@ public class FlightAdapter implements ListFlightByIdPort, GenerateNextWeekFlight
     @Transactional
     public void generateNextWeekFlights(String fecha,Integer dias, Integer paraSim) throws IOException {
         //InputStream inputStream = getClass().getResourceAsStream("/c.inf226.22-2.planes_vuelo.v02.txt");
+        //URL resource = getClass().getClassLoader().getResource("c.inf226.22-2.planes_vuelo.v02.txt");
+        ClassPathResource classPathResource = new ClassPathResource("c.inf226.22-2.planes_vuelo.v02.txt");
+        InputStream resourceAsStream = getClass().getClassLoader().getResourceAsStream("c.inf226.22-2.planes_vuelo.v02.txt");
+        //Resource resource = new ClassPathResource("c.inf226.22-2.planes_vuelo.v02.txt");
+        //File planes = resource.getFile();
 
-        Resource resource = new ClassPathResource("c.inf226.22-2.planes_vuelo.v02.txt");
-        File planes = resource.getFile();
 
-
-        //if(resource == null) {System.out.println("Es nulo"); return;}
+        if(resourceAsStream == null) {System.out.println("Es nulo"); return;}
         //else{System.out.println("No es nulo");}
         //File planes = new File("src/main/java/com/bb/envifastservice/c.inf226.22-2.planes_vuelo.v02.txt");
         Scanner myReader = null;
@@ -125,11 +127,7 @@ public class FlightAdapter implements ListFlightByIdPort, GenerateNextWeekFlight
         int origen=0,destino=0;
         //Pendiente: agregar que no se repita para el dia a dia...
         for (int i = 0; i<dias;i++){
-            try {
-                myReader = new Scanner(planes);
-            } catch (FileNotFoundException e) {
-                throw new RuntimeException(e);
-            }
+            myReader = new Scanner(classPathResource.getInputStream());
             while (myReader.hasNextLine()) {
                 var vuelo = new FlightModel();
                 final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");

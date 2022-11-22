@@ -6,6 +6,7 @@ import com.bb.envifastservice.hexagonal.UseCase;
 import lombok.RequiredArgsConstructor;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 
 @UseCase
 @RequiredArgsConstructor
@@ -13,7 +14,7 @@ public class GenerateOrderForSimUseCase implements GenerateOrderForSimService {
     private final GenerateOrderForSimPort generateOrderForSimPort;
 
     @Override
-    public int generateSimulationOrders(String fecha, String timeInf, String timeSup, Integer forSim) throws FileNotFoundException {
+    public int generateSimulationOrders(String fecha, String timeInf, String timeSup, Integer forSim) throws IOException {
         return generateOrderForSimPort.generateSimulationOrders(fecha,timeInf,timeSup,forSim);
     }
 }

@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.couchbase.CouchbaseProperties;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -664,7 +665,7 @@ public class OrderAdapter implements ListPackagesPort, InsertOrderPort, PlanOrde
     }
 
     @Override
-    public int generateSimulationOrders(String fecha, String timeInf, String timeSup, Integer forSim) throws FileNotFoundException {
+    public int generateSimulationOrders(String fecha, String timeInf, String timeSup, Integer forSim) throws IOException {
         var envios = new ArrayList<Envio>();
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /*Aqui leeriamos los envios con forSim=1 que aun no se han planificado*/

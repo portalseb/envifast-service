@@ -1,6 +1,9 @@
 package com.bb.envifastservice.algo;
 
+import org.springframework.core.io.ClassPathResource;
+
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -136,7 +139,7 @@ public class LectorEnviosCorto {
         }
     }
 
-    public void LeerActualizado(String ruta, String fecha, String timeInf, String timeSup)  throws FileNotFoundException {
+    public void LeerActualizado(String ruta, String fecha, String timeInf, String timeSup) throws IOException {
         String[] codes  = {"SKBO",
                 "SEQM",
                 "SVMI",
@@ -178,8 +181,9 @@ public class LectorEnviosCorto {
                 "ESKN",
                 "LSZB"};
         for(int i=0;i<40;i++) {
-            File archivo = new File(ruta + "pack_enviado_"+ codes[i] +".txt");
-            BufferedReader br = new BufferedReader(new FileReader(archivo));
+            ClassPathResource classPathResource = new ClassPathResource("pack_enviado_"+ codes[i] +".txt");
+            //File archivo = new File(ruta + "pack_enviado_"+ codes[i] +".txt");
+            BufferedReader br = new BufferedReader(new InputStreamReader(classPathResource.getInputStream(), StandardCharsets.UTF_8));
             try {
                 String data;
                 while (true) {
