@@ -10,10 +10,11 @@ import com.bb.envifastservice.hexagonal.PersistenceAdapter;
 import com.bb.envifastservice.models.FlightModel;
 import com.bb.envifastservice.models.PackageModel;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.FileNotFoundException;
-import java.io.File;
+import java.io.*;
 import java.io.FileNotFoundException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -103,8 +104,16 @@ public class FlightAdapter implements ListFlightByIdPort, GenerateNextWeekFlight
 
     @Override
     @Transactional
-    public void generateNextWeekFlights(String fecha,Integer dias, Integer paraSim) {
-        File planes = new File("src/main/java/com/bb/envifastservice/c.inf226.22-2.planes_vuelo.v02.txt");
+    public void generateNextWeekFlights(String fecha,Integer dias, Integer paraSim) throws IOException {
+        //InputStream inputStream = getClass().getResourceAsStream("/c.inf226.22-2.planes_vuelo.v02.txt");
+
+        Resource resource = new ClassPathResource("c.inf226.22-2.planes_vuelo.v02.txt");
+        File planes = resource.getFile();
+
+
+        //if(resource == null) {System.out.println("Es nulo"); return;}
+        //else{System.out.println("No es nulo");}
+        //File planes = new File("src/main/java/com/bb/envifastservice/c.inf226.22-2.planes_vuelo.v02.txt");
         Scanner myReader = null;
         var vuelos = new ArrayList<FlightModel>();
         //if(paraSim>0){

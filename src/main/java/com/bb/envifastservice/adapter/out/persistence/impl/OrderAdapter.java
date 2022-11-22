@@ -656,7 +656,7 @@ public class OrderAdapter implements ListPackagesPort, InsertOrderPort, PlanOrde
 
     @Override
     public int iniciarSim5Dias(String fecha, Integer dias, Integer paraSim) throws FileNotFoundException {
-        flightAdapter.generateNextWeekFlights(fecha, dias, paraSim);
+        //flightAdapter.generateNextWeekFlights(fecha, dias, paraSim);
         airportAdapter.generateNextWeekDateTime(fecha, dias, paraSim);
         generateSimulationOrder(fecha);
 

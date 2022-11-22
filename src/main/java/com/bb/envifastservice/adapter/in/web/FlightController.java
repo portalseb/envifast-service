@@ -8,6 +8,7 @@ import com.bb.envifastservice.hexagonal.WebAdapter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -39,7 +40,7 @@ public class FlightController {
     }
 
     @PostMapping(value = "/generate")
-    public void generarVuelos(@RequestParam(name = "fecha") String fecha,  @RequestParam(name = "dias") Integer dias, @RequestParam(name = "paraSim") Integer paraSim){
+    public void generarVuelos(@RequestParam(name = "fecha") String fecha,  @RequestParam(name = "dias") Integer dias, @RequestParam(name = "paraSim") Integer paraSim) throws IOException {
         generateNextWeekFlightsService.generateNextWeekFlights(fecha, dias,paraSim);
     }
     @PutMapping(value = "/restore")

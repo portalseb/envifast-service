@@ -5,13 +5,15 @@ import com.bb.envifastservice.application.port.out.GenerateNextWeekFlightsPort;
 import com.bb.envifastservice.hexagonal.UseCase;
 import lombok.RequiredArgsConstructor;
 
+import java.io.IOException;
+
 @UseCase
 @RequiredArgsConstructor
 public class GenerateNextWeekFlightsUseCase implements GenerateNextWeekFlightsService {
     private final GenerateNextWeekFlightsPort nextWeekFlightsPort;
 
     @Override
-    public void generateNextWeekFlights(String fecha, Integer dias, Integer paraSim) {
+    public void generateNextWeekFlights(String fecha, Integer dias, Integer paraSim) throws IOException {
         nextWeekFlightsPort.generateNextWeekFlights(fecha,dias,paraSim);
     }
 }
