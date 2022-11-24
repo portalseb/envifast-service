@@ -8,22 +8,23 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.LinkedList;
 
 public class LectorEnviosCorto {
-    private ArrayList<String> codigos;
-    private ArrayList<LocalDateTime> fechasEnvio;
-    private ArrayList<Aeropuerto> origenes;
-    private ArrayList<Aeropuerto> destinos;
-    private ArrayList<Aeropuerto> aeropuertos;
-    private ArrayList<Integer> cantPaquetes;
+    private LinkedList<String> codigos;
+    private LinkedList<LocalDateTime> fechasEnvio;
+    private LinkedList<Aeropuerto> origenes;
+    private LinkedList<Aeropuerto> destinos;
+    private LinkedList<Aeropuerto> aeropuertos;
+    private LinkedList<Integer> cantPaquetes;
     private LocalDate fechaDesde;
-    public LectorEnviosCorto(ArrayList<Aeropuerto> aeropuertos) {
-        this.origenes = new ArrayList<>();
-        this.destinos = new ArrayList<>();
+    public LectorEnviosCorto(LinkedList<Aeropuerto> aeropuertos) {
+        this.origenes = new LinkedList<>();
+        this.destinos = new LinkedList<>();
         this.aeropuertos = aeropuertos;
-        this.cantPaquetes = new ArrayList<>();
-        this.codigos = new ArrayList<>();
-        this.fechasEnvio = new ArrayList<>();
+        this.cantPaquetes = new LinkedList<>();
+        this.codigos = new LinkedList<>();
+        this.fechasEnvio = new LinkedList<>();
     }
 
     public LocalDate getFechaDesde() {
@@ -34,51 +35,51 @@ public class LectorEnviosCorto {
         this.fechaDesde = fechaDesde;
     }
 
-    public ArrayList<Aeropuerto> getOrigenes() {
+    public LinkedList<Aeropuerto> getOrigenes() {
         return origenes;
     }
 
-    public void setOrigenes(ArrayList<Aeropuerto> origenes) {
+    public void setOrigenes(LinkedList<Aeropuerto> origenes) {
         this.origenes = origenes;
     }
 
-    public ArrayList<Aeropuerto> getDestinos() {
+    public LinkedList<Aeropuerto> getDestinos() {
         return destinos;
     }
 
-    public void setDestinos(ArrayList<Aeropuerto> destinos) {
+    public void setDestinos(LinkedList<Aeropuerto> destinos) {
         this.destinos = destinos;
     }
 
-    public ArrayList<Aeropuerto> getAeropuertos() {
+    public LinkedList<Aeropuerto> getAeropuertos() {
         return aeropuertos;
     }
 
-    public void setAeropuertos(ArrayList<Aeropuerto> aeropuertos) {
+    public void setAeropuertos(LinkedList<Aeropuerto> aeropuertos) {
         this.aeropuertos = aeropuertos;
     }
 
-    public ArrayList<Integer> getCantPaquetes() {
+    public LinkedList<Integer> getCantPaquetes() {
         return cantPaquetes;
     }
 
-    public void setCantPaquetes(ArrayList<Integer> cantPaquetes) {
+    public void setCantPaquetes(LinkedList<Integer> cantPaquetes) {
         this.cantPaquetes = cantPaquetes;
     }
 
-    public ArrayList<String> getCodigos() {
+    public LinkedList<String> getCodigos() {
         return codigos;
     }
 
-    public void setCodigos(ArrayList<String> codigos) {
+    public void setCodigos(LinkedList<String> codigos) {
         this.codigos = codigos;
     }
 
-    public ArrayList<LocalDateTime> getFechasEnvio() {
+    public LinkedList<LocalDateTime> getFechasEnvio() {
         return fechasEnvio;
     }
 
-    public void setFechasEnvio(ArrayList<LocalDateTime> fechasEnvio) {
+    public void setFechasEnvio(LinkedList<LocalDateTime> fechasEnvio) {
         this.fechasEnvio = fechasEnvio;
     }
 

@@ -9,6 +9,7 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
+import java.util.LinkedList;
 
 public class Aco {
     private double solucionCosto;
@@ -367,7 +368,7 @@ public class Aco {
 
 
             //Se crean los paquetes (Esto se debe leer en la clase principal)
-            ArrayList<Paquete> paquetes = new ArrayList<Paquete>();
+            LinkedList<Paquete> paquetes = new LinkedList<Paquete>();
             for (int i = 0; i < 20; i++) {
                 Paquete paquete = new Paquete();//Ponerle el detalle
                 paquetes.add(paquete);

@@ -5,91 +5,91 @@ import com.bb.envifastservice.algo.ArcoAeropuerto;
 import com.bb.envifastservice.algo.Envio;
 import com.bb.envifastservice.algo.Paquete;
 
-import javax.persistence.criteria.CriteriaBuilder;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.LinkedList;
 
 public class AntSide {
-    public ArrayList<ArcoAeropuerto> caminos;//0: 1-2, 1:1-3, 2: 3-4, 3: 3-5, se debe cambiar
-    public ArrayList<Integer> posiblesCaminosIndices;
-    public ArrayList<Aeropuerto> nodos;//aeropuertos, se debe cambiar
-    public ArrayList<Double> costos;//costos (duracion de vuelos), no se cambia
-    public ArrayList<Double> visibilidad; //inversa de los costos, no se cambia
-    public ArrayList<Double> cantidadFeromonasCamino; //feromonas, no se cambia
-    public ArrayList<Double> probabilidadDeSerEscogido; //recta de probabilidad, no se cambia
-    public ArrayList<Integer> numeroVecesDeSerEscogigo; //no se esta usando
+    public LinkedList<ArcoAeropuerto> caminos;//0: 1-2, 1:1-3, 2: 3-4, 3: 3-5, se debe cambiar
+    public LinkedList<Integer> posiblesCaminosIndices;
+    public LinkedList<Aeropuerto> nodos;//aeropuertos, se debe cambiar
+    public LinkedList<Double> costos;//costos (duracion de vuelos), no se cambia
+    public LinkedList<Double> visibilidad; //inversa de los costos, no se cambia
+    public LinkedList<Double> cantidadFeromonasCamino; //feromonas, no se cambia
+    public LinkedList<Double> probabilidadDeSerEscogido; //recta de probabilidad, no se cambia
+    public LinkedList<Integer> numeroVecesDeSerEscogigo; //no se esta usando
     public static final double coeficienteEvaporacion = 0.9; //para actualizar feromonas, no se cambia
     public Aeropuerto nodoInicial; //cambiar tipo de dato
     public Aeropuerto nodoFinal; //cambiar tipo de dato
     public int tipoEnvio; //1: mismo continente, 2: diferentes contientes
     public double plazoMaximoEntrega;
 
-    public ArrayList<Paquete> paquetesEnvio;
+    public LinkedList<Paquete> paquetesEnvio;
 
     public LocalDateTime fechaInicial;
     public int maximoDeIteraciones;
 
     public AntSide(){
-        caminos = new ArrayList<ArcoAeropuerto>();
+        caminos = new LinkedList<ArcoAeropuerto>();
         //caminos = new ArrayList<ArcoAeropuerto>();
-        nodos = new ArrayList<Aeropuerto>();
+        nodos = new LinkedList<Aeropuerto>();
         //nodos = new ArrayList <Aeropuerto>();
-        costos = new ArrayList<Double>();
-        visibilidad = new ArrayList<Double>();
-        cantidadFeromonasCamino = new ArrayList<Double>();
-        probabilidadDeSerEscogido = new ArrayList<Double>();
-        numeroVecesDeSerEscogigo = new ArrayList<Integer>();
-        posiblesCaminosIndices = new ArrayList<Integer>();
-        paquetesEnvio = new ArrayList<Paquete>();
+        costos = new LinkedList<Double>();
+        visibilidad = new LinkedList<Double>();
+        cantidadFeromonasCamino = new LinkedList<Double>();
+        probabilidadDeSerEscogido = new LinkedList<Double>();
+        numeroVecesDeSerEscogigo = new LinkedList<Integer>();
+        posiblesCaminosIndices = new LinkedList<Integer>();
+        paquetesEnvio = new LinkedList<Paquete>();
     }
 
     public AntSide(ArrayList<Aeropuerto> aeropuertos, ArrayList<ArcoAeropuerto> vuelos){
-        caminos = new ArrayList<ArcoAeropuerto>(vuelos);
-        nodos = new ArrayList<Aeropuerto>(aeropuertos);
-        costos = new ArrayList<Double>(vuelos.size());
-        visibilidad = new ArrayList<Double>(vuelos.size());
-        cantidadFeromonasCamino = new ArrayList<Double>();
+        caminos = new LinkedList<ArcoAeropuerto>(vuelos);
+        nodos = new LinkedList<Aeropuerto>(aeropuertos);
+        costos = new LinkedList<Double>();
+        visibilidad = new LinkedList<Double>();
+        cantidadFeromonasCamino = new LinkedList<Double>();
         for(int i=0;i<vuelos.size();i++)
             cantidadFeromonasCamino.add(0.1);
-        probabilidadDeSerEscogido = new ArrayList<Double>(vuelos.size());
-        numeroVecesDeSerEscogigo = new ArrayList<Integer>(vuelos.size());
-        posiblesCaminosIndices = new ArrayList<Integer>();
-        paquetesEnvio = new ArrayList<Paquete>();
+        probabilidadDeSerEscogido = new LinkedList<Double>();
+        numeroVecesDeSerEscogigo = new LinkedList<Integer>();
+        posiblesCaminosIndices = new LinkedList<Integer>();
+        paquetesEnvio = new LinkedList<Paquete>();
     }
 
     public AntSide(int numeroAristas, int numeroNodos) {
-        caminos = new ArrayList<ArcoAeropuerto>(numeroAristas);
+        caminos = new LinkedList<ArcoAeropuerto>();
         //caminos = new ArrayList<ArcoAeropuerto>(numeroAristas);
-        nodos = new ArrayList<Aeropuerto>(numeroNodos);
+        nodos = new LinkedList<Aeropuerto>();
         //nodos = new ArrayList <Aeropuerto>(numeroNodos);
-        costos = new ArrayList<Double>(numeroAristas);
-        visibilidad = new ArrayList<Double>(numeroAristas);
-        cantidadFeromonasCamino = new ArrayList<Double>(numeroAristas);
+        costos = new LinkedList<Double>();
+        visibilidad = new LinkedList<Double>();
+        cantidadFeromonasCamino = new LinkedList<Double>();
         for(int i=0;i<numeroAristas;i++){
             cantidadFeromonasCamino.add(0.1);
         }
-        probabilidadDeSerEscogido = new ArrayList<Double>(numeroAristas);
-        numeroVecesDeSerEscogigo = new ArrayList<Integer>(numeroAristas);
-        posiblesCaminosIndices = new ArrayList<Integer>();
-        paquetesEnvio = new ArrayList<Paquete>();
+        probabilidadDeSerEscogido = new LinkedList<Double>();
+        numeroVecesDeSerEscogigo = new LinkedList<Integer>();
+        posiblesCaminosIndices = new LinkedList<Integer>();
+        paquetesEnvio = new LinkedList<Paquete>();
     }
 
     public AntSide(int numeroAristas, int numeroNodos, Aeropuerto nodoIni, Aeropuerto nodoFin) {
-        caminos = new ArrayList<ArcoAeropuerto>(numeroAristas);
+        caminos = new LinkedList<ArcoAeropuerto>();
         //caminos = new ArrayList<ArcoAeropuerto>(numeroAristas);
-        nodos = new ArrayList<Aeropuerto>(numeroNodos);
+        nodos = new LinkedList<Aeropuerto>();
         //nodos = new ArrayList <Aeropuerto>(numeroNodos);
-        costos = new ArrayList<Double>(numeroAristas);
-        visibilidad = new ArrayList<Double>(numeroAristas);
-        cantidadFeromonasCamino = new ArrayList<Double>(numeroAristas);
+        costos = new LinkedList<Double>();
+        visibilidad = new LinkedList<Double>();
+        cantidadFeromonasCamino = new LinkedList<Double>();
         for(int i=0;i<numeroAristas;i++){
             cantidadFeromonasCamino.add(0.1);
         }
-        probabilidadDeSerEscogido = new ArrayList<Double>(numeroAristas);
-        numeroVecesDeSerEscogigo = new ArrayList<Integer>(numeroAristas);
+        probabilidadDeSerEscogido = new LinkedList<Double>();
+        numeroVecesDeSerEscogigo = new LinkedList<Integer>();
 
         this.nodoInicial = nodoIni;
         this.nodoFinal = nodoFin;
@@ -101,23 +101,23 @@ public class AntSide {
             this.tipoEnvio = 2;
             this.plazoMaximoEntrega=2880.00; //2 dias en minutos
         }
-        posiblesCaminosIndices = new ArrayList<Integer>();
-        paquetesEnvio = new ArrayList<Paquete>();
+        posiblesCaminosIndices = new LinkedList<Integer>();
+        paquetesEnvio = new LinkedList<Paquete>();
     }
 
-    public AntSide(int numeroAristas, int numeroNodos, Aeropuerto nodoIni, Aeropuerto nodoFin, ArrayList<Paquete> paquetes) {
-        caminos = new ArrayList<ArcoAeropuerto>(numeroAristas);
+    public AntSide(int numeroAristas, int numeroNodos, Aeropuerto nodoIni, Aeropuerto nodoFin, LinkedList<Paquete> paquetes) {
+        caminos = new LinkedList<ArcoAeropuerto>();
         //caminos = new ArrayList<ArcoAeropuerto>(numeroAristas);
-        nodos = new ArrayList<Aeropuerto>(numeroNodos);
+        nodos = new LinkedList<Aeropuerto>();
         //nodos = new ArrayList <Aeropuerto>(numeroNodos);
-        costos = new ArrayList<Double>(numeroAristas);
-        visibilidad = new ArrayList<Double>(numeroAristas);
-        cantidadFeromonasCamino = new ArrayList<Double>(numeroAristas);
+        costos = new LinkedList<Double>();
+        visibilidad = new LinkedList<Double>();
+        cantidadFeromonasCamino = new LinkedList<Double>();
         for(int i=0;i<numeroAristas;i++){
             cantidadFeromonasCamino.add(0.1);
         }
-        probabilidadDeSerEscogido = new ArrayList<Double>(numeroAristas);
-        numeroVecesDeSerEscogigo = new ArrayList<Integer>(numeroAristas);
+        probabilidadDeSerEscogido = new LinkedList<Double>();
+        numeroVecesDeSerEscogigo = new LinkedList<Integer>();
 
         this.nodoInicial = nodoIni;
         this.nodoFinal = nodoFin;
@@ -129,23 +129,23 @@ public class AntSide {
             this.tipoEnvio = 2;
             this.plazoMaximoEntrega=2880.00; //2 dias en minutos
         }
-        posiblesCaminosIndices = new ArrayList<Integer>();
+        posiblesCaminosIndices = new LinkedList<Integer>();
         paquetesEnvio = paquetes;
     }
 
-    public AntSide(int numeroAristas, int numeroNodos, Aeropuerto nodoIni, Aeropuerto nodoFin, ArrayList<Paquete> paquetes,LocalDateTime fechaIni) {
-        caminos = new ArrayList<ArcoAeropuerto>(numeroAristas);
+    public AntSide(int numeroAristas, int numeroNodos, Aeropuerto nodoIni, Aeropuerto nodoFin, LinkedList<Paquete> paquetes,LocalDateTime fechaIni) {
+        caminos = new LinkedList<ArcoAeropuerto>();
         //caminos = new ArrayList<ArcoAeropuerto>(numeroAristas);
-        nodos = new ArrayList<Aeropuerto>(numeroNodos);
+        nodos = new LinkedList<Aeropuerto>();
         //nodos = new ArrayList <Aeropuerto>(numeroNodos);
-        costos = new ArrayList<Double>(numeroAristas);
-        visibilidad = new ArrayList<Double>(numeroAristas);
-        cantidadFeromonasCamino = new ArrayList<Double>(numeroAristas);
+        costos = new LinkedList<Double>();
+        visibilidad = new LinkedList<Double>();
+        cantidadFeromonasCamino = new LinkedList<Double>();
         for(int i=0;i<numeroAristas;i++){
             cantidadFeromonasCamino.add(0.1);
         }
-        probabilidadDeSerEscogido = new ArrayList<Double>(numeroAristas);
-        numeroVecesDeSerEscogigo = new ArrayList<Integer>(numeroAristas);
+        probabilidadDeSerEscogido = new LinkedList<Double>();
+        numeroVecesDeSerEscogigo = new LinkedList<Integer>();
 
         this.nodoInicial = nodoIni;
         this.nodoFinal = nodoFin;
@@ -157,7 +157,7 @@ public class AntSide {
             this.tipoEnvio = 2;
             this.plazoMaximoEntrega=2880.00; //2 dias en minutos
         }
-        posiblesCaminosIndices = new ArrayList<Integer>();
+        posiblesCaminosIndices = new LinkedList<Integer>();
         paquetesEnvio = paquetes;
         fechaInicial = fechaIni;
     }
@@ -198,10 +198,10 @@ public class AntSide {
             this.tipoEnvio = 2;
             this.plazoMaximoEntrega=2880.00; //2 dias en minutos
         }
-        paquetesEnvio = new ArrayList<Paquete>();
+        paquetesEnvio = new LinkedList<Paquete>();
     }
 
-    public void setNodoInicialFinalPaquetes(Aeropuerto nodoInicial, Aeropuerto nodoFinal, ArrayList<Paquete> paquetes) {
+    public void setNodoInicialFinalPaquetes(Aeropuerto nodoInicial, Aeropuerto nodoFinal, LinkedList<Paquete> paquetes) {
         this.nodoInicial = nodoInicial;
         this.nodoFinal = nodoFinal;
         if(nodoInicial.getCiudad().getContinente().equals(nodoFinal.getCiudad().getContinente())) {
@@ -223,11 +223,11 @@ public class AntSide {
         this.plazoMaximoEntrega = plazoMaximoEntrega;
     }
 
-    public ArrayList<Paquete> getPaquetesEnvio() {
+    public LinkedList<Paquete> getPaquetesEnvio() {
         return paquetesEnvio;
     }
 
-    public void setPaquetesEnvio(ArrayList<Paquete> paquetesEnvio) {
+    public void setPaquetesEnvio(LinkedList<Paquete> paquetesEnvio) {
         this.paquetesEnvio = paquetesEnvio;
     }
 
@@ -237,71 +237,71 @@ public class AntSide {
     public double getPlazoMaximoEntrega() {
         return plazoMaximoEntrega;
     }
-    public ArrayList<Integer> getPosiblesCaminosIndices() {
+    public LinkedList<Integer> getPosiblesCaminosIndices() {
         return posiblesCaminosIndices;
     }
 
-    public void setPosiblesCaminosIndices(ArrayList<Integer> posiblesCaminosIndices) {
+    public void setPosiblesCaminosIndices(LinkedList<Integer> posiblesCaminosIndices) {
         this.posiblesCaminosIndices = posiblesCaminosIndices;
     }
 
-    public ArrayList<ArcoAeropuerto> getCaminos() {
+    public LinkedList<ArcoAeropuerto> getCaminos() {
         return caminos;
     }
 
-    public void setCaminos(ArrayList<ArcoAeropuerto> caminos) {
+    public void setCaminos(LinkedList<ArcoAeropuerto> caminos) {
         this.caminos = caminos;
-        cantidadFeromonasCamino = new ArrayList<Double>(caminos.size());
+        cantidadFeromonasCamino = new LinkedList<Double>();
         for(int i=0;i<caminos.size();i++) {
             cantidadFeromonasCamino.add(0.1);
         }
     }
 
-    public ArrayList<Aeropuerto> getNodos() {
+    public LinkedList<Aeropuerto> getNodos() {
         return nodos;
     }
 
-    public void setNodos(ArrayList<Aeropuerto> nodos) {
+    public void setNodos(LinkedList<Aeropuerto> nodos) {
         this.nodos = nodos;
     }
 
-    public ArrayList<Double> getCostos() {
+    public LinkedList<Double> getCostos() {
         return costos;
     }
 
-    public void setCostos(ArrayList<Double> costos) {
+    public void setCostos(LinkedList<Double> costos) {
         this.costos = costos;
     }
 
-    public ArrayList<Double> getVisibilidad() {
+    public LinkedList<Double> getVisibilidad() {
         return visibilidad;
     }
 
-    public void setVisibilidad(ArrayList<Double> visibilidad) {
+    public void setVisibilidad(LinkedList<Double> visibilidad) {
         this.visibilidad = visibilidad;
     }
 
-    public ArrayList<Double> getCantidadFeromonasCamino() {
+    public LinkedList<Double> getCantidadFeromonasCamino() {
         return cantidadFeromonasCamino;
     }
 
-    public void setCantidadFeromonasCamino(ArrayList<Double> cantidadFeromonasCamino) {
+    public void setCantidadFeromonasCamino(LinkedList<Double> cantidadFeromonasCamino) {
         this.cantidadFeromonasCamino = cantidadFeromonasCamino;
     }
 
-    public ArrayList<Double> getProbabilidadDeSerEscogido() {
+    public LinkedList<Double> getProbabilidadDeSerEscogido() {
         return probabilidadDeSerEscogido;
     }
 
-    public void setProbabilidadDeSerEscogido(ArrayList<Double> probabilidadDeSerEscogido) {
+    public void setProbabilidadDeSerEscogido(LinkedList<Double> probabilidadDeSerEscogido) {
         this.probabilidadDeSerEscogido = probabilidadDeSerEscogido;
     }
 
-    public ArrayList<Integer> getNumeroVecesDeSerEscogigo() {
+    public LinkedList<Integer> getNumeroVecesDeSerEscogigo() {
         return numeroVecesDeSerEscogigo;
     }
 
-    public void setNumeroVecesDeSerEscogigo(ArrayList<Integer> numeroVecesDeSerEscogigo) {
+    public void setNumeroVecesDeSerEscogigo(LinkedList<Integer> numeroVecesDeSerEscogigo) {
         this.numeroVecesDeSerEscogigo = numeroVecesDeSerEscogigo;
     }
 
@@ -415,8 +415,8 @@ public class AntSide {
         }
     }
 
-    public ArrayList<ArcoAeropuerto> sacarArcosPosibles(ArrayList<ArcoAeropuerto> arcosGeneral, Envio envio){
-        ArrayList<ArcoAeropuerto> arcos = new ArrayList<>();
+    public LinkedList<ArcoAeropuerto> sacarArcosPosibles(LinkedList<ArcoAeropuerto> arcosGeneral, Envio envio){
+        LinkedList<ArcoAeropuerto> arcos = new LinkedList<>();
         if(envio.getOrigen().getCiudad().getContinente().equals(envio.getDestino().getCiudad().getContinente())) {
             for (int i = 0; i < arcosGeneral.size(); i++) {
                 ArcoAeropuerto arco = arcosGeneral.get(i);

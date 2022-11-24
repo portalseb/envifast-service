@@ -20,9 +20,10 @@ public interface OrderRepository extends JpaRepository<OrderModel, Long> {
     @Query("Select o from OrderModel o WHERE o.emisorDocumentoNumero like %:DocNo% or o.destinatarioDocumentoNumero like %:DocNo% and o.token = :token and o.active=1")
     Optional<OrderModel> queryOrdersWithDocNoandToken(@Param("DocNo")String docNo, @Param("token")String token);
     //OrderModel insertOrder(@Param("envio") OrderModel envio);
-    @Query("SELECT p from OrderModel  p WHERE p.id =:id and p.active=:active")
+    @Query("SELECT p from OrderModel  p WHERE p.Id =:id and p.active=:active")
     OrderModel findByIdOfOrder(@Param("id") Long id, @Param("active") int active);
 
     @Query("SELECT o from OrderModel  o WHERE o.active =:active and o.planned =:planned and o.forSim =:forSim" )
     List<OrderModel> findAllByPlanified(@Param("planned") int planned, @Param("forSim")int forSim, @Param("active") int active);
+    List<OrderModel> findTop100ByPlannedAndForSimAndActive(int planned,int forSim, int active);
 }

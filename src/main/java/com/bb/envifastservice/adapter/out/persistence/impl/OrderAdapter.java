@@ -8,7 +8,6 @@ import com.bb.envifastservice.application.port.out.*;
 import com.bb.envifastservice.hexagonal.PersistenceAdapter;
 import com.bb.envifastservice.models.*;
 import lombok.RequiredArgsConstructor;
-import org.springframework.boot.autoconfigure.couchbase.CouchbaseProperties;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -32,14 +31,14 @@ public class OrderAdapter implements ListPackagesPort, InsertOrderPort, PlanOrde
     @Override
     public List<Envio> listByFields(String input) {
         var registros = orderRepository.findAllByFieldsLikeAndActive(input,0);
-        var paquetes = new ArrayList<Paquete>();
-        var envios = new ArrayList<Envio>();
-        var vuelos = new ArrayList<ArcoAeropuerto>();
+        var paquetes = new LinkedList<Paquete>();
+        var envios = new LinkedList<Envio>();
+        var vuelos = new LinkedList<ArcoAeropuerto>();
         for (OrderModel order: registros
              ) {
             var envio = new Envio();
-            paquetes = new ArrayList<Paquete>();
-            vuelos = new ArrayList<ArcoAeropuerto>();
+            paquetes = new LinkedList<Paquete>();
+            vuelos = new LinkedList<ArcoAeropuerto>();
             convertToEnvio(paquetes, order, envio, vuelos);
             envios.add(envio);
         }
@@ -47,7 +46,7 @@ public class OrderAdapter implements ListPackagesPort, InsertOrderPort, PlanOrde
         return envios;
     }
 
-    private void convertToEnvio(ArrayList<Paquete> paquetes, OrderModel order, Envio envio, ArrayList<ArcoAeropuerto>vuelos) {
+    private void convertToEnvio(LinkedList<Paquete> paquetes, OrderModel order, Envio envio, LinkedList<ArcoAeropuerto>vuelos) {
         envio.setCodigo(order.getCodigo());
         envio.setCantidadPaquetes(order.getCantidad());
         var destino = airportRepository.findByCityNameAndActive(order.getDestino(),1);
@@ -181,7 +180,7 @@ public class OrderAdapter implements ListPackagesPort, InsertOrderPort, PlanOrde
 
         orderRepository.save(envioNuevo);
         envio.setId(envioNuevo.getId());
-        envio.setPaquetes(new ArrayList<Paquete>());
+        envio.setPaquetes(new LinkedList<Paquete>());
         for(int i=0;i<envio.getCantidadPaquetes();i++) {
             Paquete paqueteNuevo = new Paquete();
             paqueteNuevo.setId(envioNuevo.getPacks().get(i).getId());
@@ -216,7 +215,7 @@ public class OrderAdapter implements ListPackagesPort, InsertOrderPort, PlanOrde
             Envio envio = new Envio();
             envio.setId(order.getId());
             envio.setFechaEnvio(order.getFechaEnvio());
-            envio.setPaquetes(new ArrayList<>());
+            envio.setPaquetes(new LinkedList<>());
             for(PackageModel pack: order.getPacks()){
                     Paquete paquete = new Paquete();
                     paquete.setId(pack.getId());
@@ -244,8 +243,8 @@ public class OrderAdapter implements ListPackagesPort, InsertOrderPort, PlanOrde
         //Planear y guardar en BD las rutas para los envios
         var aeropuertosRegistros = airportRepository.findAllByActive(1);
         var arcosGeneralRegistros = flightRepository.findAllByActiveRange(1,envioFechaMin, envioFechaMax,0);
-        ArrayList<Aeropuerto> aeropuertos= new ArrayList<>();
-        ArrayList<ArcoAeropuerto> arcosGeneral = new ArrayList<>();
+        LinkedList<Aeropuerto> aeropuertos= new LinkedList<>();
+        LinkedList<ArcoAeropuerto> arcosGeneral = new LinkedList<>();
 
 
         System.out.println("Ya inicializo");
@@ -320,7 +319,7 @@ public class OrderAdapter implements ListPackagesPort, InsertOrderPort, PlanOrde
 
         for(int i=0;i<envios.size();i++){
             //Variables... modificar
-            ArrayList<ArcoAeropuerto> arcos = ambiente.sacarArcosPosibles(arcosGeneral,envios.get(i));
+            LinkedList<ArcoAeropuerto> arcos = ambiente.sacarArcosPosibles(arcosGeneral,envios.get(i));
             ambiente.setCaminos(arcos);
             System.out.println("Cantidad de arcos");
             System.out.println(arcos.size());
@@ -339,7 +338,7 @@ public class OrderAdapter implements ListPackagesPort, InsertOrderPort, PlanOrde
             //ambiente.setPaquetesEnvio(envios.get(i).getPaquetes());
             ambiente.setFechaInicial(envios.get(i).getFechaEnvio());
             for(int l=0;l<envios.get(i).getPaquetes().size();l++) {
-                ArrayList<Paquete> packEnvio = new ArrayList<>();
+                LinkedList<Paquete> packEnvio = new LinkedList<>();
                 packEnvio.add(envios.get(i).getPaquetes().get(l));
                 ambiente.setPaquetesEnvio(packEnvio);
 
@@ -440,8 +439,8 @@ public class OrderAdapter implements ListPackagesPort, InsertOrderPort, PlanOrde
         //Planear y guardar en BD las rutas para los envios
         var aeropuertosRegistros = airportRepository.findAllByActive(1);
         var arcosGeneralRegistros = flightRepository.findAllByActiveRange(1,envioFechaMin, envioFechaMax,1);
-        ArrayList<Aeropuerto> aeropuertos= new ArrayList<>();
-        ArrayList<ArcoAeropuerto> arcosGeneral = new ArrayList<>();
+        LinkedList<Aeropuerto> aeropuertos= new LinkedList<>();
+        LinkedList<ArcoAeropuerto> arcosGeneral = new LinkedList<>();
 
 
         for(AirportsModel airport: aeropuertosRegistros){
@@ -525,7 +524,7 @@ public class OrderAdapter implements ListPackagesPort, InsertOrderPort, PlanOrde
             envio.setOrigen(lectorEnviosCorto.getOrigenes().get(j));
             envio.setDestino(lectorEnviosCorto.getDestinos().get(j));
             envio.setCantidadPaquetes(lectorEnviosCorto.getCantPaquetes().get(j));
-            envio.setPaquetes(new ArrayList<Paquete>());
+            envio.setPaquetes(new LinkedList<Paquete>());
 
             for (int k = 0; k < envio.getCantidadPaquetes(); k++) {
                 Paquete paquete = new Paquete();
@@ -533,7 +532,7 @@ public class OrderAdapter implements ListPackagesPort, InsertOrderPort, PlanOrde
             }
 
             //Algoritmo seteo de datos
-            ArrayList<ArcoAeropuerto> arcos = ambiente.sacarArcosPosibles(arcosGeneral,envio);
+            LinkedList<ArcoAeropuerto> arcos = ambiente.sacarArcosPosibles(arcosGeneral,envio);
             ambiente.setCaminos(arcos);
             System.out.println("Cantidad de arcos");
             System.out.println(arcos.size());
@@ -642,9 +641,9 @@ public class OrderAdapter implements ListPackagesPort, InsertOrderPort, PlanOrde
         var orderOpt = orderRepository.queryOrdersWithDocNoandToken(docNo,token);
         if(orderOpt.isPresent()){
             var order = orderOpt.get();
-            var paquetes = new ArrayList<Paquete>();
+            var paquetes = new LinkedList<Paquete>();
             var envio = new Envio();
-            var vuelos = new ArrayList<ArcoAeropuerto>();
+            var vuelos = new LinkedList<ArcoAeropuerto>();
             convertToEnvio(paquetes,order,envio, vuelos);
             return envio;
 
@@ -666,16 +665,16 @@ public class OrderAdapter implements ListPackagesPort, InsertOrderPort, PlanOrde
 
     @Override
     public int generateSimulationOrders(String fecha, String timeInf, String timeSup, Integer forSim) throws IOException {
-        var envios = new ArrayList<Envio>();
+        var envios = new LinkedList<Envio>();
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /*Aqui leeriamos los envios con forSim=1 que aun no se han planificado*/
-        var enviosBD = orderRepository.findAllByPlanified(0,1,1);
+        var enviosBD = orderRepository.findTop100ByPlannedAndForSimAndActive(0,1,1);
         for(OrderModel order: enviosBD) {
             Envio envio = new Envio();
             envio.setId(order.getId());
             envio.setCodigo(order.getCodigo());
             envio.setFechaEnvio(order.getFechaEnvio());
-            envio.setPaquetes(new ArrayList<>());
+            envio.setPaquetes(new LinkedList<>());
             for(PackageModel pack: order.getPacks()){
                 Paquete paquete = new Paquete();
                 paquete.setId(pack.getId());
@@ -714,8 +713,8 @@ public class OrderAdapter implements ListPackagesPort, InsertOrderPort, PlanOrde
         //Planear y guardar en BD las rutas para los envios
         var aeropuertosRegistros = airportRepository.findAllByActive(1);
         var arcosGeneralRegistros = flightRepository.findAllByActiveRange(1,envioFechaMin, envioFechaMax,forSim);
-        ArrayList<Aeropuerto> aeropuertos= new ArrayList<>();
-        ArrayList<ArcoAeropuerto> arcosGeneral = new ArrayList<>();
+        LinkedList<Aeropuerto> aeropuertos= new LinkedList<>();
+        LinkedList<ArcoAeropuerto> arcosGeneral = new LinkedList<>();
 
 
         for(AirportsModel airport: aeropuertosRegistros){
@@ -794,7 +793,7 @@ public class OrderAdapter implements ListPackagesPort, InsertOrderPort, PlanOrde
         /**Planificar los que no fueron planificados*/
         for(int j=0;j<cantNoPlan;j++){
             //Seteo de datos de algoritmo
-            ArrayList<ArcoAeropuerto> arcos = ambiente.sacarArcosPosibles(arcosGeneral,envios.get(j));
+            LinkedList<ArcoAeropuerto> arcos = ambiente.sacarArcosPosibles(arcosGeneral,envios.get(j));
             int origen =0;
             int destino = 0;
             for(int k=0;k<aeropuertos.size();k++){
@@ -813,7 +812,7 @@ public class OrderAdapter implements ListPackagesPort, InsertOrderPort, PlanOrde
             ambiente.setFechaInicial(envios.get(j).getFechaEnvio());
 
             for(int l=0;l<envios.get(j).getPaquetes().size();l++){
-                ArrayList<Paquete> packEnvio = new ArrayList<>();
+                LinkedList<Paquete> packEnvio = new LinkedList<>();
                 packEnvio.add(envios.get(j).getPaquetes().get(l));
                 ambiente.setPaquetesEnvio(packEnvio);
 
@@ -848,7 +847,7 @@ public class OrderAdapter implements ListPackagesPort, InsertOrderPort, PlanOrde
             envio.setOrigen(lectorEnviosCorto.getOrigenes().get(j));
             envio.setDestino(lectorEnviosCorto.getDestinos().get(j));
             envio.setCantidadPaquetes(lectorEnviosCorto.getCantPaquetes().get(j));
-            envio.setPaquetes(new ArrayList<Paquete>());
+            envio.setPaquetes(new LinkedList<Paquete>());
 
             for (int k = 0; k < envio.getCantidadPaquetes(); k++) {
                 Paquete paquete = new Paquete();
@@ -856,7 +855,7 @@ public class OrderAdapter implements ListPackagesPort, InsertOrderPort, PlanOrde
             }
 
             //Algoritmo seteo de datos
-            ArrayList<ArcoAeropuerto> arcos = ambiente.sacarArcosPosibles(arcosGeneral,envio);
+            LinkedList<ArcoAeropuerto> arcos = ambiente.sacarArcosPosibles(arcosGeneral,envio);
             int origen =0;
             int destino = 0;
             for(int k=0;k<aeropuertos.size();k++){
@@ -879,7 +878,7 @@ public class OrderAdapter implements ListPackagesPort, InsertOrderPort, PlanOrde
             ambiente.setFechaInicial(envio.getFechaEnvio());
 
             for(int l=0;l<envio.getPaquetes().size();l++){
-                ArrayList<Paquete> packEnvio = new ArrayList<>();
+                LinkedList<Paquete> packEnvio = new LinkedList<>();
                 packEnvio.add(envio.getPaquetes().get(l));
                 ambiente.setPaquetesEnvio(packEnvio);
 
@@ -1020,7 +1019,7 @@ public class OrderAdapter implements ListPackagesPort, InsertOrderPort, PlanOrde
 
         return 1;
     }
-    LocalDateTime fechaMaxEnvio(ArrayList<Envio> envios){
+    LocalDateTime fechaMaxEnvio(LinkedList<Envio> envios){
         LocalDateTime fechaMax=LocalDateTime.of(LocalDate.of(2030,12,31),LocalTime.of(0,0));
         for(int i=0;i<envios.size();i++){
             Envio envio = new Envio();

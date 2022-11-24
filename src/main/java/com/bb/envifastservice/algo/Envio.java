@@ -5,6 +5,7 @@ import lombok.Data;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.LinkedList;
 
 @Data
 public class Envio {
@@ -27,7 +28,7 @@ public class Envio {
     private String destinatarioCorreo;
     private String destinatarioTelefonoNumero;
 
-    private ArrayList<Paquete> paquetes;
+    private LinkedList<Paquete> paquetes;
     private Integer cantidadPaquetes;
 
     private Aeropuerto origen;
