@@ -34,6 +34,7 @@ public class Envio {
     private Aeropuerto destino;
 
     private LocalDateTime fechaEnvio;
+    private LocalDateTime fechaMax;
     private double tiempoTotal;
 
     private String token;

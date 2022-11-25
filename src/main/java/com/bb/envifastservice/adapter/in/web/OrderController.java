@@ -32,7 +32,7 @@ public class OrderController {
     }
 
     @PostMapping(value = "/plan")
-    public int planificarEnvios(@RequestBody List<Envio> envios){return planOrderRouteService.planOrderRoute(envios);}
+    public int planificarEnvios(){return planOrderRouteService.planOrderRoute();}
 
     @PostMapping(value = "/cargar")
     public int cargarEnvios(@RequestParam(name = "fecha") String fecha) throws FileNotFoundException {

@@ -30,6 +30,8 @@ public interface FlightRepository extends JpaRepository<FlightModel, Long> {
     FlightModel findByFlightId(@Param("idFlight") Long idFlight);
     @Query(value = "CALL restore_flight_for_sim(:fechaIni, :fechaFin, :forSim, :active);", nativeQuery = true)
     void restoreFlights(@Param("fechaIni")LocalDateTime fechaIni,@Param("fechaFin") LocalDateTime fechaFin,@Param("forSim") Integer forSim,@Param("active") Integer active);
+    //@Procedure(procedureName = "restore_flight_for_sim")
+    //void restoreFlights(@Param("fechaIni")LocalDateTime fechaIni,@Param("fechaFin") LocalDateTime fechaFin,@Param("forSim") Integer forSim,@Param("active") Integer active);
 
     //@Query("SELECT a from FlightModel a where a.departureTime = :fechaIni and a.departureAirport.id = :origen and a.arrivalAirport.id =: destino and a.forSim = :forSim and a.active = :active")
     //FlightModel findFlightByDateTimeDepartureArrival(@Param("fechaIni")LocalDateTime fechaIni, @Param("origen")Long origen, @Param("destino")Long destino, @Param("forSim") Integer forSim, @Param("active") int active);

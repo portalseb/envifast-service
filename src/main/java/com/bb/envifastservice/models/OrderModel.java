@@ -32,7 +32,7 @@ public class OrderModel {
     private String destinatarioDocumentoNumero;
     private String destinatarioCorreo;
     private String destinatarioTelefonoNumero;
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
     @JoinColumn(name="order_id")
     private List<PackageModel> packs = new ArrayList<>();
     private Integer cantidad;

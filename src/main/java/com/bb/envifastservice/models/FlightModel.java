@@ -30,7 +30,7 @@ public class FlightModel {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "_airport_arrival_id", insertable = true, updatable = true)
     private AirportsModel arrivalAirport;
-    @ManyToMany(mappedBy = "route")
+    @ManyToMany(fetch = FetchType.EAGER, mappedBy = "route")
     private List<PackageModel> cargo = new ArrayList<>();
     @Column(name = "_departure_date")
     private LocalDateTime departureTime;

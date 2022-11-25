@@ -22,7 +22,7 @@ public class PackageModel {
     @GenericGenerator(name="system-uuid", strategy = "uuid")
     private String id;
     private LocalDateTime dateTime;
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "route",
             joinColumns = @JoinColumn(name = "package_id"),

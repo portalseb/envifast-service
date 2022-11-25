@@ -13,6 +13,6 @@ import java.util.List;
 public class PlanOrderRouteUseCase implements PlanOrderRouteService {
     private final PlanOrderRoutePort planOrderRoutePort;
     @Override
-    public int planOrderRoute(List<Envio> envios){return planOrderRoutePort.planOrdRoute(envios);}
+    public int planOrderRoute(){return planOrderRoutePort.planOrdRoute();}
 
 }
