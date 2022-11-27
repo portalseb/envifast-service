@@ -1,5 +1,6 @@
 package com.bb.envifastservice.adapter.out.persistence.impl;
 
+import com.bb.envifastservice.adapter.out.persistence.dtos.PackagePlanified;
 import com.bb.envifastservice.adapter.out.persistence.repos.*;
 import com.bb.envifastservice.algo.*;
 import com.bb.envifastservice.algo.antColony.Aco;
@@ -11,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.couchbase.CouchbaseProperties;
 import org.springframework.scheduling.annotation.Scheduled;
 
+import javax.transaction.Transactional;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.time.LocalDate;
@@ -20,7 +22,7 @@ import java.util.*;
 
 @PersistenceAdapter
 @RequiredArgsConstructor
-public class OrderAdapter implements ListPackagesPort, InsertOrderPort, PlanOrderRoutePort, GenerateSimulationOrderPort, GetOrderForUserPort, IniciarSim5DiasPort, GenerateOrderForSimPort {
+public class OrderAdapter implements ListPackagesPort, InsertOrderPort, PlanOrderRoutePort, GenerateSimulationOrderPort, GetOrderForUserPort, IniciarSim5DiasPort, GenerateOrderForSimPort, RestoreUnplanOrderPort, GetPlanifiedOrderPort {
     private final PackageRepository packageRepository;
     private final AirportRepository airportRepository;
     private final OrderRepository orderRepository;
@@ -175,6 +177,7 @@ public class OrderAdapter implements ListPackagesPort, InsertOrderPort, PlanOrde
             paqueteNuevo.setOrigen(aeropuertoOrigen.getCityName());
             paqueteNuevo.setDestino(aeropuertoDestino.getCityName());
             paqueteNuevo.setActive(1);
+            paqueteNuevo.setPlannedP(0);
             paquetes.add(paqueteNuevo);
         }
 
@@ -209,7 +212,7 @@ public class OrderAdapter implements ListPackagesPort, InsertOrderPort, PlanOrde
     }
 
     @Override
-    @Scheduled(initialDelay = 10000,fixedDelay = 600000)
+    //@Scheduled(initialDelay = 10000,fixedDelay = 600000)
     public int planOrdRoute(){
         //Menor fecha de envios
         var enviosBD = orderRepository.findAllByPlanified(0,0,1);
@@ -392,6 +395,7 @@ public class OrderAdapter implements ListPackagesPort, InsertOrderPort, PlanOrde
                         flights.add(flight);
                     }
                     orderBD.getPacks().get(orderBD.getPacks().indexOf(packageBD)).setRoute(flights);
+                    orderBD.getPacks().get(orderBD.getPacks().indexOf(packageBD)).setPlannedP(1);
                 }
                 else{
                     plan=0;
@@ -740,6 +744,7 @@ public class OrderAdapter implements ListPackagesPort, InsertOrderPort, PlanOrde
                 paqueteNuevo.setOrigen(aeropuertoOrigen.getCityName());
                 paqueteNuevo.setDestino(aeropuertoDestino.getCityName());
                 paqueteNuevo.setActive(1);
+                paqueteNuevo.setPlannedP(0);
                 var flights = new ArrayList<FlightModel>();
                 paqueteNuevo.setRoute(flights);
                 paquetes.add(paqueteNuevo);
@@ -1008,6 +1013,7 @@ public class OrderAdapter implements ListPackagesPort, InsertOrderPort, PlanOrde
                         flights.add(flight);
                     }
                     orderBD.getPacks().get(orderBD.getPacks().indexOf(packageBD)).setRoute(flights);
+                    orderBD.getPacks().get(orderBD.getPacks().indexOf(packageBD)).setPlannedP(1);
                 }
                 else{
                     plan=0;
@@ -1128,274 +1134,33 @@ public class OrderAdapter implements ListPackagesPort, InsertOrderPort, PlanOrde
 //        }
         return fechaMax;
     }
-
-    void planificador() throws IOException {
-
-        ArrayList<ArcoAeropuerto> arcos;
-        ArrayList<Aeropuerto> aeropuertos;
-
-        /* Leemos los aeropuertos y los planes de vuelo */
-        LectorAeropuertos lectorAeropuertos = new LectorAeropuertos();
-        lectorAeropuertos.Leer("C:\\Users\\Fernando\\Desktop\\fernando\\Archivos Pucp\\ciclo 9\\dp1\\algoritmos\\c.inf226.22-2.lista.aeropuertos.v01.txt");
-//        lectorAeropuertos.Leer("D:\\Documentos\\Cursos\\Noveno ciclo\\DP1\\Algoritmos\\Datos_entrada\\c.inf226.22-2.lista.aeropuertos.v01.txt");
-        aeropuertos = lectorAeropuertos.getAeropuertos();
-
-        LectorArcoAeropuerto lectorArcos = new LectorArcoAeropuerto(aeropuertos);
-        lectorArcos.Leer("C:\\Users\\Fernando\\Desktop\\fernando\\Archivos Pucp\\ciclo 9\\dp1\\algoritmos\\c.inf226.22-2.planes_vuelo.v02.txt");
-//        lectorArcos.Leer("D:\\Documentos\\Cursos\\Noveno ciclo\\DP1\\Algoritmos\\Datos_entrada\\c.inf226.22-2.planes_vuelo.v01.txt");
-        arcos = lectorArcos.getArcos();
-
-
-        double horaPartida, horaLlegada;
-        int total=arcos.size();
-
-        //Se crea los arcos para los siguientes 3 dias:
-        //Vuelos del dia 1 y dia1-dia2
-        for(int i =0;i<arcos.size();i++){
-            ArcoAeropuerto arco = arcos.get(i);
-            horaPartida = (double) arco.getHoraPartida().getHour()*60 + arco.getHoraPartida().getMinute();
-            horaLlegada = (double) arco.getHoraLlegada().getHour()*60 + arco.getHoraLlegada().getMinute();
-
-            if(horaPartida < horaLlegada){
-                arco.setDiaPartida(LocalDate.parse("2022-10-18"));
-                arco.setDiaLLegada(LocalDate.parse("2022-10-18"));
-            }
-            else{
-                arco.setDiaPartida(LocalDate.parse("2022-10-18"));
-                arco.setDiaLLegada(LocalDate.parse("2022-10-19"));
-            }
-            arcos.set(i,arco);
-        }
-
-        //Vuelos del dia 2 y dia2-dia3
-        for(int i =0;i<total;i++){
-            ArcoAeropuerto arco = new ArcoAeropuerto();
-            arco.setId(total+i);
-            arco.setAeropuerto1(arcos.get(i).getAeropuerto1());
-            arco.setAeropuerto2(arcos.get(i).getAeropuerto2());
-            arco.setHoraPartida(arcos.get(i).getHoraPartida());
-            arco.setHoraLlegada(arcos.get(i).getHoraLlegada());
-            arco.setCapacidadMaxima(arcos.get(i).getCapacidadMaxima());
-            arco.setCapacidadDisponible(arcos.get(i).getCapacidadDisponible());
-            horaPartida = (double) arcos.get(i).getHoraPartida().getHour()*60 + arcos.get(i).getHoraPartida().getMinute();
-            horaLlegada = (double) arcos.get(i).getHoraLlegada().getHour()*60 + arcos.get(i).getHoraLlegada().getMinute();
-
-            if(horaPartida < horaLlegada){
-                arco.setDiaPartida(LocalDate.parse("2022-10-19"));
-                arco.setDiaLLegada(LocalDate.parse("2022-10-19"));
-            }
-            else{
-                arco.setDiaPartida(LocalDate.parse("2022-10-19"));
-                arco.setDiaLLegada(LocalDate.parse("2022-10-20"));
-            }
-            arcos.add(arco);
-        }
-
-        //Vuelos del dia 3 y dia3-dia4
-        for(int i =0;i<total;i++){
-            ArcoAeropuerto arco = new ArcoAeropuerto();
-            arco.setId(total+total+i);
-            arco.setAeropuerto1(arcos.get(i).getAeropuerto1());
-            arco.setAeropuerto2(arcos.get(i).getAeropuerto2());
-            arco.setHoraPartida(arcos.get(i).getHoraPartida());
-            arco.setHoraLlegada(arcos.get(i).getHoraLlegada());
-            arco.setCapacidadMaxima(arcos.get(i).getCapacidadMaxima());
-            arco.setCapacidadDisponible(arcos.get(i).getCapacidadDisponible());
-
-            horaPartida = (double) arcos.get(i).getHoraPartida().getHour()*60 + arcos.get(i).getHoraPartida().getMinute();
-            horaLlegada = (double) arcos.get(i).getHoraLlegada().getHour()*60 + arcos.get(i).getHoraLlegada().getMinute();
-
-            if(horaPartida < horaLlegada){
-                arco.setDiaPartida(LocalDate.parse("2022-10-20"));
-                arco.setDiaLLegada(LocalDate.parse("2022-10-20"));
-            }
-            else{
-                arco.setDiaPartida(LocalDate.parse("2022-10-20"));
-                arco.setDiaLLegada(LocalDate.parse("2022-10-21"));
-            }
-            arcos.add(arco);
-        }
-
-
-        Iterator<ArcoAeropuerto> itr = arcos.iterator();
-        while (itr.hasNext()) {
-            ArcoAeropuerto arcosig = itr.next();
-            ArcoAeropuerto arco = new ArcoAeropuerto();
-            arco.setHoraPartida(arcosig.getHoraPartida());
-            arco.setHoraLlegada(arcosig.getHoraLlegada());
-            arco.setDiaLLegada(arcosig.getDiaLLegada());
-            arco.setDiaPartida(arcosig.getDiaPartida());
-
-
-            horaPartida = (double) arco.getHoraPartida().getHour()*60 + arco.getHoraPartida().getMinute();
-            horaLlegada = (double) arco.getHoraLlegada().getHour()*60 + arco.getHoraLlegada().getMinute();
-            LocalDate fechaActual = LocalDate.of(2022,10,18);
-            LocalDate diaSig = fechaActual.plusDays(1);
-            LocalDate diaSigSig = fechaActual.plusDays(2);
-            LocalTime horaActual = LocalTime.of(18,29,18,185);
-            double horaActualValor = (double)horaActual.getHour()*60 + horaActual.getMinute();
-
-            //Condicion para formar los arcos de envios entre mismo continente, es decir, 1 dia como maximo
-//            if(
-//                    !(
-//                            (
-//                            (fechaActual.isEqual(arco.getDiaPartida()) && fechaActual.isEqual(arco.getDiaLLegada()) && horaActualValor<=horaPartida)
-//                        ||
-//                            (fechaActual.isEqual(arco.getDiaPartida()) && diaSig.isEqual(arco.getDiaLLegada()) && horaActualValor<=horaPartida && horaActualValor-60>=horaLlegada)
-//                        ||
-//                        (diaSig.isEqual(arco.getDiaPartida())  && diaSig.isEqual(arco.getDiaLLegada()) && horaActualValor-60>=horaLlegada)
-//                            )
-//                            //&& arco.getCapacidadDisponible()>5 //cantidad de paquetes
-//
-//                    )
-//            )
-//            {
-//                itr.remove();
-//            }
-
-//            //Condicion para formar arcos de envios entre 2 continentes, es decir, 2 dias como maximo
-            if(
-                    !(
-                            (
-                                    (fechaActual.isEqual(arco.getDiaPartida()) && fechaActual.isEqual(arco.getDiaLLegada()) && horaActualValor<=horaPartida)
-                                            ||
-                                            (fechaActual.isEqual(arco.getDiaPartida()) && diaSig.isEqual(arco.getDiaLLegada()) && horaActualValor<=horaPartida)
-                                            ||
-                                            (diaSig.isEqual(arco.getDiaPartida())  && diaSig.isEqual(arco.getDiaLLegada()))
-                                            ||
-                                            (diaSig.isEqual(arco.getDiaPartida())  && diaSigSig.isEqual(arco.getDiaLLegada()) && horaActualValor-60>=horaLlegada)
-                                            ||
-                                            (diaSigSig.isEqual(arco.getDiaPartida())  && diaSigSig.isEqual(arco.getDiaLLegada()) && horaActualValor-60>=horaLlegada)
-                                            ||
-                                            (fechaActual.isEqual(arco.getDiaPartida())  && diaSigSig.isEqual(arco.getDiaLLegada()) && horaActualValor<=horaPartida && horaActualValor-60>=horaLlegada)
-                            )
-                            //&& arco.getCapacidadDisponible()>5 //cantidad de paquetes
-                    )
-            )
-            {
-                itr.remove();
-            }
-
-
-        }
-
-
-
-
-        //Se crean las capacidades de aeropuertos para los siguiente 3 dias
-        for(int i=0;i<aeropuertos.size();i++){
-            //dia1:
-            for(int j=0;j<24;j++){
-                for(int k=0;k<60;k++){
-                    FechaHora fechaHora = new FechaHora();
-                    fechaHora.setDia(LocalDate.parse("2022-10-18"));
-                    fechaHora.setHora(LocalTime.of(j,k));
-
-                    CapacidadAeropuerto capacidad = new CapacidadAeropuerto();
-                    capacidad.setFechaHora(fechaHora);
-                    capacidad.setCapacidadDisponible(aeropuertos.get(i).getCapacidad());
-                    aeropuertos.get(i).getCapacidadDisponible().add(capacidad);
-                }
-            }
-            //dia2:
-            for(int j=0;j<24;j++){
-                for(int k=0;k<60;k++){
-                    FechaHora fechaHora = new FechaHora();
-                    fechaHora.setDia(LocalDate.parse("2022-10-19"));
-                    fechaHora.setHora(LocalTime.of(j,k));
-
-                    CapacidadAeropuerto capacidad = new CapacidadAeropuerto();
-                    capacidad.setFechaHora(fechaHora);
-                    capacidad.setCapacidadDisponible(aeropuertos.get(i).getCapacidad());
-                    aeropuertos.get(i).getCapacidadDisponible().add(capacidad);
-                }
-            }
-            //dia3:
-            for(int j=0;j<24;j++){
-                for(int k=0;k<60;k++){
-                    FechaHora fechaHora = new FechaHora();
-                    fechaHora.setDia(LocalDate.parse("2022-10-20"));
-                    fechaHora.setHora(LocalTime.of(j,k));
-
-                    CapacidadAeropuerto capacidad = new CapacidadAeropuerto();
-                    capacidad.setFechaHora(fechaHora);
-                    capacidad.setCapacidadDisponible(aeropuertos.get(i).getCapacidad());
-                    aeropuertos.get(i).getCapacidadDisponible().add(capacidad);
-                }
-            }
-            //dia4:
-            for(int j=0;j<24;j++){
-                for(int k=0;k<60;k++){
-                    FechaHora fechaHora = new FechaHora();
-                    fechaHora.setDia(LocalDate.parse("2022-10-21"));
-                    fechaHora.setHora(LocalTime.of(j,k));
-
-                    CapacidadAeropuerto capacidad = new CapacidadAeropuerto();
-                    capacidad.setFechaHora(fechaHora);
-                    capacidad.setCapacidadDisponible(aeropuertos.get(i).getCapacidad());
-                    aeropuertos.get(i).getCapacidadDisponible().add(capacidad);
-                }
-            }
-        }
-
-        // Creamos el ambiente
-        AntSide ambiente= new AntSide(aeropuertos,arcos);
-        // Hora actual
-        LocalDateTime horaActual = LocalDateTime.of(LocalDate.of(2022,10,18),LocalTime.of(18,29,18,185));
-
-
-        //Se debe tener un arreglo de arcos general (ya se tiene) y feromonas general.
-        //ArrayList<Double> feromonas = new ArrayList<Double>();
-        //feromonas.addAll(Collections.singleton((double) 0.1));
-
-
-        for(int j=0;j<9;j++) {
-            // Fijamos los aeropuertos de origen y destino (Ej: 0: Bogotá - 6: Lima
-            ambiente.setNodoInicialFinal(aeropuertos.get(j), aeropuertos.get(39));
-
-
-            //Aqui se eligen el subarreglo de arcosEnvio y feromonasEnvio:
-            //ArrayList<ArcoAeropuerto> arcosEnvio = modificarArcos(arcos,aeropuertos.get(0),aeropuertos.get(j+1)); //en este metodo se hace las funciones de mas arriba
-            //ArrayList<Double> feromonasEnvio = sacarFeromonas(arcosEnvio);
-            //ambiente.setCaminos(arcosEnvio);
-            //ambiente.setCantidadFeromonasCamino(feromonasEnvio);
-
-
-            //Se crean los paquetes (Esto se debe leer en la clase principal)
-            ArrayList<Paquete> paquetes = new ArrayList<Paquete>();
-            for (int i = 0; i < 20; i++) {
-                Paquete paquete = new Paquete();//Ponerle el detalle
-                paquetes.add(paquete);
-            }
-
-            //Fijamos los paquetes
-            ambiente.setPaquetesEnvio(paquetes);
-            ambiente.setFechaInicial(horaActual);
-
-            // Creamos la solución
-            Aco algoritmoHormigas = new Aco();
-            long start1 = System.currentTimeMillis();
-            algoritmoHormigas.activarHormigas(ambiente);
-            long end1 = System.currentTimeMillis();
-            System.out.println("Elapsed Time in milli seconds: " + (end1 - start1));
-
-            //Se imprime la solucion
-            if(algoritmoHormigas.getSolucionCamino().size()!=0)
-                System.out.println("Envio "+ j +" - Camino: " + algoritmoHormigas.getSolucionCamino().toString() + algoritmoHormigas.getSolucionCosto());
-            else{
-                System.out.println("No se encontro nada xd");
-            }
-            //Actualizar capacidades
-            ambiente.actualizarCapacidades(algoritmoHormigas.getSolucionCamino());
-
-            //Actualizar arreglo global de arcos y feromonas, con el arcosEnvio y feromonasEnvio
-            //actualizarArcosFeromonas(arcosEnvio,feromonasEnvio);
-
-        }
-    }
-
     void ordenarPorFechaVencimiento(List<Envio> envios){
         Collections.sort(envios,Comparator.comparing(Envio::getFechaMax));
     }
 
+    @Override
+    @Transactional
+    public int restoreOrders(Integer planned, Integer paraSim) {
+        packageRepository.deleteByParaSim(planned,1);
+        orderRepository.deleteByParaSim(planned,paraSim,1);
+        return 1;
+    }
+
+    @Override
+    public List<PackagePlanified> getPlanifiedOrder(String fecha, String timeInf, String timeSup, Integer paraSim) {
+        var enviosBD = orderRepository.finOrderInRangeForSim(LocalDateTime.of(LocalDate.parse(fecha),LocalTime.parse(timeInf)),LocalDateTime.of(LocalDate.parse(fecha),LocalTime.parse(timeSup)),paraSim,1);
+        var lista = new ArrayList<PackagePlanified>();
+        for(OrderModel envioBD: enviosBD){
+            for(PackageModel paqueteBD: envioBD.getPacks()){
+                if(paqueteBD.getRoute()!=null){
+                    PackagePlanified paqueteNuevo = new PackagePlanified();
+                    paqueteNuevo.setCodEnvio(envioBD.getCodigo());
+                    paqueteNuevo.setCodPaquete(paqueteBD.getId());
+                    paqueteNuevo.setFecha(envioBD.getFechaEnvio());
+                    lista.add(paqueteNuevo);
+                }
+            }
+        }
+        return lista;
+    }
 }

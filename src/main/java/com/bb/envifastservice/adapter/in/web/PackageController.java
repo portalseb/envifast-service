@@ -1,5 +1,6 @@
 package com.bb.envifastservice.adapter.in.web;
 
+import com.bb.envifastservice.adapter.out.persistence.dtos.FlightRoute;
 import com.bb.envifastservice.algo.ArcoAeropuerto;
 import com.bb.envifastservice.algo.Envio;
 import com.bb.envifastservice.algo.Paquete;
@@ -22,7 +23,7 @@ public class PackageController {
     private final ShowPackageRouteService showPackageRouteService;
 
     @GetMapping(value = "/route/{id}")
-    public List<ArcoAeropuerto> getPackageRoute(@RequestParam(name = "id") String id){
+    public List<FlightRoute> getPackageRoute(@RequestParam(name = "id") String id){
         return showPackageRouteService.showRoute(id);
     }
 }

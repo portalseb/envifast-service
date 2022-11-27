@@ -1,5 +1,6 @@
 package com.bb.envifastservice.adapter.in.web;
 
+import com.bb.envifastservice.adapter.out.persistence.dtos.PackagePlanified;
 import com.bb.envifastservice.algo.Envio;
 import com.bb.envifastservice.application.port.in.*;
 import com.bb.envifastservice.hexagonal.WebAdapter;
@@ -26,6 +27,8 @@ public class OrderController {
     private final GenerateNextWeekDateTimeService generateNextWeekDateTimeService;
     private final IniciarSim5DiasService iniciarSim5DiasService;
     private final GenerateOrderForSimService generateOrderForSimService;
+    private final RestoreUnplanOrderService restoreUnplanOrderService;
+    private final GetPlanifiedOrderService getPlanifiedOrderService;
     @PostMapping(value = "/insert")
     public Envio insertarEnvio(@RequestBody Envio envio){
         return insertOrderService.insertOrder(envio);
@@ -57,4 +60,15 @@ public class OrderController {
     public int cargarEnviosSim(@RequestParam(name = "fecha") String fecha,@RequestParam(name = "timeInf")  String timeInf, @RequestParam(name = "timeSup") String timeSup, @RequestParam(name = "paraSim") Integer forSim) throws IOException {
         return generateOrderForSimService.generateSimulationOrders(fecha,timeInf,timeSup,forSim);
     }
+    @DeleteMapping(value = "/deleteUnplanified")
+    public int restaurarOrdenesNoPlanificadas(@RequestParam(name = "planned") Integer planned, @RequestParam(name = "paraSim") Integer paraSim){
+        return restoreUnplanOrderService.restoreOrders(planned,paraSim);
+    }
+
+    @GetMapping(value = "/planifiedOrders")
+    @ResponseBody
+    public List<PackagePlanified> getPlanifiedOrders(@RequestParam(name = "fecha")String fecha, @RequestParam(name = "timeInf") String timeInf, @RequestParam(name = "timeSup") String timeSup, @RequestParam(name = "paraSim") Integer paraSim){
+        return getPlanifiedOrderService.getPlanifiedOrder(fecha, timeInf, timeSup, paraSim);
+    }
+
 }

@@ -1,5 +1,6 @@
 package com.bb.envifastservice.application.port;
 
+import com.bb.envifastservice.adapter.out.persistence.dtos.FlightRoute;
 import com.bb.envifastservice.algo.ArcoAeropuerto;
 import com.bb.envifastservice.application.port.in.ShowPackageRouteService;
 import com.bb.envifastservice.application.port.out.ShowPackageRoutePort;
@@ -13,7 +14,7 @@ public class ShowPackageRouteUseCase implements ShowPackageRouteService {
     private final ShowPackageRoutePort showPackageRoutePort;
 
     @Override
-    public List<ArcoAeropuerto> showRoute(String id) {
+    public List<FlightRoute> showRoute(String id) {
         return showPackageRoutePort.showRoute(id);
     }
 }

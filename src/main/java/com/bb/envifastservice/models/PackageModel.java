@@ -5,6 +5,7 @@ import com.bb.envifastservice.algo.ArcoAeropuerto;
 import com.bb.envifastservice.algo.Avion;
 import lombok.Data;
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.criterion.Order;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -22,7 +23,7 @@ public class PackageModel {
     @GenericGenerator(name="system-uuid", strategy = "uuid")
     private String id;
     private LocalDateTime dateTime;
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany
     @JoinTable(
             name = "route",
             joinColumns = @JoinColumn(name = "package_id"),
@@ -35,5 +36,7 @@ public class PackageModel {
     private Long currentFlightId;
     private String destino;
     private String origen;
+    @Column(columnDefinition = "integer default 0")
+    private int plannedP;
     private int active;
 }

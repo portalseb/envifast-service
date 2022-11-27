@@ -4,9 +4,11 @@ import com.bb.envifastservice.algo.Envio;
 import com.bb.envifastservice.models.OrderModel;
 import com.bb.envifastservice.models.PackageModel;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -25,4 +27,11 @@ public interface OrderRepository extends JpaRepository<OrderModel, Long> {
 
     @Query("SELECT o from OrderModel  o WHERE o.active =:active and o.planned =:planned and o.forSim =:forSim" )
     List<OrderModel> findAllByPlanified(@Param("planned") int planned, @Param("forSim")int forSim, @Param("active") int active);
+
+    @Modifying
+    @Query("DELETE from OrderModel a where a.forSim = :paraSim and a.planned = :planned and a.active = :active")
+    void deleteByParaSim(@Param("planned")int planned, @Param("paraSim")int paraSim, @Param("active") int active);
+
+    @Query("SELECT o from OrderModel  o WHERE o.active =:active and o.forSim =:paraSim and o.fechaEnvio >= :inf and o.fechaEnvio <= :sup" )
+    List<OrderModel> finOrderInRangeForSim(@Param("inf") LocalDateTime inf, @Param("sup") LocalDateTime sup, @Param("paraSim")int paraSim, @Param("active") int active);
 }

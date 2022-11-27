@@ -4,8 +4,11 @@ package com.bb.envifastservice.adapter.out.persistence.repos;
 import com.bb.envifastservice.algo.Envio;
 import com.bb.envifastservice.algo.Paquete;
 import com.bb.envifastservice.models.FlightModel;
+import com.bb.envifastservice.models.OrderModel;
 import com.bb.envifastservice.models.PackageModel;
+import org.hibernate.criterion.Order;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -22,4 +25,8 @@ public interface PackageRepository  extends JpaRepository<PackageModel, String> 
     //PackageModel insertPackage(@Param("paquete") PackageModel paquete);
     @Query("SELECT p.route from PackageModel  p WHERE p.id =:id and p.active=:active")
     List<FlightModel> findFlightsInPackageRouteAndActive(@Param("id") String id, @Param("active") int active);
+    @Modifying
+    @Query("DELETE from PackageModel a where a.plannedP = :planned and a.active = :active")
+    void deleteByParaSim(@Param("planned")int planned,  @Param("active") int active);
+
 }

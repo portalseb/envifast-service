@@ -10,7 +10,6 @@ import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 @SpringBootApplication
-@EnableScheduling
 public class EnvifastServiceApplication {
 
     public static void main(String[] args) throws IOException {
