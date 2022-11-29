@@ -10,6 +10,9 @@ import com.bb.envifastservice.models.FlightModel;
 import com.bb.envifastservice.models.PackageModel;
 import lombok.RequiredArgsConstructor;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 //TODO: verificar que se devuelva
@@ -23,6 +26,7 @@ public class PackageAdapter implements ShowPackageRoutePort {
     public List<FlightRoute> showRoute(String id) {
         var vuelos = new ArrayList<FlightRoute>();
         var flights = packageRepository.findFlightsInPackageRouteAndActive(id,1);
+        var ultimaLlegada = LocalDateTime.of(LocalDate.of(2022,8,4), LocalTime.of(0,0));
         for (FlightModel vuelo:flights
              ) {
             var arco = new FlightRoute();
@@ -30,7 +34,17 @@ public class PackageAdapter implements ShowPackageRoutePort {
             arco.setCiudadDestino(vuelo.getArrivalAirport().getCityName());
             arco.setHoraSalida(vuelo.getDepartureTime());
             arco.setHoraLLegada(vuelo.getArrivalTime());
+            if(arco.getHoraSalida().isBefore(ultimaLlegada)){
+                for(int i=0;i<5;i++) {
+                    arco.setHoraSalida(arco.getHoraSalida().plusDays(i+1));
+                    arco.setHoraLLegada(arco.getHoraLLegada().plusDays(i+1));
+                    if(arco.getHoraSalida().isAfter(ultimaLlegada)){
+                        break;
+                    }
+                }
+            }
             vuelos.add(arco);
+            ultimaLlegada = arco.getHoraLLegada();
         }
         return vuelos;
     }

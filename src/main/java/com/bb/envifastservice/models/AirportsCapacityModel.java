@@ -33,4 +33,5 @@ public class AirportsCapacityModel {
     private int active;
     @Column(name = "_for_sim")
     private int forSim;
+    private LocalDateTime localDateTime;
 }

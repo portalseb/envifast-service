@@ -4,6 +4,8 @@ package com.bb.envifastservice.adapter.out.persistence.impl;
 import com.bb.envifastservice.adapter.out.persistence.dtos.FlightMap;
 import com.bb.envifastservice.adapter.out.persistence.repos.AirportRepository;
 import com.bb.envifastservice.adapter.out.persistence.repos.FlightRepository;
+import com.bb.envifastservice.adapter.out.persistence.repos.OrderRepository;
+import com.bb.envifastservice.adapter.out.persistence.repos.PackageRepository;
 import com.bb.envifastservice.algo.*;
 import com.bb.envifastservice.application.port.out.*;
 import com.bb.envifastservice.hexagonal.PersistenceAdapter;
@@ -28,6 +30,8 @@ import java.util.*;
 public class FlightAdapter implements ListFlightByIdPort, GenerateNextWeekFlightsPort, ListAllFlightsPort, ListDayFlightsPort, RestoreFlightsPort, FindFlightPackagesPort {
     private final FlightRepository flightRepository;
     private final AirportRepository airportRepository;
+    private final PackageRepository packageRepository;
+    private final OrderRepository orderRepository;
     @Override
     public ArcoAeropuerto listById(Long id) {
         var bdVueloOpt = flightRepository.findByIdAndActive(id, 1);
@@ -107,8 +111,8 @@ public class FlightAdapter implements ListFlightByIdPort, GenerateNextWeekFlight
     public void generateNextWeekFlights(String fecha,Integer dias, Integer paraSim) throws IOException {
         //InputStream inputStream = getClass().getResourceAsStream("/c.inf226.22-2.planes_vuelo.v02.txt");
         //URL resource = getClass().getClassLoader().getResource("c.inf226.22-2.planes_vuelo.v02.txt");
-        ClassPathResource classPathResource = new ClassPathResource("c.inf226.22-2.planes_vuelo.v02.txt");
-        InputStream resourceAsStream = getClass().getClassLoader().getResourceAsStream("c.inf226.22-2.planes_vuelo.v02.txt");
+        ClassPathResource classPathResource = new ClassPathResource("c.inf226.22-2.planes_vuelo.v03.txt");
+        InputStream resourceAsStream = getClass().getClassLoader().getResourceAsStream("c.inf226.22-2.planes_vuelo.v03.txt");
         //Resource resource = new ClassPathResource("c.inf226.22-2.planes_vuelo.v02.txt");
         //File planes = resource.getFile();
 
@@ -118,11 +122,12 @@ public class FlightAdapter implements ListFlightByIdPort, GenerateNextWeekFlight
         //File planes = new File("src/main/java/com/bb/envifastservice/c.inf226.22-2.planes_vuelo.v02.txt");
         Scanner myReader = null;
         var vuelos = new ArrayList<FlightModel>();
-        //if(paraSim>0){
+        if(paraSim==1 && dias==3){
         //    //probar si se puede o si se debe borrar primero la tabla route
-        //    flightRepository.deleteByParaSim(paraSim,1);
-
-        //}
+            flightRepository.deleteByParaSimRange(paraSim,1);
+            packageRepository.deleteByParaSimRange(paraSim,1);
+            orderRepository.deleteByParaSimRange(paraSim,1);
+        }
         var airportsBD = airportRepository.findAllByActive(1);
         int origen=0,destino=0;
         //Pendiente: agregar que no se repita para el dia a dia...

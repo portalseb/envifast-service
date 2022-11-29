@@ -39,4 +39,5 @@ public class PackageModel {
     @Column(columnDefinition = "integer default 0")
     private int plannedP;
     private int active;
+    private int forSim;
 }

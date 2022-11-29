@@ -50,6 +50,10 @@ public class Paquete {
         this.vueloActual = null;
     }
 
+    public void setearRuta(ArrayList<ArcoAeropuerto> ruta){
+        this.ruta = ruta;
+    }
+
 //    public Avion obtenerSiguienteAvion(Aeropuerto aeropuerto){
 //        for(ArcoAeropuerto ec :this.ruta){
 //            if(ec.getAeropuerto1().getId() == aeropuerto.getId()){

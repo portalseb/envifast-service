@@ -5,6 +5,7 @@ import com.bb.envifastservice.adapter.out.persistence.mappers.AirportMapper;
 import com.bb.envifastservice.adapter.out.persistence.repos.AirportCapacityRepository;
 import com.bb.envifastservice.adapter.out.persistence.repos.AirportRepository;
 import com.bb.envifastservice.adapter.out.persistence.repos.DateTimeRepository;
+import com.bb.envifastservice.adapter.out.persistence.repos.OrderRepository;
 import com.bb.envifastservice.algo.Aeropuerto;
 import com.bb.envifastservice.algo.CapacidadAeropuerto;
 import com.bb.envifastservice.algo.Ciudad;
@@ -34,6 +35,7 @@ public class AirportAdapter implements ListAllAirportsPort, ListAirportCoordPort
     private final AirportRepository airportRepository;
     private final DateTimeRepository dateTimeRepository;
     private final AirportCapacityRepository airportCapacityRepository;
+    private final OrderRepository orderRepository;
 
     @Override
     public List<Aeropuerto> listAllAirports() {
@@ -102,9 +104,9 @@ public class AirportAdapter implements ListAllAirportsPort, ListAirportCoordPort
         var airportsModels = airportRepository.findAllByActive(1);
         var dateTimesModels = dateTimeRepository.findDateTimesActiveRange(LocalDateTime.of(LocalDate.parse(fecha),LocalTime.of(0,0,0)),LocalDateTime.of(LocalDate.parse(fecha).plusDays(dias),LocalTime.of(23,59,0)),1);
 
-        //if(forSim>0) {
-        //    airportCapacityRepository.deleteByForSim(forSim,1);
-        //}
+        if(forSim==1 && dias==3) {
+            airportCapacityRepository.deleteByForSimRange(forSim,1);
+        }
 
         //Pendiente: agregar que no se repita para el dia a dia...
         for(AirportsModel airportsModel: airportsModels){
@@ -113,6 +115,7 @@ public class AirportAdapter implements ListAllAirportsPort, ListAirportCoordPort
             for(DateTimeModel dateTimeModel: dateTimesModels){
                 var airportsCapacityModel = new AirportsCapacityModel();
                 airportsCapacityModel.setDateTime(dateTimeModel);
+                airportsCapacityModel.setLocalDateTime(dateTimeModel.getDateTime());
 //                airportsCapacityModel.setAirport(airportsModel);
                 airportsCapacityModel.setAvailableCapacity(airportsModel.getMaxCapacity());
                 airportsCapacityModel.setActive(1);

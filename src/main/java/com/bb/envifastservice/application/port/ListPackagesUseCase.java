@@ -14,7 +14,7 @@ import java.util.List;
 public class ListPackagesUseCase implements ListPackagesService {
     private final ListPackagesPort listPackagesPort;
     @Override
-    public List<Envio> listByFields(String input) {
-        return listPackagesPort.listByFields(input);
+    public List<Envio> listByFields(String input, Integer forSim) {
+        return listPackagesPort.listByFields(input,forSim);
     }
 }

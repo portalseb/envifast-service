@@ -25,6 +25,9 @@ public interface FlightRepository extends JpaRepository<FlightModel, Long> {
     @Modifying
     @Query("DELETE from FlightModel a where a.forSim = :paraSim and a.active = :active")
     void deleteByParaSim(@Param("paraSim")int paraSim, @Param("active") int active);
+    @Modifying
+    @Query("DELETE from FlightModel a where a.forSim = :paraSim and a.active = :active")
+    void deleteByParaSimRange(@Param("paraSim")int paraSim, @Param("active") int active);
 
     @Query("SELECT a from FlightModel a where a.id = :idFlight")
     FlightModel findByFlightId(@Param("idFlight") Long idFlight);

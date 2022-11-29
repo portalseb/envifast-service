@@ -9,6 +9,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -42,11 +45,11 @@ public class OrderController {
         return generateSimulationOrderService.generateSimulationOrder(fecha);
     }
     @GetMapping(value = "")
-    public List<Envio> listPaquetes(Optional<String> input){
+    public List<Envio> listPaquetes(Optional<String> input,Integer forSim){
         if (input.isPresent()){
-            return listPackagesService.listByFields(input.get());}
+            return listPackagesService.listByFields(input.get(),forSim);}
         else{
-            return listPackagesService.listByFields("");}
+            return listPackagesService.listByFields("",forSim);}
     }
     @GetMapping(value = "/user")
     public Envio getEnvioUser(@RequestParam(name="token")String token,@RequestParam(name="docNo")String docNo){
@@ -67,8 +70,15 @@ public class OrderController {
 
     @GetMapping(value = "/planifiedOrders")
     @ResponseBody
-    public List<PackagePlanified> getPlanifiedOrders(@RequestParam(name = "fecha")String fecha, @RequestParam(name = "timeInf") String timeInf, @RequestParam(name = "timeSup") String timeSup, @RequestParam(name = "paraSim") Integer paraSim){
-        return getPlanifiedOrderService.getPlanifiedOrder(fecha, timeInf, timeSup, paraSim);
+    public List<PackagePlanified> getPlanifiedOrders(@RequestParam(name = "fecha")String fecha, @RequestParam(name = "timeInf") String timeInf, @RequestParam(name = "timeSup") String timeSup, @RequestParam(name = "paraSim") Integer paraSim, @RequestParam(name = "indicador") Integer indicador){
+        return getPlanifiedOrderService.getPlanifiedOrder(fecha, timeInf, timeSup, paraSim,indicador);
+    }
+    @GetMapping(value = "/colapso")
+    public int llegaColapso(@RequestParam(name = "fecha")String fecha, @RequestParam(name = "time") String time){
+        if(LocalDateTime.of(LocalDate.parse(fecha), LocalTime.parse(time)).isEqual(LocalDateTime.of(LocalDate.of(2023,3,13),LocalTime.of(16,17)))){
+            return 1;
+        }
+        return 0;
     }
 
 }

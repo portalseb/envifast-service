@@ -31,7 +31,9 @@ public interface OrderRepository extends JpaRepository<OrderModel, Long> {
     @Modifying
     @Query("DELETE from OrderModel a where a.forSim = :paraSim and a.planned = :planned and a.active = :active")
     void deleteByParaSim(@Param("planned")int planned, @Param("paraSim")int paraSim, @Param("active") int active);
-
+    @Modifying
+    @Query("DELETE from OrderModel a where a.forSim = :paraSim and a.active = :active")
+    void deleteByParaSimRange(@Param("paraSim")int paraSim, @Param("active") int active);
     @Query("SELECT o from OrderModel  o WHERE o.active =:active and o.forSim =:paraSim and o.fechaEnvio >= :inf and o.fechaEnvio <= :sup" )
     List<OrderModel> finOrderInRangeForSim(@Param("inf") LocalDateTime inf, @Param("sup") LocalDateTime sup, @Param("paraSim")int paraSim, @Param("active") int active);
 }

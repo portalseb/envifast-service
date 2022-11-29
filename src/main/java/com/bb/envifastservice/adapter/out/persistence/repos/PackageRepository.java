@@ -12,6 +12,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 public interface PackageRepository  extends JpaRepository<PackageModel, String> {
@@ -28,5 +29,8 @@ public interface PackageRepository  extends JpaRepository<PackageModel, String> 
     @Modifying
     @Query("DELETE from PackageModel a where a.plannedP = :planned and a.active = :active")
     void deleteByParaSim(@Param("planned")int planned,  @Param("active") int active);
+    @Modifying
+    @Query("DELETE from PackageModel a where a.active = :active and a.forSim = :forSim")
+    void deleteByParaSimRange(@Param("forSim") int forSim ,@Param("active") int active);
 
 }

@@ -33,8 +33,8 @@ public class OrderAdapter implements ListPackagesPort, InsertOrderPort, PlanOrde
 
     private final AirportCapacityRepository airportCapacityRepository;
     @Override
-    public List<Envio> listByFields(String input) {
-        var registros = orderRepository.findAllByFieldsLikeAndActive(input,0);
+    public List<Envio> listByFields(String input, Integer forSim) {
+        var registros = orderRepository.findAllByFieldsLikeAndActive(input,forSim);
         var paquetes = new ArrayList<Paquete>();
         var envios = new ArrayList<Envio>();
         var vuelos = new ArrayList<ArcoAeropuerto>();
@@ -275,7 +275,7 @@ public class OrderAdapter implements ListPackagesPort, InsertOrderPort, PlanOrde
             ciudad.setPais(airport.getCountryName());
             aeropuerto.setCiudad(ciudad);
             var  capacidadCopia = airportCapacityRepository.findByAirportCode((long)aeropuerto.getId());
-            capacidadCopia.removeIf(c->c.getDateTime().getDateTime().isBefore(envioFechaMin) || c.getDateTime().getDateTime().isAfter(envioFechaMax) || c.getForSim()==1);
+            capacidadCopia.removeIf(c->c.getDateTime().getDateTime().isBefore(envioFechaMin) || c.getDateTime().getDateTime().isAfter(envioFechaMax) || c.getForSim()!=0);
             for(AirportsCapacityModel airportsCapacityModel: capacidadCopia){
                 CapacidadAeropuerto capacidadAeropuerto = new CapacidadAeropuerto();
                 capacidadAeropuerto.setId((int)(long)airportsCapacityModel.getId());
@@ -670,9 +670,7 @@ public class OrderAdapter implements ListPackagesPort, InsertOrderPort, PlanOrde
     @Override
     public int iniciarSim5Dias(String fecha, Integer dias, Integer paraSim) throws FileNotFoundException {
         //flightAdapter.generateNextWeekFlights(fecha, dias, paraSim);
-        airportAdapter.generateNextWeekDateTime(fecha, dias, paraSim);
-        generateSimulationOrder(fecha);
-
+        var aeropuertosRegistros = airportRepository.findAllByActive(1);
         return 1;
     }
 
@@ -735,7 +733,7 @@ public class OrderAdapter implements ListPackagesPort, InsertOrderPort, PlanOrde
             envioNuevo.setOrigen(aeropuertoOrigen.getCityName());
             envioNuevo.setDestino(aeropuertoDestino.getCityName());
             envioNuevo.setActive(1);
-            envioNuevo.setForSim(1);
+            envioNuevo.setForSim(forSim);
             List<PackageModel> paquetes = new ArrayList<PackageModel>();
             for(int j=0;j<envios.get(i).getPaquetes().size();j++){
                 var paqueteNuevo = new PackageModel();
@@ -744,6 +742,7 @@ public class OrderAdapter implements ListPackagesPort, InsertOrderPort, PlanOrde
                 paqueteNuevo.setOrigen(aeropuertoOrigen.getCityName());
                 paqueteNuevo.setDestino(aeropuertoDestino.getCityName());
                 paqueteNuevo.setActive(1);
+                paqueteNuevo.setForSim(forSim);
                 paqueteNuevo.setPlannedP(0);
                 var flights = new ArrayList<FlightModel>();
                 paqueteNuevo.setRoute(flights);
@@ -767,8 +766,10 @@ public class OrderAdapter implements ListPackagesPort, InsertOrderPort, PlanOrde
             for(PackageModel pack: order.getPacks()){
                 Paquete paquete = new Paquete();
                 paquete.setId(pack.getId());
-                if(pack.getRoute().size()==0)
+                if(pack.getRoute().size()==0) {
+                    paquete.setearRuta(new ArrayList<>());
                     envio.getPaquetes().add(paquete);
+                }
             }
             envio.setCantidadPaquetes(envio.getPaquetes().size());
             envio.setOrigen(new Aeropuerto());
@@ -793,12 +794,15 @@ public class OrderAdapter implements ListPackagesPort, InsertOrderPort, PlanOrde
         if(envios.size()!=0) {
             envioFechaMinim = envios.stream().min(Comparator.comparing(Envio::getFechaEnvio)).orElseThrow(NoSuchElementException::new).getFechaEnvio(); //LocalDateTime.of(LocalDate.parse(fecha),LocalTime.parse(timeInf)); //Se va a cambiar cuando necesite reprogramar envios de fechas/horas anteriores
             if(fechaMaxEnvio(envios).isBefore(LocalDateTime.of(LocalDate.parse(fecha),LocalTime.parse(timeSup)))) {
-                System.out.println("Se llego al colapso");
+                //System.out.println("Se llego al colapso");
                 return 0;
             }
         }
         var envioFechaMin = LocalDateTime.of(envioFechaMinim.toLocalDate(),LocalTime.of(envioFechaMinim.getHour(),envioFechaMinim.getMinute(),0));
         var envioFechMax = LocalDateTime.of(LocalDate.parse(fecha),LocalTime.parse(timeSup)).plusDays(2);
+        if(LocalTime.parse(timeSup).isBefore(LocalTime.parse(timeInf))){
+            envioFechMax = envioFechMax.plusDays(1);
+        }
         var envioFechaMax = LocalDateTime.of(envioFechMax.toLocalDate(),LocalTime.of(envioFechMax.getHour(),envioFechMax.getMinute(),0));
 
         var arcosGeneralRegistros = flightRepository.findAllByActiveRange(1,envioFechaMin, envioFechaMax,forSim);
@@ -823,7 +827,7 @@ public class OrderAdapter implements ListPackagesPort, InsertOrderPort, PlanOrde
             aeropuerto.setCiudad(ciudad);
             //System.out.println(envioFechaMax);
             var  capacidadCopia = new ArrayList<>(airport.getCapacity());
-            capacidadCopia.removeIf(c->c.getDateTime().getDateTime().isBefore(envioFechaMin) || c.getDateTime().getDateTime().isAfter(envioFechaMax) || c.getForSim()==0);
+            capacidadCopia.removeIf(c->c.getDateTime().getDateTime().isBefore(envioFechaMin) || c.getDateTime().getDateTime().isAfter(envioFechaMax) || c.getForSim()!=forSim);
             for(AirportsCapacityModel airportsCapacityModel: capacidadCopia){
                 CapacidadAeropuerto capacidadAeropuerto = new CapacidadAeropuerto();
                 capacidadAeropuerto.setId((int)(long)airportsCapacityModel.getId());
@@ -876,6 +880,7 @@ public class OrderAdapter implements ListPackagesPort, InsertOrderPort, PlanOrde
         /*Aqui leeriamos los envios con forSim=1 que aun no se han planificado*/
         AntSide ambiente = new AntSide();
         ambiente.setNodos(aeropuertos);
+        int maxPaquetes=5000, cantPaquetes=0;
         /**Planificar los que no fueron planificados*/
         for(int j=0;j<cantNoPlan;j++){
             //Seteo de datos de algoritmo
@@ -916,12 +921,17 @@ public class OrderAdapter implements ListPackagesPort, InsertOrderPort, PlanOrde
                     envios.get(j).setTiempoTotal(algoritmoHormigas.getSolucionCosto());
                     //Actualizar rutas de paquetes
                     envios.get(j).getPaquetes().get(l).setRuta(algoritmoHormigas.getSolucionCamino());
+                    cantPaquetes++;
+                    if(cantPaquetes >= maxPaquetes)break;
                 }
                 else{
                     System.out.println("Envio " + j + " - no se hallo solucion");
                     envios.get(j).setTiempoTotal(0.0);
                 }
             }
+
+            if(cantPaquetes >= maxPaquetes)break;
+
         }
 
 
@@ -1147,10 +1157,12 @@ public class OrderAdapter implements ListPackagesPort, InsertOrderPort, PlanOrde
     }
 
     @Override
-    public List<PackagePlanified> getPlanifiedOrder(String fecha, String timeInf, String timeSup, Integer paraSim) {
+    public List<PackagePlanified> getPlanifiedOrder(String fecha, String timeInf, String timeSup, Integer paraSim, Integer indicador) {
         var enviosBD = orderRepository.finOrderInRangeForSim(LocalDateTime.of(LocalDate.parse(fecha),LocalTime.parse(timeInf)),LocalDateTime.of(LocalDate.parse(fecha),LocalTime.parse(timeSup)),paraSim,1);
         var lista = new ArrayList<PackagePlanified>();
+        int i=0;
         for(OrderModel envioBD: enviosBD){
+            if(envioBD.getPlanned()==1){i++;
             for(PackageModel paqueteBD: envioBD.getPacks()){
                 if(paqueteBD.getRoute()!=null){
                     PackagePlanified paqueteNuevo = new PackagePlanified();
@@ -1160,6 +1172,7 @@ public class OrderAdapter implements ListPackagesPort, InsertOrderPort, PlanOrde
                     lista.add(paqueteNuevo);
                 }
             }
+            if(indicador==1 && i==20) break;}
         }
         return lista;
     }

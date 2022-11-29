@@ -3,6 +3,7 @@ package com.bb.envifastservice.adapter.out.persistence.repos;
 import com.bb.envifastservice.models.AirportsCapacityModel;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.Modifying;
@@ -19,6 +20,9 @@ public interface AirportCapacityRepository extends JpaRepository<AirportsCapacit
     @Modifying
     @Query("DELETE from AirportsCapacityModel a where a.forSim = :paraSim and a.active = :active")
     void deleteByForSim(@Param("paraSim")int paraSim, @Param("active") int active);
+    @Modifying
+    @Query("DELETE from AirportsCapacityModel a where a.forSim = :paraSim and a.active = :active")
+    void deleteByForSimRange(@Param("paraSim")int paraSim, @Param("active") int active);
 
     @Query("SELECT p.capacity from AirportsModel  p WHERE p.id =:id")
     List<AirportsCapacityModel> findByAirportCode(@Param("id") Long id);

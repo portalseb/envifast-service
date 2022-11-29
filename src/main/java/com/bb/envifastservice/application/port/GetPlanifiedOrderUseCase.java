@@ -14,7 +14,7 @@ public class GetPlanifiedOrderUseCase implements GetPlanifiedOrderService {
     private final GetPlanifiedOrderPort getPlanifiedOrderPort;
 
     @Override
-    public List<PackagePlanified> getPlanifiedOrder(String fecha, String timeInf, String timeSup, Integer paraSim) {
-        return getPlanifiedOrderPort.getPlanifiedOrder(fecha,timeInf,timeSup,paraSim);
+    public List<PackagePlanified> getPlanifiedOrder(String fecha, String timeInf, String timeSup, Integer paraSim, Integer indicador) {
+        return getPlanifiedOrderPort.getPlanifiedOrder(fecha,timeInf,timeSup,paraSim,indicador);
     }
 }
