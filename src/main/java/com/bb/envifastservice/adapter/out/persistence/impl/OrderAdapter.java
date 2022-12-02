@@ -22,7 +22,7 @@ import java.util.*;
 
 @PersistenceAdapter
 @RequiredArgsConstructor
-public class OrderAdapter implements ListPackagesPort, InsertOrderPort, PlanOrderRoutePort, GenerateSimulationOrderPort, GetOrderForUserPort, IniciarSim5DiasPort, GenerateOrderForSimPort, RestoreUnplanOrderPort, GetPlanifiedOrderPort {
+public class OrderAdapter implements ListPackagesPort, InsertOrderPort, PlanOrderRoutePort, GenerateSimulationOrderPort, GetOrderForUserPort, IniciarSim5DiasPort, GenerateOrderForSimPort, RestoreUnplanOrderPort, GetPlanifiedOrderPort, CountPlanifiedOrderPort {
     private final PackageRepository packageRepository;
     private final AirportRepository airportRepository;
     private final OrderRepository orderRepository;
@@ -786,7 +786,8 @@ public class OrderAdapter implements ListPackagesPort, InsertOrderPort, PlanOrde
                 envio.setFechaMax(order.getFechaEnvio().plusDays(1));
             else
                 envio.setFechaMax(order.getFechaEnvio().plusDays(2));
-            envios.add(envio);
+            if(!(envio.getOrigen().getCiudad().getContinente().equals("EUROPA") && envio.getDestino().getCiudad().getContinente().equals("AMERICA DEL SUR")))
+                envios.add(envio);
         }
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         var envioFechaMinim = LocalDateTime.of(LocalDate.parse(fecha),LocalTime.parse(timeInf)); //Se va a cambiar cuando necesite reprogramar envios de fechas/horas anteriores
@@ -1175,5 +1176,10 @@ public class OrderAdapter implements ListPackagesPort, InsertOrderPort, PlanOrde
             if(indicador==1 && i==20) break;}
         }
         return lista;
+    }
+    @Override
+    public int countPlanifiedOrder(String fecha, String timeInf, String timeSup, Integer paraSim, Integer indicador) {
+        var paquetesBD = packageRepository.finPackageInRangeForSim(LocalDateTime.of(LocalDate.parse(fecha),LocalTime.parse(timeInf)),LocalDateTime.of(LocalDate.parse(fecha),LocalTime.parse(timeSup)),paraSim,1);
+        return paquetesBD.size();
     }
 }

@@ -32,6 +32,7 @@ public class OrderController {
     private final GenerateOrderForSimService generateOrderForSimService;
     private final RestoreUnplanOrderService restoreUnplanOrderService;
     private final GetPlanifiedOrderService getPlanifiedOrderService;
+    private final CountPlanifiedOrderService countPlanifiedOrderService;
     @PostMapping(value = "/insert")
     public Envio insertarEnvio(@RequestBody Envio envio){
         return insertOrderService.insertOrder(envio);
@@ -80,5 +81,9 @@ public class OrderController {
         }
         return 0;
     }
-
+    @GetMapping(value = "/countPlanifiedOrders")
+    @ResponseBody
+    public int countPlanifiedOrders(@RequestParam(name = "fecha")String fecha, @RequestParam(name = "timeInf") String timeInf, @RequestParam(name = "timeSup") String timeSup, @RequestParam(name = "paraSim") Integer paraSim, @RequestParam(name = "indicador") Integer indicador){
+        return countPlanifiedOrderService.countPlanifiedOrder(fecha, timeInf, timeSup, paraSim,indicador);
+    }
 }

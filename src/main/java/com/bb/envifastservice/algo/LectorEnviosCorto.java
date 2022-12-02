@@ -204,14 +204,13 @@ public class LectorEnviosCorto {
                                     if (origen.equals(this.aeropuertos.get(j).getCodigo())) j_aeropuerto1 = j;
                                     if (destPaq[0].equals(this.aeropuertos.get(j).getCodigo())) j_aeropuerto2 = j;
                                 }
-                                if (!(this.aeropuertos.get(j_aeropuerto1).getCiudad().getContinente().equals("EUROPA")
-                                        && this.aeropuertos.get(j_aeropuerto2).getCiudad().getContinente().equals("AMERICA DEL SUR"))) {
+
                                     codigos.add(parts[0]);
                                     fechasEnvio.add(fechaHoraIni);
                                     origenes.add(this.aeropuertos.get(j_aeropuerto1));
                                     destinos.add(this.aeropuertos.get(j_aeropuerto2));
                                     cantPaquetes.add(Integer.parseInt(destPaq[1]));
-                                }
+
                             }
                             if (fechaHoraIni.toLocalDate().isAfter(LocalDate.parse(fecha)))
                                 break;
@@ -226,14 +225,13 @@ public class LectorEnviosCorto {
                                     if (origen.equals(this.aeropuertos.get(j).getCodigo())) j_aeropuerto1 = j;
                                     if (destPaq[0].equals(this.aeropuertos.get(j).getCodigo())) j_aeropuerto2 = j;
                                 }
-                                if (!(this.aeropuertos.get(j_aeropuerto1).getCiudad().getContinente().equals("EUROPA")
-                                        && this.aeropuertos.get(j_aeropuerto2).getCiudad().getContinente().equals("AMERICA DEL SUR"))) {
+
                                     codigos.add(parts[0]);
                                     fechasEnvio.add(fechaHoraIni);
                                     origenes.add(this.aeropuertos.get(j_aeropuerto1));
                                     destinos.add(this.aeropuertos.get(j_aeropuerto2));
                                     cantPaquetes.add(Integer.parseInt(destPaq[1]));
-                                }
+
                             }
                             if (fechaHoraIni.toLocalDate().isAfter(LocalDate.parse(fecha).plusDays(1)))
                                 break;

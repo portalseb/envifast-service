@@ -32,5 +32,7 @@ public interface PackageRepository  extends JpaRepository<PackageModel, String> 
     @Modifying
     @Query("DELETE from PackageModel a where a.active = :active and a.forSim = :forSim")
     void deleteByParaSimRange(@Param("forSim") int forSim ,@Param("active") int active);
+    @Query("SELECT o from PackageModel  o WHERE o.active =:active and o.forSim =:paraSim and o.dateTime >= :inf and o.dateTime <= :sup" )
+    List<PackageModel> finPackageInRangeForSim(@Param("inf") LocalDateTime inf, @Param("sup") LocalDateTime sup, @Param("paraSim")int paraSim, @Param("active") int active);
 
 }
