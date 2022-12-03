@@ -24,6 +24,8 @@ public class FlightController {
     private final ListDayFlightsService listDayFlightsService;
     private final RestoreFlightsService restoreFlightsService;
     private final FindFlightPackagesService findFlightPackagesService;
+    private final CapacityFlightService capacityFlightService;
+    private final CapacityAirportService capacityAirportService;
     @GetMapping(value = "/{id}")
     public ArcoAeropuerto findVuelo(@RequestParam(name = "id") Long id){
         return listFlightByIdService.listById(id);
@@ -51,4 +53,14 @@ public class FlightController {
     public int paquetesDeVuelo(@RequestParam(name = "fechaIni")String fechaIni,@RequestParam(name = "horaIni") String horaIni,@RequestParam(name = "origenId") Integer origenId,@RequestParam(name = "destinoId") Integer destinoId,@RequestParam(name = "paraSim") Integer paraSim){
         return findFlightPackagesService.findFlightPackages(fechaIni, horaIni, origenId, destinoId, paraSim);
     }
+    @GetMapping(value = "/cantPaquetesAirport")
+    public void cantPaquetesAirport(@RequestParam(name = "fecha") String fecha,@RequestParam(name = "timeInf")  String timeInf, @RequestParam(name = "timeSup") String timeSup, @RequestParam(name = "paraSim") Integer forSim) throws IOException{
+        capacityAirportService.capacityAirport(fecha, timeInf, timeSup, forSim);
+    }
+
+    @GetMapping(value = "/cantPaquetesFlight")
+    public int cantPaquetesFlight(@RequestParam(name = "fecha") String fecha,@RequestParam(name = "origenId")  Integer origenId, @RequestParam(name = "destinoId") Integer destinoId) throws IOException{
+        return capacityFlightService.capacityFlights(fecha, origenId,destinoId);
+    }
+
 }

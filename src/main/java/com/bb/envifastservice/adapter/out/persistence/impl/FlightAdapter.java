@@ -9,6 +9,7 @@ import com.bb.envifastservice.adapter.out.persistence.repos.PackageRepository;
 import com.bb.envifastservice.algo.*;
 import com.bb.envifastservice.application.port.out.*;
 import com.bb.envifastservice.hexagonal.PersistenceAdapter;
+import com.bb.envifastservice.models.AirportsModel;
 import com.bb.envifastservice.models.FlightModel;
 import com.bb.envifastservice.models.PackageModel;
 import lombok.RequiredArgsConstructor;
@@ -27,7 +28,7 @@ import java.util.*;
 
 @PersistenceAdapter
 @RequiredArgsConstructor
-public class FlightAdapter implements ListFlightByIdPort, GenerateNextWeekFlightsPort, ListAllFlightsPort, ListDayFlightsPort, RestoreFlightsPort, FindFlightPackagesPort {
+public class FlightAdapter implements ListFlightByIdPort, GenerateNextWeekFlightsPort, ListAllFlightsPort, ListDayFlightsPort, RestoreFlightsPort, FindFlightPackagesPort, CapacityFlightPort, CapacityAirportPort {
     private final FlightRepository flightRepository;
     private final AirportRepository airportRepository;
     private final PackageRepository packageRepository;
@@ -242,5 +243,158 @@ public class FlightAdapter implements ListFlightByIdPort, GenerateNextWeekFlight
         if(flightBD!=null)
             return (int) (flightBD.getMaxCapacity()-flightBD.getAvailableCapacity());
         return -1;
+    }
+
+    @Override
+    public int capacityFlights(String fecha, Integer origenId, Integer destinoId) throws IOException {
+        var aeropuertosRegistros = airportRepository.findAllByActive(1);
+        String timeInf = "00:00";
+        String timeSup = "23:59";
+        String code = "";
+        String origenContinent="";
+        String destinoContinent="";
+        int cantPacks=0;
+        int maxPacks=0;
+        int flightPacks=0;
+        ArrayList<Aeropuerto> aeropuertos= new ArrayList<>();
+        for(AirportsModel airport: aeropuertosRegistros){
+            Aeropuerto aeropuerto = new Aeropuerto();
+            aeropuerto.setId((int)(long)airport.getId());
+            aeropuerto.setCodigo(airport.getAirportCode());
+            aeropuerto.setPosX(airport.getXPos());
+            aeropuerto.setPosY(airport.getYPos());
+            aeropuerto.setCapacidad(airport.getMaxCapacity());
+            aeropuerto.setTimeZone(TimeZone.getTimeZone(airport.getCityName()).toString());
+            Ciudad ciudad = new Ciudad();
+            ciudad.setNombre(airport.getCityName());
+            ciudad.setAbreviacion(airport.getCityShortName());
+            ciudad.setContinente(airport.getContinent());
+            ciudad.setPais(airport.getCountryName());
+            aeropuerto.setCiudad(ciudad);
+            if(aeropuerto.getId()==origenId) {
+                code = aeropuerto.getCodigo();
+                origenContinent = aeropuerto.getCiudad().getContinente();
+            } else if (aeropuerto.getId()==destinoId) {
+                destinoContinent = aeropuerto.getCiudad().getContinente();
+            }
+            aeropuertos.add(aeropuerto);
+        }
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        //Se generan los envios de este rango
+        LectorEnviosCorto lectorEnviosCorto = new LectorEnviosCorto(aeropuertos);
+        lectorEnviosCorto.setFechaDesde(LocalDate.parse(fecha));
+        lectorEnviosCorto.LeerDeAeropuerto("src/main/java/com/bb/envifastservice/historicData/",fecha,timeInf,timeSup,code);
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+        System.out.println("Para "+ fecha);
+        for (int j = 0; j < lectorEnviosCorto.getDestinos().size(); j++) {
+            if(code.equals(lectorEnviosCorto.getOrigenes().get(j).getCodigo())){
+                cantPacks+=lectorEnviosCorto.getCantPaquetes().get(j);
+            }
+        }
+
+        if(origenContinent.equals(destinoContinent)){
+            if(origenContinent.equals("EUROPA")){
+                maxPacks=250;
+            }
+            else{
+                maxPacks=300;
+            }
+        }
+        else{
+            maxPacks=350;
+        }
+
+        flightPacks=cantPacks/78;
+        if(flightPacks>=maxPacks){
+            flightPacks=maxPacks;
+        }
+
+        System.out.println("Aeropuerto: " + code + " Cant. Packs: " + cantPacks);
+        System.out.println("Origen: " + origenContinent + " Destino: " + destinoContinent);
+        System.out.println("Maximo de paquetes: "+ maxPacks + " Paquetes del vuelo: "+ flightPacks);
+        return flightPacks;
+    }
+
+    @Override
+    public void capacityAirport(String fecha, String timeInf, String timeSup, Integer forSim) throws IOException {
+        var aeropuertosRegistros = airportRepository.findAllByActive(1);
+        ArrayList<Aeropuerto> aeropuertos= new ArrayList<>();
+        for(AirportsModel airport: aeropuertosRegistros){
+            Aeropuerto aeropuerto = new Aeropuerto();
+            aeropuerto.setId((int)(long)airport.getId());
+            aeropuerto.setCodigo(airport.getAirportCode());
+            aeropuerto.setPosX(airport.getXPos());
+            aeropuerto.setPosY(airport.getYPos());
+            aeropuerto.setCapacidad(airport.getMaxCapacity());
+            aeropuerto.setTimeZone(TimeZone.getTimeZone(airport.getCityName()).toString());
+            Ciudad ciudad = new Ciudad();
+            ciudad.setNombre(airport.getCityName());
+            ciudad.setAbreviacion(airport.getCityShortName());
+            ciudad.setContinente(airport.getContinent());
+            ciudad.setPais(airport.getCountryName());
+            aeropuerto.setCiudad(ciudad);
+            //System.out.println(envioFechaMax);
+            aeropuertos.add(aeropuerto);
+        }
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        //Se generan los envios de este rango
+        LectorEnviosCorto lectorEnviosCorto = new LectorEnviosCorto(aeropuertos);
+        lectorEnviosCorto.setFechaDesde(LocalDate.parse(fecha));
+        lectorEnviosCorto.LeerActualizado("src/main/java/com/bb/envifastservice/historicData/",fecha,timeInf,timeSup);
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        String[] codes  = {"SKBO",
+                "SEQM",
+                "SVMI",
+                "SBBR",
+                "SPIM",
+                "SLLP",
+                "SCEL",
+                "SABE",
+                "SGAS",
+                "SUAA",
+                "LATI",
+                "EDDI",
+                "LOWW",
+                "EBCI",
+                "UMMS",
+                "LBSF",
+                "LKPR",
+                "LDZA",
+                "EKCH",
+                "LZIB",
+                "LJLJ",
+                "LEMD",
+                "EETN",
+                "EFHK",
+                "LFPG",
+                "LGAV",
+                "EHAM",
+                "LHBP",
+                "EIDW",
+                "BIKF",
+                "LIRA",
+                "EVRA",
+                "ELLX",
+                "LMML",
+                "ENGM",
+                "EPMO",
+                "LPPT",
+                "EGLL",
+                "ESKN",
+                "LSZB"};
+
+        //Se generan los envios de este rango
+        int cantPacks=0;
+        System.out.println("Para "+ fecha);
+        for(int i=0;i<40;i++) {
+            cantPacks=0;
+            for (int j = 0; j < lectorEnviosCorto.getDestinos().size(); j++) {
+                if(codes[i].equals(lectorEnviosCorto.getOrigenes().get(j).getCodigo())){
+                    cantPacks+=lectorEnviosCorto.getCantPaquetes().get(j);
+                }
+            }
+            System.out.println("Aeropuerto: " + codes[i] + " Cant. Packs: " + cantPacks);
+        }
     }
 }
