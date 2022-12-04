@@ -51,6 +51,12 @@ public class OrderAdapter implements ListPackagesPort, InsertOrderPort, PlanOrde
     }
 
     private void convertToEnvio(ArrayList<Paquete> paquetes, OrderModel order, Envio envio, ArrayList<ArcoAeropuerto>vuelos) {
+        LocalDateTime horaReal = LocalDateTime.now();
+        LocalDateTime horaAct = LocalDateTime.of(horaReal.toLocalDate(),LocalTime.of(horaReal.getHour(),horaReal.getMinute()));
+        System.out.println(horaAct);
+        int estado = 0;
+        int contador = 0;
+        int contPacks=0;
         envio.setCodigo(order.getCodigo());
         envio.setCantidadPaquetes(order.getCantidad());
         var destino = airportRepository.findByCityNameAndActive(order.getDestino(),1);
@@ -95,6 +101,7 @@ public class OrderAdapter implements ListPackagesPort, InsertOrderPort, PlanOrde
         envio.setEmisorTelefonoNumero(order.getEmisorTelefonoNumero());
         envio.setTiempoTotal(order.getTiempoTotal());
         envio.setToken(order.getToken());
+        contPacks=0;
         for (PackageModel pack: order.getPacks()
              ) {
             var paquete = new Paquete();
@@ -124,16 +131,27 @@ public class OrderAdapter implements ListPackagesPort, InsertOrderPort, PlanOrde
             paquete.setDestino(aDestino2);
             paquete.setId(pack.getId());
             paquete.setOrigen(aOrigen2);
-            for (FlightModel vuelo:pack.getRoute()
-            ) {
-                var arco = flightAdapter.listById(vuelo.getId());
-                vuelos.add(arco);
+            if(pack.getRoute().size()!=0) {
+                contador = 0;
+                for (FlightModel vuelo : pack.getRoute()
+                ) {
+                    var arco = flightAdapter.listById(vuelo.getId());
+                    if (LocalDateTime.of(arco.getDiaPartida(), arco.getHoraPartida()).isBefore(horaAct) &&
+                            LocalDateTime.of(arco.getDiaPartida(), arco.getHoraLlegada()).isAfter(horaAct))
+                        estado = 1;
+                    if (LocalDateTime.of(arco.getDiaLLegada(), arco.getHoraLlegada()).isBefore(horaAct))
+                        contador++;
+                    vuelos.add(arco);
 
+                }
+                if (contador == pack.getRoute().size()) contPacks++;
             }
             paquetes.add(paquete);
 
         }
+        if(contPacks==order.getPacks().size()) estado=2;
         envio.setPaquetes(paquetes);
+        envio.setEstado(estado);
     }
 
     @Override

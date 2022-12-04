@@ -38,4 +38,5 @@ public class Envio {
     private double tiempoTotal;
 
     private String token;
+    private int estado;
 }
