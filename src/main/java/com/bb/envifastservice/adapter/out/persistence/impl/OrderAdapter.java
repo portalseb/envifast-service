@@ -220,13 +220,16 @@ public class OrderAdapter implements ListPackagesPort, InsertOrderPort, PlanOrde
         for(OrderModel order: enviosBD) {
             Envio envio = new Envio();
             envio.setId(order.getId());
+            envio.setCodigo(order.getCodigo());
             envio.setFechaEnvio(order.getFechaEnvio());
             envio.setPaquetes(new ArrayList<>());
             for(PackageModel pack: order.getPacks()){
                     Paquete paquete = new Paquete();
                     paquete.setId(pack.getId());
-                    if(pack.getRoute().size()==0)
+                    if(pack.getRoute().size()==0){
+                        paquete.setearRuta(new ArrayList<>());
                         envio.getPaquetes().add(paquete);
+                    }
             }
             envio.setCantidadPaquetes(envio.getPaquetes().size());
             envio.setOrigen(new Aeropuerto());
@@ -274,7 +277,7 @@ public class OrderAdapter implements ListPackagesPort, InsertOrderPort, PlanOrde
             ciudad.setContinente(airport.getContinent());
             ciudad.setPais(airport.getCountryName());
             aeropuerto.setCiudad(ciudad);
-            var  capacidadCopia = airportCapacityRepository.findByAirportCode((long)aeropuerto.getId());
+            var  capacidadCopia = new ArrayList<>(airport.getCapacity());
             capacidadCopia.removeIf(c->c.getDateTime().getDateTime().isBefore(envioFechaMin) || c.getDateTime().getDateTime().isAfter(envioFechaMax) || c.getForSim()!=0);
             for(AirportsCapacityModel airportsCapacityModel: capacidadCopia){
                 CapacidadAeropuerto capacidadAeropuerto = new CapacidadAeropuerto();
@@ -332,9 +335,6 @@ public class OrderAdapter implements ListPackagesPort, InsertOrderPort, PlanOrde
         for(int i=0;i<envios.size();i++){
             //Variables... modificar
             ArrayList<ArcoAeropuerto> arcos = ambiente.sacarArcosPosibles(arcosGeneral,envios.get(i));
-            ambiente.setCaminos(arcos);
-            System.out.println("Cantidad de arcos");
-            System.out.println(arcos.size());
             int origen =0;
             int destino = 0;
             for(int j=0;j<aeropuertos.size();j++){
@@ -345,7 +345,12 @@ public class OrderAdapter implements ListPackagesPort, InsertOrderPort, PlanOrde
                     destino=j;
                 }
             }
-
+            if(aeropuertos.get(origen).getCiudad().getContinente().equals("EUROPA") && aeropuertos.get(destino).getCiudad().getContinente().equals("AMERICA DEL SUR")){
+                arcos = ambiente.sacarArcosPosiblesEUSA(arcos);
+            }
+            ambiente.setCaminos(arcos);
+            System.out.println("Cantidad de arcos");
+            System.out.println(arcos.size());
             ambiente.setNodoInicialFinal(aeropuertos.get(origen),aeropuertos.get(destino));
             //ambiente.setPaquetesEnvio(envios.get(i).getPaquetes());
             ambiente.setFechaInicial(envios.get(i).getFechaEnvio());

@@ -109,9 +109,10 @@ public class AirportAdapter implements ListAllAirportsPort, ListAirportCoordPort
         }
 
         //Pendiente: agregar que no se repita para el dia a dia...
+
         for(AirportsModel airportsModel: airportsModels){
 
-            var airportsCapacityModels = new ArrayList<AirportsCapacityModel>();
+            var airportsCapacityModels = airportCapacityRepository.findByAirportCode(airportsModel.getId());
             for(DateTimeModel dateTimeModel: dateTimesModels){
                 var airportsCapacityModel = new AirportsCapacityModel();
                 airportsCapacityModel.setDateTime(dateTimeModel);
