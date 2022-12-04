@@ -310,7 +310,9 @@ public class Ant {
                         break;
                     }
                     caminosHormigaAnteriores.remove(caminosHormigaAnteriores.size() - 1);
-                    if(caminosHormigaAnteriores.size()==0){  sinCamino=1; System.out.println("No hay camino posible"); break;}
+                    if(caminosHormigaAnteriores.size()==0){  sinCamino=1;
+                        //System.out.println("No hay camino posible");
+                        break;}
                 }
             }
 

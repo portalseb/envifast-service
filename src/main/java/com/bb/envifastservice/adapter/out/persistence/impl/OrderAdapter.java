@@ -367,8 +367,8 @@ public class OrderAdapter implements ListPackagesPort, InsertOrderPort, PlanOrde
                 arcos = ambiente.sacarArcosPosiblesEUSA(arcos);
             }
             ambiente.setCaminos(arcos);
-            System.out.println("Cantidad de arcos");
-            System.out.println(arcos.size());
+            //System.out.println("Cantidad de arcos");
+            //System.out.println(arcos.size());
             ambiente.setNodoInicialFinal(aeropuertos.get(origen),aeropuertos.get(destino));
             //ambiente.setPaquetesEnvio(envios.get(i).getPaquetes());
             ambiente.setFechaInicial(envios.get(i).getFechaEnvio());
@@ -381,10 +381,10 @@ public class OrderAdapter implements ListPackagesPort, InsertOrderPort, PlanOrde
                 long start1 = System.currentTimeMillis();
                 algoritmoHormigas.activarHormigas(ambiente);
                 long end1 = System.currentTimeMillis();
-                System.out.println("Elapsed Time in milli seconds: " + (end1 - start1));
+                //System.out.println("Elapsed Time in milli seconds: " + (end1 - start1));
                 if (algoritmoHormigas.getSolucionCamino().size() != 0) {
                     //Se imprime la solucion
-                    System.out.println("Envio " + i + " - Camino: " + algoritmoHormigas.getSolucionCamino().toString() + algoritmoHormigas.getSolucionCosto());
+                    //System.out.println("Envio " + i + " - Camino: " + algoritmoHormigas.getSolucionCamino().toString() + algoritmoHormigas.getSolucionCosto());
 
                     //Actualizar capacidades
                     ambiente.actualizarCapacidades(algoritmoHormigas.getSolucionCamino());
@@ -392,7 +392,7 @@ public class OrderAdapter implements ListPackagesPort, InsertOrderPort, PlanOrde
                     //Actualizar rutas de paquetes
                     envios.get(i).getPaquetes().get(l).setRuta(algoritmoHormigas.getSolucionCamino());
                 } else {
-                    System.out.println("Envio " + i + " - no se hallo solucion");
+                    //System.out.println("Envio " + i + " - no se hallo solucion");
                     envios.get(i).setTiempoTotal(0.0);
                 }
             }
@@ -570,8 +570,8 @@ public class OrderAdapter implements ListPackagesPort, InsertOrderPort, PlanOrde
             //Algoritmo seteo de datos
             ArrayList<ArcoAeropuerto> arcos = ambiente.sacarArcosPosibles(arcosGeneral,envio);
             ambiente.setCaminos(arcos);
-            System.out.println("Cantidad de arcos");
-            System.out.println(arcos.size());
+            //System.out.println("Cantidad de arcos");
+            //System.out.println(arcos.size());
             int origen =0;
             int destino = 0;
             for(int k=0;k<aeropuertos.size();k++){
@@ -591,10 +591,10 @@ public class OrderAdapter implements ListPackagesPort, InsertOrderPort, PlanOrde
             long start1 = System.currentTimeMillis();
             algoritmoHormigas.activarHormigas(ambiente);
             long end1 = System.currentTimeMillis();
-            System.out.println("Elapsed Time in milli seconds: " + (end1 - start1));
+            //System.out.println("Elapsed Time in milli seconds: " + (end1 - start1));
 
             //Se imprime la solucion
-            System.out.println("Envio "+ j +" - Camino: " + algoritmoHormigas.getSolucionCamino().toString() + algoritmoHormigas.getSolucionCosto());
+            //System.out.println("Envio "+ j +" - Camino: " + algoritmoHormigas.getSolucionCamino().toString() + algoritmoHormigas.getSolucionCosto());
 
             //Actualizar capacidades
             ambiente.actualizarCapacidades(algoritmoHormigas.getSolucionCamino());
@@ -920,8 +920,8 @@ public class OrderAdapter implements ListPackagesPort, InsertOrderPort, PlanOrde
                 }
             }
             ambiente.setCaminos(arcos);
-            System.out.println("Cantidad de arcos");
-            System.out.println(arcos.size());
+            //System.out.println("Cantidad de arcos");
+            //System.out.println(arcos.size());
             ambiente.setNodoInicialFinal(aeropuertos.get(origen),aeropuertos.get(destino));
             //ambiente.setPaquetesEnvio(envio.getPaquetes());
             ambiente.setFechaInicial(envios.get(j).getFechaEnvio());
@@ -935,11 +935,11 @@ public class OrderAdapter implements ListPackagesPort, InsertOrderPort, PlanOrde
                 long start1 = System.currentTimeMillis();
                 algoritmoHormigas.activarHormigas(ambiente);
                 long end1 = System.currentTimeMillis();
-                System.out.println("Elapsed Time in milli seconds: " + (end1 - start1));
+                //System.out.println("Elapsed Time in milli seconds: " + (end1 - start1));
 
                 //Se imprime la solucion
                 if(algoritmoHormigas.getSolucionCamino().size()!=0) {
-                    System.out.println("Envio " + j + " - Camino: " + algoritmoHormigas.getSolucionCamino().toString() + algoritmoHormigas.getSolucionCosto());
+                    //System.out.println("Envio " + j + " - Camino: " + algoritmoHormigas.getSolucionCamino().toString() + algoritmoHormigas.getSolucionCosto());
                     //Actualizar capacidades
                     ambiente.actualizarCapacidades(algoritmoHormigas.getSolucionCamino());
                     envios.get(j).setTiempoTotal(algoritmoHormigas.getSolucionCosto());
@@ -949,7 +949,7 @@ public class OrderAdapter implements ListPackagesPort, InsertOrderPort, PlanOrde
                     if(cantPaquetes >= maxPaquetes)break;
                 }
                 else{
-                    System.out.println("Envio " + j + " - no se hallo solucion");
+                    //System.out.println("Envio " + j + " - no se hallo solucion");
                     envios.get(j).setTiempoTotal(0.0);
                 }
             }
@@ -957,79 +957,6 @@ public class OrderAdapter implements ListPackagesPort, InsertOrderPort, PlanOrde
             if(cantPaquetes >= maxPaquetes)break;
 
         }
-
-
-//        for(int j=0; j<lectorEnviosCorto.getDestinos().size(); j++) {
-//            //Creacion objeto envio
-//            var envio = new Envio();
-//            envio.setCodigo(lectorEnviosCorto.getCodigos().get(j));
-//            envio.setFechaEnvio(lectorEnviosCorto.getFechasEnvio().get(j));
-//            envio.setOrigen(lectorEnviosCorto.getOrigenes().get(j));
-//            envio.setDestino(lectorEnviosCorto.getDestinos().get(j));
-//            envio.setCantidadPaquetes(lectorEnviosCorto.getCantPaquetes().get(j));
-//            envio.setPaquetes(new ArrayList<Paquete>());
-//
-//            for (int k = 0; k < envio.getCantidadPaquetes(); k++) {
-//                Paquete paquete = new Paquete();
-//                envio.getPaquetes().add(paquete);
-//            }
-//
-//            //Algoritmo seteo de datos
-//            ArrayList<ArcoAeropuerto> arcos = ambiente.sacarArcosPosibles(arcosGeneral,envio);
-//            int origen =0;
-//            int destino = 0;
-//            for(int k=0;k<aeropuertos.size();k++){
-//                if(aeropuertos.get(k).getId()==envio.getOrigen().getId()){
-//                    origen=k;
-//                }
-//                if(aeropuertos.get(k).getId()==envio.getDestino().getId()){
-//                    destino=k;
-//                }
-//            }
-//            //Manejar los envios EU->SA
-//            //if(aeropuertos.get(origen).getCiudad().getContinente().equals("EUROPA") && aeropuertos.get(destino).getCiudad().getContinente().equals("AMERICA DEL SUR")){
-//            //    arcos = ambiente.sacarArcosPosiblesEUSA(arcos);
-//            //}
-//            ambiente.setCaminos(arcos);
-//            System.out.println("Cantidad de arcos");
-//            System.out.println(arcos.size());
-//            ambiente.setNodoInicialFinal(aeropuertos.get(origen),aeropuertos.get(destino));
-//            //ambiente.setPaquetesEnvio(envio.getPaquetes());
-//            ambiente.setFechaInicial(envio.getFechaEnvio());
-//
-//            for(int l=0;l<envio.getPaquetes().size();l++){
-//                ArrayList<Paquete> packEnvio = new ArrayList<>();
-//                packEnvio.add(envio.getPaquetes().get(l));
-//                ambiente.setPaquetesEnvio(packEnvio);
-//
-//                Aco algoritmoHormigas = new Aco();
-//                //long start1 = System.currentTimeMillis();
-//                algoritmoHormigas.activarHormigas(ambiente);
-//                //long end1 = System.currentTimeMillis();
-//                System.out.println("Elapsed Time in milli seconds: acabo pack " + j + "-" + l);
-//
-//                //Se imprime la solucion
-//                if(algoritmoHormigas.getSolucionCamino().size()!=0) {
-//                    //System.out.println("Envio " + j + " - Camino: " + algoritmoHormigas.getSolucionCamino().toString() + algoritmoHormigas.getSolucionCosto());
-//                    //Actualizar capacidades
-//                    ambiente.actualizarCapacidades(algoritmoHormigas.getSolucionCamino());
-//                    envio.setTiempoTotal(algoritmoHormigas.getSolucionCosto());
-//                    //Actualizar rutas de paquetes
-//                    envio.getPaquetes().get(l).setRuta(algoritmoHormigas.getSolucionCamino());
-//                    //for (int k = 0; k < envio.getPaquetes().size(); k++) {
-//                    //    envio.getPaquetes().get(k).setRuta(algoritmoHormigas.getSolucionCamino());
-//                    //}
-//                }
-//                else{
-//                    System.out.println("Envio " + j + "pack" + l + " - no se hallo solucion");
-//                    envio.setTiempoTotal(0.0);
-//                }
-//            }
-//
-//            //Algoritmo ejecucion
-//
-//            envios.add(envio);
-//        }
 
         //Registrar en BD envios y paquetes con ruta
         var enviosNuevos = new ArrayList<OrderModel>();
@@ -1058,47 +985,6 @@ public class OrderAdapter implements ListPackagesPort, InsertOrderPort, PlanOrde
             enviosNuevos.add(orderBD);
         }
 
-//        for(int i=cantNoPlan;i<lectorEnviosCorto.getDestinos().size();i++) {
-//            var envioNuevo = new OrderModel();
-//            int plan=1;
-//            //Setear todoz lo del envio
-//            envioNuevo.setCodigo(envios.get(i).getCodigo());
-//            envioNuevo.setCantidad(envios.get(i).getCantidadPaquetes());
-//            envioNuevo.setFechaEnvio(envios.get(i).getFechaEnvio());
-//            envioNuevo.setTiempoTotal(envios.get(i).getTiempoTotal());
-//            var aeropuertoOrigen = airportRepository.findByIdActive(envios.get(i).getOrigen().getId().longValue(),1);
-//            var aeropuertoDestino = airportRepository.findByIdActive(envios.get(i).getDestino().getId().longValue(),1);
-//            envioNuevo.setOrigen(aeropuertoOrigen.getCityName());
-//            envioNuevo.setDestino(aeropuertoDestino.getCityName());
-//            envioNuevo.setActive(1);
-//            envioNuevo.setForSim(1);
-//            List<PackageModel> paquetes = new ArrayList<PackageModel>();
-//            for(int j=0;j<envios.get(i).getPaquetes().size();j++){
-//                var paqueteNuevo = new PackageModel();
-//                paqueteNuevo.setDateTime(envios.get(i).getFechaEnvio());
-//                paqueteNuevo.setCurrentAirportId(envios.get(i).getOrigen().getId().longValue());
-//                paqueteNuevo.setOrigen(aeropuertoOrigen.getCityName());
-//                paqueteNuevo.setDestino(aeropuertoDestino.getCityName());
-//                paqueteNuevo.setActive(1);
-//                var flights = new ArrayList<FlightModel>();
-//                if(envios.get(i).getPaquetes().get(j).getRuta().size()!=0) {
-//                    for (ArcoAeropuerto vuelo : envios.get(i).getPaquetes().get(j).getRuta()
-//                    ) {
-//                        var flight = flightRepository.findByFlightId(vuelo.getId().longValue());
-//                        flights.add(flight);
-//                    }
-//                }
-//                else{
-//                    plan=0;
-//                }
-//                paqueteNuevo.setRoute(flights);
-//                paquetes.add(paqueteNuevo);
-//            }
-//            envioNuevo.setPacks(paquetes);
-//            if(plan==1)envioNuevo.setPlanned(1);
-//            if(plan==0)envioNuevo.setPlanned(0);
-//            enviosNuevos.add(envioNuevo);
-//        }
         orderRepository.saveAll(enviosNuevos);
 
 

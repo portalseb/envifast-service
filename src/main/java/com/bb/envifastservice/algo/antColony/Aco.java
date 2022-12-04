@@ -66,7 +66,7 @@ public class Aco {
                     if (hormiga2.getCaminoProbabilidades().get(p) >= 0.9)
                         contProb2++;
                 if (contProb1 == hormiga1.getCaminoProbabilidades().size() || contProb2 == hormiga2.getCaminoProbabilidades().size()) {
-                    System.out.println("Se llego al limite");
+                    //System.out.println("Se llego al limite");
                     //System.out.println(i);
                     break;
                 }
@@ -87,7 +87,7 @@ public class Aco {
                         if (hormiga1.getCaminoProbabilidades().get(p) >= 0.9)
                             contProb1++;
                     if (contProb1 == hormiga1.getCaminoProbabilidades().size()) {
-                        System.out.println("Se llego al limite");
+                        //System.out.println("Se llego al limite");
                         //System.out.println(i);
                         break;
                     }
@@ -107,7 +107,7 @@ public class Aco {
                             if (hormiga2.getCaminoProbabilidades().get(p) >= 0.9)
                                 contProb2++;
                         if (contProb2 == hormiga2.getCaminoProbabilidades().size()) {
-                            System.out.println("Se llego al limite");
+                            //System.out.println("Se llego al limite");
                             //System.out.println(i);
                             break;
                         }
@@ -118,7 +118,7 @@ public class Aco {
 
             if(contIteraciones>1000){
                 if(solucionCamino.size()!=0) {
-                    System.out.println("Se llego al limite");
+                    //System.out.println("Se llego al limite");
                     break;
                 }
                 else{
@@ -128,7 +128,7 @@ public class Aco {
             }
 
             if(ambiente.getMaximoDeIteraciones()>=100000 && solucionCamino.size()!=0){
-                System.out.println("Se llego al limite - No se hallo solucion");
+                //System.out.println("Se llego al limite - No se hallo solucion");
                 break;
             }
         }

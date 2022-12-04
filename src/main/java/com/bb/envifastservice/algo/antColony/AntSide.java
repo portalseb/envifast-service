@@ -406,7 +406,9 @@ public class AntSide {
                 int mes = horaAnt.getMonthValue();
                 int anio = horaAnt.getYear();
                 int ind = nodos.get(nodos.indexOf(destino)).getCapacidadIndex(hora, minuto, dia, mes, anio);
-                if(ind==-1) {System.out.println("No se encontro el indice para" + hora +":"+ minuto +" " + dia + "-"+mes +"-" +anio); return;}
+                if(ind==-1) {
+                    //System.out.println("No se encontro el indice para" + hora +":"+ minuto +" " + dia + "-"+mes +"-" +anio);
+                    return;}
                 for(int j=0;j<paquetesEnvio.size();j++) {
                     nodos.get(nodos.indexOf(destino)).getCapacidadDisponible().get(ind).agregarPaquete(paquetesEnvio.get(j));
                 }

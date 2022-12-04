@@ -202,8 +202,8 @@ public class FlightAdapter implements ListFlightByIdPort, GenerateNextWeekFlight
             //flightMap.setCantMax((int)(long)(flight.getMaxCapacity()));
             list.add(flightMap);
         }
-        System.out.println(table.size());
-        System.out.println("Ya paso por todos");
+        //System.out.println(table.size());
+        //System.out.println("Ya paso por todos");
         return list;
     }
     @Override
@@ -225,8 +225,8 @@ public class FlightAdapter implements ListFlightByIdPort, GenerateNextWeekFlight
             //flightMap.setCantMax((int)(long)(flight.getMaxCapacity()));
             list.add(flightMap);
         }
-        System.out.println(table.size());
-        System.out.println("Ya paso por todos");
+        //System.out.println(table.size());
+        //System.out.println("Ya paso por todos");
         return list;
     }
     @Override
@@ -286,7 +286,7 @@ public class FlightAdapter implements ListFlightByIdPort, GenerateNextWeekFlight
         lectorEnviosCorto.LeerDeAeropuerto("src/main/java/com/bb/envifastservice/historicData/",fecha,timeInf,timeSup,code);
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-        System.out.println("Para "+ fecha);
+        //System.out.println("Para "+ fecha);
         for (int j = 0; j < lectorEnviosCorto.getDestinos().size(); j++) {
             if(code.equals(lectorEnviosCorto.getOrigenes().get(j).getCodigo())){
                 cantPacks+=lectorEnviosCorto.getCantPaquetes().get(j);
@@ -310,9 +310,9 @@ public class FlightAdapter implements ListFlightByIdPort, GenerateNextWeekFlight
             flightPacks=maxPacks;
         }
 
-        System.out.println("Aeropuerto: " + code + " Cant. Packs: " + cantPacks);
-        System.out.println("Origen: " + origenContinent + " Destino: " + destinoContinent);
-        System.out.println("Maximo de paquetes: "+ maxPacks + " Paquetes del vuelo: "+ flightPacks);
+        //System.out.println("Aeropuerto: " + code + " Cant. Packs: " + cantPacks);
+        //System.out.println("Origen: " + origenContinent + " Destino: " + destinoContinent);
+        //System.out.println("Maximo de paquetes: "+ maxPacks + " Paquetes del vuelo: "+ flightPacks);
         return flightPacks;
     }
 
