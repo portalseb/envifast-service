@@ -13,7 +13,7 @@ public class CapacityAirportUseCase implements CapacityAirportService {
     private final CapacityAirportPort capacityAirportPort;
 
     @Override
-    public void capacityAirport(String fecha, String timeInf, String timeSup, Integer forSim) throws IOException {
-        capacityAirportPort.capacityAirport(fecha, timeInf, timeSup, forSim);
+    public int capacityAirport(String fecha, String timeInf,String code)  throws IOException {
+        return capacityAirportPort.capacityAirport(fecha, timeInf, code);
     }
 }

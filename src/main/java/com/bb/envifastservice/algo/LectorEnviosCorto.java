@@ -367,4 +367,42 @@ public class LectorEnviosCorto {
             }
     }
 
+    public void LeerCapAeropuerto(String ruta, String fechaInf, String fechaSup, String timeInf, String timeSup, String code) throws IOException {
+        ClassPathResource classPathResource = new ClassPathResource("pack_enviado_"+ code +".txt");
+        BufferedReader br = new BufferedReader(new InputStreamReader(classPathResource.getInputStream(), StandardCharsets.UTF_8));
+        try {
+            String data;
+            while (true) {
+                data = br.readLine();
+                if (data == null) break;
+                String[] parts = data.split("-");
+                if (parts.length >= 2) {
+                    Integer fechaIni = Integer.parseInt(parts[1]);
+                    String[] horaIni = parts[2].split(":");
+                    LocalDateTime fechaHoraIni = LocalDateTime.of(LocalDate.of(fechaIni / 10000, (fechaIni % 10000) / 100, (fechaIni % 10000) % 100), LocalTime.of(Integer.parseInt(horaIni[0]), Integer.parseInt(horaIni[1])));
+                    if ((LocalDateTime.of(LocalDate.parse(fechaInf), LocalTime.parse(timeInf)).isBefore(fechaHoraIni) && LocalDateTime.of(LocalDate.parse(fechaSup), LocalTime.parse(timeSup)).isAfter(fechaHoraIni))
+                                || LocalDateTime.of(LocalDate.parse(fechaInf), LocalTime.parse(timeInf)).isEqual(fechaHoraIni)) {
+                            String origen = parts[0].substring(0, 4);
+                            String[] destPaq = parts[3].split(":");
+                            codigos.add(parts[0]);
+                            fechasEnvio.add(fechaHoraIni);
+                            cantPaquetes.add(Integer.parseInt(destPaq[1]));
+                        }
+                        if (fechaHoraIni.toLocalDate().isAfter(LocalDate.parse(fechaSup)))
+                            break;
+                }
+            }
+        } catch (IOException ioe) {
+            ioe.printStackTrace();
+        } finally {
+            try {
+                if (br != null) {
+                    br.close();
+                }
+            } catch (IOException ioe) {
+                ioe.printStackTrace();
+            }
+        }
+    }
+
 }

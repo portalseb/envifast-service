@@ -54,8 +54,8 @@ public class FlightController {
         return findFlightPackagesService.findFlightPackages(fechaIni, horaIni, origenId, destinoId, paraSim);
     }
     @GetMapping(value = "/cantPaquetesAirport")
-    public void cantPaquetesAirport(@RequestParam(name = "fecha") String fecha,@RequestParam(name = "timeInf")  String timeInf, @RequestParam(name = "timeSup") String timeSup, @RequestParam(name = "paraSim") Integer forSim) throws IOException{
-        capacityAirportService.capacityAirport(fecha, timeInf, timeSup, forSim);
+    public int cantPaquetesAirport(@RequestParam(name = "fecha") String fecha,@RequestParam(name = "timeInf")  String timeInf, @RequestParam(name = "code") String code) throws IOException{
+        return capacityAirportService.capacityAirport(fecha, timeInf, code);
     }
 
     @GetMapping(value = "/cantPaquetesFlight")

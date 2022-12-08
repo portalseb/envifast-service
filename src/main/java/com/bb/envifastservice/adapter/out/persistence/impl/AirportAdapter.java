@@ -47,7 +47,6 @@ public class AirportAdapter implements ListAllAirportsPort, ListAirportCoordPort
             aerop.setCapacidad(aeropuerto.getMaxCapacity());
             aerop.setCodigo(aeropuerto.getAirportCode());
 
-
             var ciudad = new Ciudad();
             ciudad.setAbreviacion(aeropuerto.getCityShortName());
             ciudad.setContinente(aeropuerto.getContinent());

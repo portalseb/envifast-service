@@ -778,7 +778,7 @@ public class OrderAdapter implements ListPackagesPort, InsertOrderPort, PlanOrde
         orderRepository.saveAll(enviosNuevosBD);
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /*Aqui leeriamos los envios con forSim=1 que aun no se han planificado*/
-        var enviosBD = orderRepository.findAllByPlanified(0,1,1);
+        var enviosBD = orderRepository.findAllByPlanified(0,forSim,1);
         envios = new ArrayList<Envio>();
         for(OrderModel order: enviosBD) {
             Envio envio = new Envio();
@@ -1061,7 +1061,7 @@ public class OrderAdapter implements ListPackagesPort, InsertOrderPort, PlanOrde
     @Override
     @Transactional
     public int restoreOrders(Integer planned, Integer paraSim) {
-        packageRepository.deleteByParaSim(planned,1);
+        packageRepository.deleteByParaSim(planned,paraSim,1);
         orderRepository.deleteByParaSim(planned,paraSim,1);
         return 1;
     }
@@ -1082,7 +1082,7 @@ public class OrderAdapter implements ListPackagesPort, InsertOrderPort, PlanOrde
                     lista.add(paqueteNuevo);
                 }
             }
-            if(indicador==1 && i==20) break;}
+            if(indicador==1 && i==100) break;}
         }
         return lista;
     }
