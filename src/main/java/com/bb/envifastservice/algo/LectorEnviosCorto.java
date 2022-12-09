@@ -17,6 +17,7 @@ public class LectorEnviosCorto {
     private ArrayList<Aeropuerto> aeropuertos;
     private ArrayList<Integer> cantPaquetes;
     private LocalDate fechaDesde;
+    private int canTotalPaquetes;
     public LectorEnviosCorto(ArrayList<Aeropuerto> aeropuertos) {
         this.origenes = new ArrayList<>();
         this.destinos = new ArrayList<>();
@@ -24,6 +25,7 @@ public class LectorEnviosCorto {
         this.cantPaquetes = new ArrayList<>();
         this.codigos = new ArrayList<>();
         this.fechasEnvio = new ArrayList<>();
+        this.canTotalPaquetes=0;
     }
 
     public LocalDate getFechaDesde() {
@@ -387,6 +389,7 @@ public class LectorEnviosCorto {
                             codigos.add(parts[0]);
                             fechasEnvio.add(fechaHoraIni);
                             cantPaquetes.add(Integer.parseInt(destPaq[1]));
+                            canTotalPaquetes+=Integer.parseInt(destPaq[1]);
                         }
                         if (fechaHoraIni.toLocalDate().isAfter(LocalDate.parse(fechaSup)))
                             break;
@@ -405,4 +408,11 @@ public class LectorEnviosCorto {
         }
     }
 
+    public int getCanTotalPaquetes() {
+        return canTotalPaquetes;
+    }
+
+    public void setCanTotalPaquetes(int canTotalPaquetes) {
+        this.canTotalPaquetes = canTotalPaquetes;
+    }
 }

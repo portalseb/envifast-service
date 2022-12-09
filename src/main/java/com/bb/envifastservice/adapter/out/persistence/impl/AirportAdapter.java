@@ -1,17 +1,16 @@
 package com.bb.envifastservice.adapter.out.persistence.impl;
 
+import com.bb.envifastservice.adapter.out.persistence.dtos.AirportCapacity;
 import com.bb.envifastservice.adapter.out.persistence.dtos.AirportCoord;
 import com.bb.envifastservice.adapter.out.persistence.mappers.AirportMapper;
 import com.bb.envifastservice.adapter.out.persistence.repos.AirportCapacityRepository;
 import com.bb.envifastservice.adapter.out.persistence.repos.AirportRepository;
 import com.bb.envifastservice.adapter.out.persistence.repos.DateTimeRepository;
 import com.bb.envifastservice.adapter.out.persistence.repos.OrderRepository;
-import com.bb.envifastservice.algo.Aeropuerto;
-import com.bb.envifastservice.algo.CapacidadAeropuerto;
-import com.bb.envifastservice.algo.Ciudad;
-import com.bb.envifastservice.algo.FechaHora;
+import com.bb.envifastservice.algo.*;
 import com.bb.envifastservice.application.port.in.GenerateNextWeekDateTimeService;
 import com.bb.envifastservice.application.port.out.GenerateNextWeekDateTimePort;
+import com.bb.envifastservice.application.port.out.ListAirportCapacityPort;
 import com.bb.envifastservice.application.port.out.ListAirportCoordPort;
 import com.bb.envifastservice.application.port.out.ListAllAirportsPort;
 import com.bb.envifastservice.hexagonal.PersistenceAdapter;
@@ -21,6 +20,7 @@ import com.bb.envifastservice.models.DateTimeModel;
 import lombok.RequiredArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -30,7 +30,7 @@ import java.util.Optional;
 
 @PersistenceAdapter
 @RequiredArgsConstructor
-public class AirportAdapter implements ListAllAirportsPort, ListAirportCoordPort, GenerateNextWeekDateTimePort {
+public class AirportAdapter implements ListAllAirportsPort, ListAirportCoordPort, GenerateNextWeekDateTimePort, ListAirportCapacityPort {
 
     private final AirportRepository airportRepository;
     private final DateTimeRepository dateTimeRepository;
@@ -70,6 +70,7 @@ public class AirportAdapter implements ListAllAirportsPort, ListAirportCoordPort
             coord.setCityName(aeropuerto.getCityName());
             coord.setX_pos(aeropuerto.getXPos());
             coord.setY_pos(aeropuerto.getYPos());
+            coord.setMaxCapacity(aeropuerto.getMaxCapacity());
             answer.add(coord);
         }
         return answer;
@@ -129,4 +130,26 @@ public class AirportAdapter implements ListAllAirportsPort, ListAirportCoordPort
     }
 
 
+    @Override
+    public List<AirportCapacity> listAirportCapacity(String fecha, String hora) throws IOException {
+        String[] codes  = {"SKBO", "SEQM", "SVMI", "SBBR", "SPIM", "SLLP", "SCEL", "SABE", "SGAS", "SUAA", "LATI", "EDDI",
+                "LOWW", "EBCI", "UMMS", "LBSF", "LKPR", "LDZA", "EKCH", "LZIB", "LJLJ", "LEMD", "EETN", "EFHK", "LFPG", "LGAV",
+                "EHAM", "LHBP", "EIDW", "BIKF", "LIRA", "EVRA", "ELLX", "LMML", "ENGM", "EPMO", "LPPT", "EGLL", "ESKN", "LSZB"};
+        int cantPacks;
+        var lista = new ArrayList<AirportCapacity>();
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        for(int i=0;i<40;i++) {
+            var capacity = new AirportCapacity();
+            LectorEnviosCorto lectorEnviosCorto = new LectorEnviosCorto(new ArrayList<Aeropuerto>());
+            lectorEnviosCorto.setFechaDesde(LocalDate.parse(fecha));
+            lectorEnviosCorto.LeerCapAeropuerto("src/main/java/com/bb/envifastservice/historicData/", LocalDate.parse(fecha).minusDays(1).toString(), fecha, hora, hora, codes[i]);
+            capacity.setId((long) (i+1));
+            cantPacks = lectorEnviosCorto.getCanTotalPaquetes()/17;
+            if(i<=9){if(cantPacks>=850) cantPacks=850;}
+            if(i>9){if(cantPacks>=900) cantPacks=900;}
+            capacity.setUsedCapacity(cantPacks);
+            lista.add(capacity);
+        }
+        return lista;
+    }
 }

@@ -692,8 +692,6 @@ public class OrderAdapter implements ListPackagesPort, InsertOrderPort, PlanOrde
 
     @Override
     public int iniciarSim5Dias(String fecha, Integer dias, Integer paraSim) throws FileNotFoundException {
-        //flightAdapter.generateNextWeekFlights(fecha, dias, paraSim);
-        var aeropuertosRegistros = airportRepository.findAllByActive(1);
         return 1;
     }
 
@@ -946,15 +944,12 @@ public class OrderAdapter implements ListPackagesPort, InsertOrderPort, PlanOrde
                     //Actualizar rutas de paquetes
                     envios.get(j).getPaquetes().get(l).setRuta(algoritmoHormigas.getSolucionCamino());
                     cantPaquetes++;
-                    if(cantPaquetes >= maxPaquetes)break;
                 }
                 else{
                     //System.out.println("Envio " + j + " - no se hallo solucion");
                     envios.get(j).setTiempoTotal(0.0);
                 }
             }
-
-            if(cantPaquetes >= maxPaquetes)break;
 
         }
 

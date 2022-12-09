@@ -8,4 +8,5 @@ public class AirportCoord {
     String cityName;
     Double x_pos;
     Double y_pos;
+    int maxCapacity;
 }
