@@ -63,4 +63,10 @@ public class FlightController {
         return capacityFlightService.capacityFlights(fecha, origenId,destinoId);
     }
 
+    @GetMapping(value = "/generateColapsoData")
+    public int generateColapsoData(@RequestParam(name = "fecha") String fecha) throws InterruptedException {
+        Thread.sleep(135000);
+        return 1;
+    }
+
 }
